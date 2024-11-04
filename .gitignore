@@ -30,7 +30,7 @@ error-while-importing.csv
 dump.rdb
 celerybeat.pid
 !**/__init__.py
-env.py
+/env.py/
 b2b2/b2b2/env.py
 **/migrations/*.py
 **/migrations/*.pyc
