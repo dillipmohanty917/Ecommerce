@@ -1,0 +1,117 @@
+{% load static %}
+<Style>
+    #footer_2 .footer_support .terms_plcy a:last-child p{
+      border-right: 0 !important;;
+   }
+   #footer_2 .footer_support .social-links a {
+    display: inline-block;
+    padding: 5px 0;
+    margin: 0px 10px 10px 0px;
+}
+#footer_2 .footer_support .terms_plcy {
+    margin: 10px 0px 0px 0px;
+}
+#footer_2 .footer_media p {
+   
+   color: #fff;
+   margin-bottom: 15px;
+}
+#footer_2 .footer_support .social-links a {
+   display: inline-block;
+   padding: 5px 0;
+   margin: 0px 10px 10px 0px;
+}
+.text-white{
+   color:#fff;
+}
+
+
+</Style>
+<footer >
+    <div id="footer_2">
+     <div class="container">
+        <div class="row">
+           <div class="footer_section">
+              <div class="footer_box">
+                  <div class="col-md-12">
+                     <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12 text-left">
+                           <h3>Company</h3>
+                           <ul>
+                              <p style="margin-bottom:5px"><a href={%url "about_us"%} class="text-white">About Us</a></p>
+                              <p style="margin-bottom:5px"><a href={%url "contact_us"%} class="text-white">Contact Us</a></p>
+                              <p style="margin-bottom:5px"><a href={%url "privacy_policy"%} class="text-white">Privacy Policy</a></p>
+                              <p style="margin-bottom:5px"><a href={%url "terms_and_conditions"%} class="text-white">Terms and conditions</a></p>
+                              {% comment %} <li><a  >Returns, Refunds & Cancellation Policy</a></li>
+                              <li><a  >Shipping Policy</a></li> {% endcomment %}
+                           </ul>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 text-left">
+                           <h3>Reach us</h3>
+                           <div class="footer_media">
+                              <p>Gowra Palladium, 2nd Floor, Unit 203, Madhapur, Hitec City, Hyderabad, <br> Telangana-500081</p>
+                              <p><img class="social_link" src="{% static "home_v2/img/foot_phone.svg" %} "> 91 950 295 2277</p>
+                              <p><img class="social_link" src="{% static "home_v2/img/foot_mail.svg" %}"> support@medleymednetwork.com</p>
+                           </div>
+                        </div>
+                 {% comment %} <div class="col-md-3 col-sm-5 col-xs-12 offset-md-5 offset-sm-1 "> {% endcomment %}
+                  <div class="col-md-4 col-sm-6 col-xs-12 text-left">
+                    <h3>Follow us on</h3>
+                    <div class="footer_support">
+                       <div class="social-links">
+                          <a href="https://www.instagram.com/medleymednetwork?igsh=N3BvbWs2NjJ3Y3R2"  target="_blank"><img src="{% static "assets/images/new_images/01-06.png" %}"></a>
+                          {% comment %} <a href=""  target="_blank"><img src="{% static "assets/images/new_images/01-09.png" %}"></a> {% endcomment %}
+                          <a href="https://www.facebook.com/share/jG2ad4MPyVqACbLD/?mibextid=qi2Omg"  target="_blank" ><img src="{% static "assets/images/new_images/01-08.png" %}"></a>
+
+                          <a href="https://youtube.com/@medleymedicalsolutionspriv5417?feature=shared"  target="_blank"><img src="{% static "assets/images/new_images/01-07.png" %}"></a>
+
+                          {% comment %} <a href=""  target="_blank"><img src="{% static "assets/images/new_images/01-10.png" %}"></a> {% endcomment %}
+
+                       </div>
+                       <div class="terms_plcy">
+                          {% comment %} <p>Terms and conditions</p>
+                          <a ><p>Privacy Policy</p></a>
+                          <a ><p>Returns, Refunds & Cancellation Policy</p></a>
+                          <a ><p>Shipping Policy</p></a>  {% endcomment %}
+
+                          <h3>Our app</h3>
+                          <div class="footer_apps">
+                           <a href="https://play.google.com/store/apps/details?id=com.medleymed.b2bretailer.b2b_retailer&hl=en" target="_blank">
+                              <img src="{% static "home_v2/img/foot_andapp.svg" %}"></a>
+                              <a href="https://apps.apple.com/us/app/medleymed-network/id6479243124" target="_blank">
+                                 <img src="{% static "home_v2/img/foot_iosapp.svg" %}"></a> 
+                          </div>
+                       </div>
+                       </div>
+                    </div>     
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+  </div>
+  <div class="copyright">
+   <div class="container">
+      <span>&copy; Medleymed Network Solutions Pvt. Ltd 2024. All Rights Reserved. <span id="version"></span></span>
+   </div>
+      <script src="{% static "home/js/jquery.min.js" %}"></script> 
+      <script type="text/javascript" src="https://code.jquery.com/ui/1.10.1/jquery-ui.min.js"></script>
+      <script>
+            vers = document.getElementById('version')
+            $.ajax({
+                url:"{% url 'web_version'%}",
+                type: "GET",
+                success: function (data) {
+                  vers.innerHTML = data.web_version
+                },
+                error: function (error) {
+                  console.log(error)
+                    console.log(`Errorrrr ${error}`);
+                }
+            });
+      </script>
+
+</div>
+  
+  </footer>

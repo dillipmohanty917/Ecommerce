@@ -1,0 +1,272 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% load humanize %}
+    <title>{% block title %}User Summery{% endblock %}</title>
+    {% block custom_css %}
+    <link href="{% static 'assets/css/custom.css' %}" rel="stylesheet" type="text/css" id="app-style" />   
+    {% endblock %}
+       {% block content %}
+            <div class="content">
+                <div class="container-fluid">
+                    <!--content main header-->
+                    <div class="row ">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title">User Summary</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header py-2">
+                            <div class="row mb-2">
+                                <div class="col-xl-12">
+                                    <form
+                                        class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
+                                    
+                                        
+                                        <div class="col-sm-12">
+                                            <div class="d-flex">
+                                                <form method="GET" action="">
+                                                        <div class="col-sm-12 col-md-4 col-lg-4 mx-1 align-items-center">
+                                                            <select class="form-select form-control mb-3" id="user_role" name="user_role">
+                                                                <option value=""{% if request.GET.user_role == "" %}selected{% endif %}>Choose Role</option>
+                                                                <option value="callex"{% if request.GET.user_role == "callex" %}selected{% endif %}>Callex</option>
+                                                                <option value="admin"{% if request.GET.user_role == "admin" %}selected{% endif %}>Admin</option>
+                                                                <option value="operation"{% if request.GET.user_role == "operation" %}selected{% endif %}>Operation</option>
+                                                                <option value="sales"{% if request.GET.user_role == "sales" %}selected{% endif %}>Sales</option>
+                                                                <option value="marketing"{% if request.GET.user_role == "marketing" %}selected{% endif %}>Marketing</option>
+                                                            </select>
+                                                            
+                                                        </div> 
+                    
+                                                        <div class="col-sm-12 col-md-4 col-lg-3 mx-1">
+                                                            <input type="text" class="form-control" id="mobile_number" name="mobile_number" placeholder="Search Mobile No" value="{{ request.GET.mobile_number }}">
+                                                        </div>
+                                                      
+                                                        <div class="col-sm-12 col-md-4 col-lg-4 gap-2">
+                                                            <button type="submit" class="btn btn-light bg-success text-white">Apply</button>
+                                                            <a href="{% url 'user-list' %}" class="btn btn-primary text-white">Reset</a>
+                                                            <a href="" id="add_user_tab"  data-bs-toggle="modal" data-bs-target="#exampleModalFullscreenLg" class="btn btn-warning align-items-center text-dark">
+                                                                <i class="mdi mdi-plus"></i>New User
+                                                            </a>
+                                                        </div>
+                                                </form>
+                                               </div>
+                                               
+                                          
+                                             
+                                            </div>
+                                           
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--table-->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="table-responsive">
+                                        <table class="table table-centered table-nowrap mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th>User ID</th>
+                                                    <th>Name</th>
+                                                    <th>Mobile Number</th>
+                                                    <th>Role</th>
+                                                    <th>Edit</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for user in users %}
+                                                    <tr>
+                                                        <td>{{ forloop.counter0|add:users.start_index }}</td>
+                                                        <td id="user-id">#{{ user.id}}</td>
+                                                        <td>{{ user.first_name }}</td>
+                                                        <td>{{ user.username}}</td>
+                                                        <td>
+                                                            {% if user.is_admin %}
+                                                               <strong>Admin</strong>
+                                                            {% elif user.is_superuser %}
+                                                            <strong>Super Admin</strong>
+                                                            {% elif user.is_callex %}
+                                                            <strong>Callex</strong>
+                                                            {% elif user.is_operation %}
+                                                            <strong>Operation</strong>
+                                                            {% elif user.is_sales %}
+                                                            <strong>Sales</strong>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                            <i class="mdi mdi-square-edit-outline edit_user" data-user-id="{{ user.id }}" style="cursor: pointer;"></i>
+                                                        </td>
+                                                        <td>
+                                                            <form method="POST" action="{% url 'user-list' user.id %}">
+                                                                {% csrf_token %}
+                                                                {% if user.is_active == True %}
+                                                                    <input type="hidden" name="action" value="deactivate">
+                                                                    <button class="btn btn-secondary text-white w-100" name="deactivate" type="submit">Deactivate</button>
+                                                                {% elif user.is_active == False %}
+                                                                    <input type="hidden" name="action" value="activate">
+                                                                    <button class="btn btn-primary text-white w-100" name="activate" type="submit">Activate</button>
+                                                                    <!-- Your code here -->
+                                                                {% endif %}
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
+                        </div>
+
+                        {% include 'pagination.html' with data=users %} 
+                    </div>
+
+
+
+
+                </div>
+                {% include 'add_user_modal.html' %}
+            {% endblock %}
+            <!-- content -->
+
+{% block javascript %}
+<script>
+    $(document).ready(function(){
+        var is_new_user;
+        $('.edit_user').click(function() {
+            $('#add_user_btn').text('Modify');
+            is_new_user=false;
+            var userId = $(this).data('user-id');
+            fetchUserDetails(userId);
+        });
+
+        $('#add_user_tab').on('click',function(){
+            $('#add_user_btn').text('Create');
+            is_new_user=true;
+            $('#add_user_form')[0].reset();
+            $('#phone_no').prop('disabled', false);
+            $('.partner_list').css('display','none');
+            $('.error_message').empty();
+            $('#add_user_form').find(':input').each(function() {
+                if ($(this).is('select') && $(this).attr('id') === 'role_type') {
+                    return;
+                }
+                $(this).val('');
+            });
+    
+        });
+        $("#role_type").on('change',function(){
+            const role = $(this).val();
+            $("#partner_search").val("");
+            $("#show-list").empty();
+            if(role==="sales"){
+                $('.partner_list').css('display','block');
+                $('#partner_search').val('');
+                $('#selectedPartnerId').val('');
+            }else{
+                $('.partner_list').css('display','none');
+                $('#partner_search').val('');
+                $('#selectedPartnerId').val('');
+            }
+
+        });
+        $('#add_user_form').on('submit', function(event){
+            event.preventDefault();
+            $('.error_message').empty();
+            var csrfToken = $('[name=csrfmiddlewaretoken]').val();
+            var lastName = $('#last_name').val().trim();
+            var firstName = $('#first_name').val().trim();
+            var phoneNumber = $('#phone_no').val().trim();
+            var email = $('#user_email').val().trim();
+            var roleType = $('#role_type').val();
+            var partner_id = $('#selectedPartnerId').val();
+            var userId = $('#user-id').text().replace('#', '').trim();
+            if(phoneNumber === '' || phoneNumber.length < 10 || !/^\d+$/.test(phoneNumber)){
+                console.log('error')
+                $('.error_phone_no').text('Please provide a valid phone no.');
+                return false;
+            }
+            const data={"last_name":lastName,'first_name':firstName,'partner_id':partner_id,
+                        'phone_no':phoneNumber,'email':email,'role_type':roleType,'is_new_user':is_new_user,"user_id": userId
+                  }
+            $("#add_user_btn").attr("disabled", true);
+            $("#spinner").show();
+            $.ajax({
+                url: `{% url 'add-user' %}`,
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                data: JSON.stringify(data),
+                success: function(response) {
+                    if(response.status==409){
+                        if(response.error_field === 'phone_no') {
+                            $('.error_phone_no').text(response.message);
+                        } else if(response.error_field === 'email') {
+                            $('.error_user_email').text(response.message);
+                        }
+                        $("#add_user_btn").attr("disabled", false);
+                        $("#spinner").hide();
+                        return false;
+                    }
+                    if(response.status==404){
+                        $('.error_phone_no').text(response.message);
+                        $("#add_user_btn").attr("disabled", false);
+                        $("#spinner").hide();
+                        return false;
+                    }
+                    console.log('Data sent successfully:', response);
+                    window.location.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error occurred:', error);
+                }
+            });
+        });
+
+        function fetchUserDetails(userId) {
+            $.ajax({
+                url: "{% url  'edit-user' %}",
+                type: 'GET',
+                data: {
+                    'user_id': userId
+                },
+                success: function(response) {
+                    console.log(response.data,'response data')
+                   $('#exampleModalFullscreenLg').modal('show');
+                   $('#first_name').val(response.data.first_name);
+                   $('#last_name').val(response.data.last_name);
+                   $('#user_email').val(response.data.email);
+                   $('#phone_no').val(response.data.username.slice(2));
+                   $('#role_type').val(response.data.role);
+                   $('#phone_no').prop('disabled', true);
+
+                   if(response.data.role==="sales"){
+                        $('.partner_list').css('display','block');
+                        if (response.data.dist_name && response.data.dist_id){
+                            $('#partner_search').val(response.data.dist_name);
+                            $('#selectedPartnerId').val(response.data.dist_id)
+                        }else {
+                            $('#partner_search').val('');
+                            $('#selectedPartnerId').val('');
+                        }
+                    }else{
+                        $('.partner_list').css('display','none');
+                    }
+                },  
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+    });
+</script>
+
+{% endblock %}

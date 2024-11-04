@@ -1,0 +1,51 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+<title>{% block title %}OTP-list{% endblock %}</title>
+{% block content %}
+<div class="content">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">OTP List</h4>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!--table-->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table table-centered table-nowrap mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Phone Number</th>
+                                    <th>OTP</th>
+                                    <th>Created At</th>
+                                    <th>Expires At</th>
+                                </tr>
+                            </thead>
+                            {{otp_code}}
+                            {% if otp_lists %}
+                            <tbody>
+                                {% for otp in otp_lists %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{otp.phone}}</td>
+                                    <td><b>{{otp.otp_code}}</b></td>
+                                    <td>{{otp.created_at }}</td>
+                                    <td>{{otp.expires_at }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

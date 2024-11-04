@@ -1,0 +1,498 @@
+
+{% extends 'dashboard.html' %}
+{% load static %}
+    <title>{% block title %}Product Deals List{% endblock %}</title>
+    {% block custom_css %}
+    <link href="{% static 'assets/css/custom.css' %}" rel="stylesheet" type="text/css" />
+    <style>       
+    
+    
+        .delete-form {
+            display: inline;
+        }
+        
+        
+        .centered-text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* This will center the text vertically */
+          }
+          
+          .centered-text p {
+            font-size: 24px;
+            
+             /* You can change the color to your preference */
+          }
+
+        .deactivate-button {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+           
+           
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+           
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 17px;
+            width: 17px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+           
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+           
+          input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+          }
+           
+          input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+          }
+           
+          /* Rounded sliders */
+          .slider.round {
+            border-radius: 34px;
+          }
+           
+          .slider.round:before {
+            border-radius: 50%;
+          }
+           
+          
+        
+    </style>
+    <link href="{% static 'assets/vendor/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" />
+        {% comment %} <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> {% endcomment %}
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {% endblock %}
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+       {% block content %}
+            <div class="content">
+                <div class="container-fluid">
+                    <!--content main header-->
+                    <div class="row ">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title">Product Deals</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row mb-2">
+                                <div class="col-xl-12">
+                                    <form action="" method="get"
+                                        class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
+                                        
+                                        <div class="col-sm-12 col-md-6 col-lg-2">
+                                            <form method="GET" action="{% url 'deals-list' %}">
+                                                {% csrf_token %}
+                                                <label for="searchInput" class="visually-hidden">Search</label>
+                                                <input type="search" class="form-control" id="searchInput" name="search_query" placeholder="Search..." value="{{ request.GET.search_query }}">
+                                        </div>
+
+                                        <div class="col-sm-12 col-md-8 col-lg-10">
+                                            <div class="d-flex gap-2">
+                                                <button type="submit" class="btn bg-success text-white">Apply</button>
+
+                                                <a href="{% url 'deals-list' %}" class="btn btn-primary text-white">Reset</a>
+
+                                                <button type="button" class="btn btn-warning align-items-center" data-bs-toggle="modal" data-bs-target="#upload_deals">
+                                                    <i class="mdi mdi-cloud-upload"></i> Upload Deals
+                                                </button>
+                                                <a href="{% url 'download_file' 'download_product_deals_format' %}" class="btn btn-secondary text-white" name="download_partner_pincodes">Download Format</a>
+                                               
+                                                <button data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" type="button" name="bulk_delete" class="btn btn-danger text-white">Delete Selected</button>
+                                                
+                                                <button type="button" id="downloadButton" class="btn btn-warning text-black" data-bs-toggle="modal" data-bs-target="#partnerModal">
+                                                    Download Deals
+                                                </button>
+
+                                                {% comment %} <button type="button" class="btn btn-danger text-white ">Export</button> {% endcomment %}
+
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <form method="POST" action="{% url 'deals-list' %}">
+                                        {% csrf_token %}
+                                        
+                                    
+                                        <div id="partnerModal" class="modal fade" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Select Partner</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="downloadAllCheckbox">
+                                                            <label class="form-check-label" for="downloadAllCheckbox" style="padding-bottom:15px;">
+                                                                Download All Partner Deals
+                                                            </label>
+                                                        </div>
+                                                        <div class="relative w-100">
+                                                            <input type="hidden" id="selectedPartnerId" name="selectedPartnerId" value="{{ request.GET.selectedPartnerId }}">
+                                                            <input class="form-control" id="partner_search" name="partner_name" type="search" value="{{ request.GET.partner_name }}" placeholder="Search partners" autocomplete="off">
+                                                            <div class="list-group" id="show-list">
+                                                                <!-- Dynamic search results here -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button id="downloadModalButton" type="submit" name="dashboard-deals" class="btn btn-warning text-black">Download</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      </form>
+                                   
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--table-->
+                        {% if products %}
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="table-responsive">
+                                        
+                                            <form method="POST" id="bulk-delete-form">
+                                                {% csrf_token %}
+                                                <table class="table table-centered table-nowrap mb-0">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th class="d-flex align-items-center gap-2"><input type="checkbox" onclick="selectAll(this)"> Select All</th>
+                                                            <th>S.No</th>
+                                                            <th>Name</th>
+                                                            <th>Distributor SKU</th>
+                                                            <th>Distributor</th>
+                                                            <th>Discount Percentage</th>
+                                                            <th>Quantity</th>
+                                                            <th>Start Date</th>
+                                                            <th>End Date</th>
+                                                            <th>Description</th>
+                                                            <th>Is Expired</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for product in products %}
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="checkbox" name="selected_products[]" value="{{ product.id }}">
+                                                                </td>
+                                                                <td scope="row">{{ forloop.counter0|add:products.start_index }}</td>
+                                                                <td>{{ product.product.name }}</td>
+                                                                <td>{{ product.product.distributor_sku }}</td>
+                                                                <td>{{ product.distributor.name }}</td>
+                                                                <td>{{ product.discount_percentage }}</td>
+                                                                <td>{{ product.quantity }}</td>
+                                                                {% if product.start_date%}
+                                                                    <td>{{ product.start_date }}</td>
+                                                                {% else %}
+                                                                    <td>NA</td>
+                                                                {% endif %}
+                                                                {% if product.end_date%}
+                                                                    <td>{{ product.end_date }}</td>
+                                                                {% else %}
+                                                                    <td>NA</td>
+                                                                {% endif %}
+                                                                <td>{{ product.description }}</td>
+                                                                <td>{{ product.is_expired }}</td>
+                                                                <td>
+                                                                    <form method="POST" class="delete-form">
+                                                                        {% csrf_token %}
+                                                                        
+                                                                        <button type="button" data-bs-toggle="modal" data-bs-target="#DeactivateConfirmationModal{{ product.id }}" id="{{product.id}}" class="deactivate-button toggle_switch">
+                                                                            <label class="switch">
+                                                                                {% if product.is_expired%}
+                                                                                    <input type="checkbox" class="toggle-checkbox" disable>
+                                                                                    <span class="slider round"></span>
+                                                                                {% else %}
+                                                                                    <input type="checkbox" class="toggle-checkbox" checked>
+                                                                                    <span class="slider round"></span>
+                                                                                {% endif %}
+                                                                                
+                                                                            </label>
+                                                                        </button>
+
+                                                                        <!-- Inactive Modal -->
+                                                                        <div class="modal fade" id="DeactivateConfirmationModal{{ product.id }}" tabindex="-1" aria-labelledby="DeactivateConfirmationModalLabel{{ product.id }}" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                                                                            <div class="modal-dialog" style="margin-top: 217px;">
+                                                                                <div class="modal-content">
+                                                                                    {% if product.is_expired%}
+                                                                                        
+                                                                                    {% else %}
+                                                                                    <div class="modal-header">
+                                                                                        <h5 class="modal-title" id="DeactivateConfirmationModalLabel{{ product.id }}">Confirm Deactivate</h5>
+                                                                                    </div>
+                                                                                    {% endif %}
+
+                                                                                    
+                                                                                    <div class="modal-body">
+                                                                                        {% if product.is_expired%}
+                                                                                            This deal is deactivated and can’t be modified.<br>
+                                                                                            Please upload it again if you want to make changes.
+                                                                                        {% else %}
+                                                                                            Are you sure you want to deactivate this deal?
+                                                                                        {% endif %}
+                                                                                        
+                                                                                    </div>
+                                                                                    <div class="modal-footer">
+                                                                                        <button type="button" class="btn btn-secondary toggleButton" data-bs-dismiss="modal" id="confirmDeactivate{{ product.id }}">Close</button>
+
+                                                                                        {% if product.is_expired%}
+                                                                                            
+                                                                                        {% else %}
+                                                                                            <button type="submit" name="deactive_deal" value="{{ product.id }}" class="btn btn-danger">Deactivate</button>
+                                                                                        {% endif %}
+                                                                                        
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        
+                                                                    </form>  
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                               
+                                                
+                                                
+                                            </form>
+                                            
+                                                <div class="d-flex m-2">
+                                                    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" style="margin-top: 217px;">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    Are you sure you want to delete the selected Deals?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                    <button type="submit" name="bulk_delete" class="btn btn-danger">Delete</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            
+                                        </div>
+                                    </div> <!-- end card-->
+                                </div> <!-- end col -->
+                            </div>
+                        {%else%}
+                          <div class="centered-text">
+                            <p>No Deals</p>
+                          </div>
+                        {%endif%}
+
+                        {% include 'pagination.html' with data=products %}
+
+
+                    </div>
+                    <div class="modal fade" id="upload_deals" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <h3>Upload Your Deals File</h3>
+                                    <form method="POST" enctype="multipart/form-data" onsubmit="disableSubmit(this)">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            <label for="dealType">Select Partner:</label>
+                                            <select class="form-select" id="dealType" name="partner_id" required>
+                                                <option value="">Select</option>
+                                                {% for partner in partners%}
+                                                    <option value="{{partner.id}}" name="partner_id">{{partner.name|title}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <!-- Date Range Fields -->
+                                        <div class="mb-3 d-none" id="dateRangeFields">
+                                            <label for="startDate">Start Date:</label>
+                                            <input type="date" class="form-control" id="startDate" name="start_date" readonly>
+                                            <label for="endDate" class="mt-2">End Date:</label>
+                                            <input type="date" class="form-control" id="endDate" name="end_date">
+                                        </div>
+                                        <div class="mb-3">
+                                            <input type="file" class="form-control" name="file" accept=".csv,.xls,.xlsx" required>
+                                        </div>       
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+            {% endblock %}
+            <!-- content -->
+
+    {% block scripts %}
+    {{block.super}}
+    <script src="{% static 'assets/vendor/select2/js/select2.min.js' %}"></script>
+    <script src="{% static 'assets/js/partner_search.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            var switchButtonId;
+            const downloadAllCheckbox = document.getElementById('downloadAllCheckbox');
+            const partnerSearch = document.getElementById('partner_search');
+            const selectedPartnerId = document.getElementById('selectedPartnerId');
+            const downloadModalButton = document.getElementById('downloadModalButton');
+    
+            downloadAllCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    partnerSearch.value = 'All';
+                    partnerSearch.disabled = true;
+                    selectedPartnerId.value = 'All';
+                    downloadModalButton.textContent = 'Download All';
+                } else {
+                    partnerSearch.disabled = false;
+                    partnerSearch.value = '';
+                    selectedPartnerId.value = '';
+                    downloadModalButton.textContent = 'Download';
+                }
+            });
+    
+            // To handle form submission with the checkbox checked
+            downloadModalButton.addEventListener('click', function(e) {
+                if (downloadAllCheckbox.checked) {
+                    selectedPartnerId.value = 'All';
+                }
+            });
+
+            $('.toggle_switch').click(function() {
+                switchButtonId = $(this).attr('id');
+            });
+            $('.toggleButton').click(function() {
+                var $button = $('#' + switchButtonId);
+                var $checkbox = $button.find('.toggle-checkbox');
+                $checkbox.prop('checked', !$checkbox.prop('checked'));
+            });
+        });
+    </script>
+    
+    <script>
+        // Wait for the document to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the download button element
+    
+            // Get the download modal button element
+            var downloadModalButton = document.getElementById('downloadModalButton');
+    
+            // Add a click event listener to the download modal button
+            downloadModalButton.addEventListener('click', function() {
+                // Close the modal when the download button inside the modal is clicked
+                $('#partnerModal').modal('hide');
+    
+                // Submit the download form
+                document.getElementById('downloadForm').submit();
+            });
+            $('#partnerModal').on('hidden.bs.modal', function() {
+                // Clear input fields
+                document.getElementById('partner_search').value = '';
+                document.getElementById('selectedPartnerId').value = '';
+            
+               
+              });
+        });
+      </script>
+    <script>
+        function selectAll(source) {
+            checkboxes = document.getElementsByName('selected_products[]');
+            for(var i=0, n=checkboxes.length;i<n;i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+    </script>
+    {% endblock %}
+    {% block javascript %}
+    <script>
+        $(document).ready(function() {
+           $('.select2').select2();
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const dealTypeSelect = document.getElementById('dealType');
+            const dateRangeFields = document.getElementById('dateRangeFields');
+            const startDateInput = document.getElementById('startDate');
+            const endDateInput = document.getElementById('endDate');
+            
+            // Set the default value of the start date to tomorrow’s date
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const startDate = tomorrow.toISOString().split('T')[0];
+            startDateInput.value = startDate;
+            
+            // Set the default value of the end date to the day after tomorrow
+            const dayAfterTomorrow = new Date();
+            dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+            const endDate = dayAfterTomorrow.toISOString().split('T')[0];
+            
+            endDateInput.min = endDate;
+        
+            dealTypeSelect.addEventListener('change', function() {
+                if (this.value) {
+                    dateRangeFields.classList.remove('d-none');
+                } else {
+                    dateRangeFields.classList.add('d-none');
+                }
+            });
+        });
+
+        function disableSubmit(form) {
+            const submitButton = form.querySelector('input[type="submit"]');
+            submitButton.disabled = true;
+            return true;
+        }
+        
+     </script>
+    {% endblock %}

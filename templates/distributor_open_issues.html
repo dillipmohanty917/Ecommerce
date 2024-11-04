@@ -1,0 +1,84 @@
+{% extends 'distributor_base.html' %}
+{% load static %}
+
+<title>{% block title %}Oppe-Issue{% endblock %}</title>
+
+{% block content %}
+<div class="content">
+    <div class="container-fluid">
+        <!--content main header-->
+        <div class="row ">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Open Issues</h4>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="row mb-2">
+                    <div class="col-xl-12">
+                        <form action="" method="get" class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
+                            <div class="col-sm-12 col-md-6 col-lg-2">
+                                <form method="GET" action="{% url 'distributor-raised-issue' %}">
+                                    {% csrf_token %}
+                                    <label for="searchInput" class="visually-hidden">Search</label>
+                                    <input type="search" class="form-control" id="searchInput" name="search_query" placeholder="Search..." value="{{ request.GET.search_query }}">
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn bg-success text-white">Apply</button>
+                                    <a href="{% url 'distributor-raised-issue' %}" class="btn btn-primary text-white">Reset</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--table-->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Issue Type</th>
+                                        <th>Created</th>
+                                        <th>Raised By</th>
+                                        <th>Order ID</th>
+                                        <th>Status</th>
+                                        <th>Description</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if issues %}
+                                        {% for issue in issues %}
+                                            <tr>
+                                                <td scope="row">{{forloop.counter}}</td>
+                                                <td>{{issue.issue_type|title}}</td>
+                                                <td>{{issue.created_at}}</td>
+                                                <td>{{issue.user.get_retailer_name|title}}</td>
+                                                <td>{{issue.id}}</td>
+                                                <td>{{issue.issue_status}}</td>
+                                                <td>{{issue.description|title}}</td>
+                                                <form method="POST" action="{% url 'distributor-raised-issue' %}">
+                                                    {% csrf_token %}
+                                                    <td><button type="submit" name="issueId" value={{issue.id}} class="btn btn-primary btn-sm">Close</button></td>
+                                                </form>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> 
+                </div> 
+            </div>
+            {% include 'pagination.html' with data=issues %}
+        </div>
+    </div>
+</div>
+{% endblock %}

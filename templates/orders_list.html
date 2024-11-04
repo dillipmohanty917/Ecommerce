@@ -1,0 +1,117 @@
+<!-- Daterangepicker css -->
+{% load humanize %}
+
+<div class="card" style="overflow: hidden; overflow-x: scroll;">
+    <div class="card-header">
+        <div class="row mb-2">
+            <div class="col-xl-12">
+                <form class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between" method="GET" action="{% url 'dashboard' %}">
+                    {% csrf_token %}
+                    <div class="col-sm-12 col-md-6 col-lg-3">
+                        <label for="searchInput" class="visually-hidden">Search</label>
+                        <input type="search" class="form-control" id="searchInput" name="search_query" placeholder="Search..." value="{{ request.GET.search_query }}">
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="singledaterange" data-toggle="date-picker" data-cancel-class="btn-warning" name="daterange" value="{{ daterange }}">
+                            <span class="input-group-text bg-primary border-primary text-white">
+                                <i class="mdi mdi-calendar-range font-13"></i>
+                            </span>
+                        </div> 
+
+                    </div>
+                    
+
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-light bg-success text-white">Apply</button>
+                            <a href="{% url 'dashboard' %}" class="btn btn-primary text-white">Reset</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body pt-0">
+        <table id="" class="table dt-responsive nowrap w-100">
+            <thead class="bg-light">
+                <tr>
+                    <th>S.No</th>
+                    <th>Retailer Name</th>
+                    <th>Partner Name</th>
+                    <th>Partner ID</th>
+                    <th>Order ID</th>
+                    <th>Time</th>
+                    <th>Item Number</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+
+
+            <tbody>
+                {% if orders %}
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{forloop.counter0|add:orders.start_index }}</td>
+                            <td>{{order.user.get_retailer_name.title}}</td>
+                            <td>{{order.distributor.name}}</td>
+                            <td>#{{order.distributor.id}}</td>
+                            <td><a href="{% url 'dashboard-order-details' order.id %}">{{order.id}}</a></td>
+                            <td>{{order.created_at}}</td>
+                            <td>{{order.get_order_item_number}}</td>
+                            <td style="white-space: nowrap;">{{ currency }} {{ order.total_amount|floatformat:2|intcomma }}</td>
+                        </tr>
+                    {% endfor %}   
+                {% else %}
+                    No orders.
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'pagination.html' with data=orders %} 
+</div>
+
+{% block javascript  %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Moment.js -->
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+<!-- Date Range Picker -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script>
+    $(function() {
+        // Set start date to 30 days before the current date and end date to the current date
+        var start = moment().subtract(30, 'days');
+        var end = moment();
+        // Get the initial value from the server-side template
+        var daterange = "{{ daterange }}";
+
+        if (daterange) {
+            // If there is a value for daterange, split it into start and end dates
+            var dates = daterange.split(' - ');
+            start = moment(dates[0], 'MM/DD/YYYY');
+            end = moment(dates[1], 'MM/DD/YYYY');
+        }
+
+        function cb(start, end) {
+            $('#singledaterange').val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+        }
+    
+        $('#singledaterange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+    
+        cb(start, end);
+    });
+</script>
+{% endblock %}

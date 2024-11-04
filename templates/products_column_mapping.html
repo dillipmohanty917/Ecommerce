@@ -1,0 +1,374 @@
+{% extends template_to_extend %}
+{% load static %}
+    <title>{% block title %}Column Mapping{% endblock %}</title>
+    {% block custom_css %}
+    {% endblock %}
+
+       {% block content %}
+       <style>
+        .selected-green {
+            color: green !important;
+        }
+    </style>
+           
+                <div class="content">
+                    <div class="container-fluid">
+                        
+                        <div class="pt-4">
+                            <div class="card">
+                                <div class="row card-body">
+                                    <div class="bg-light mb-2">
+                                        <div class="text-center py-1 ">
+                                            <h4 class="page-title text-black"> Upload Products Column Mapping</h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-6">
+                                        <form method="post" action="" id="myForm" class="form-horizontal">
+                                            {% csrf_token %}
+                                        <div>
+                                          
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black">
+                                                        <h6 class="py-0 my-0">Product Name</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center text-info">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select validate" id="product_name" name="product_name" required>
+                                                            <option value="" selected>Choose Option</option> 
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black">
+                                                        <h6 class="py-0 my-0">Product SKU</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select validate" id="product_sku" name="product_sku" required>
+                                                            <option value="" selected>Choose Option</option> 
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black">
+                                                        <h6 class="py-0 my-0">Quantity</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select validate" id="quantity" name="quantity" required>
+                                                            <option value="" selected>Choose Option</option>
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black " style="text-align: right;">
+                                                        <h6 class="py-0 my-0">Price To Retail</h6>
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select validate" id="ptr" name="ptr" required>
+                                                            <option value="" selected>Choose Option</option>
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black " style="text-align: right;">
+                                                        <h6 class="py-0 my-0">Max Retail Price</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select validate" id="mrp" name="mrp" required>
+                                                            <option value="" selected>Choose Option</option>
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black " style="text-align: right;">
+                                                        <h6 class="py-0 my-0">Expiry Date</h6>
+                                                        <span style="font-size: 12px; ">(Optional)</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select validate" id="expiry_date" name="expiry_date">
+                                                            <option value="" selected>Choose Option</option>
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black " style="text-align: right;">
+                                                        <h6 class="py-0 my-0">Scheme Billed</h6>
+                                                        <span style="font-size: 12px; ">(Optional)</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select" id="scheme_billed" name="scheme_billed">
+                                                            <option value="" selected>Choose Option</option>
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black " style="text-align: right;">
+                                                        <h6 class="py-0 my-0">Scheme Free</h6>
+                                                        <span style="font-size: 12px; ">(Optional)</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select" id="scheme_free" name="scheme_free">
+                                                            <option value="" selected>Choose Option</option>
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black " style="text-align: right;">
+                                                        <h6 class="py-0 my-0">Discount</h6>
+                                                        <span style="font-size: 12px; ">(Optional)</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select validate" id="discount" name="discount">
+                                                            <option value="" selected>Choose Option</option>
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black " style="text-align: right;">
+                                                        <h6 class="py-0 my-0">Batch</h6>
+                                                        <span style="font-size: 12px; ">(Optional)</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select validate" id="batch_number" name="batch_number">
+                                                            <option value="" selected>Choose Option</option>
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black " style="text-align: right;">
+                                                        <h6 class="py-0 my-0">Hsncode</h6>
+                                                        <span style="font-size: 12px; ">(Optional)</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select validate" id="hsncode" name="hsncode">
+                                                            <option value="" selected>Choose Option</option>
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black " style="text-align: right;">
+                                                        <h6 class="py-0 my-0">GST</h6>
+                                                        <span style="font-size: 12px; ">(Optional)</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select validate" id="gst" name="gst">
+                                                            <option value="" selected>Choose Option</option>
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black " style="text-align: right;">
+                                                        <h6 class="py-0 my-0">Manufacturer</h6>
+                                                        <span style="font-size: 12px; ">(Optional)</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select" id="manufacturer" name="manufacturer">
+                                                            <option value="" selected>Choose Option</option>
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black " style="text-align: right;">
+                                                        <h6 class="py-0 my-0">Product Category</h6>
+                                                        <span style="font-size: 12px; ">(Optional)</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select" id="product_category" name="product_category">
+                                                            <option value="" selected>Choose Option</option>
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black " style="text-align: right;">
+                                                        <h6 class="py-0 my-0">Product Composition</h6>
+                                                        <span style="font-size: 12px; ">(Optional)</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select" id="product_composition" name="product_composition">
+                                                            <option value="" selected>Choose Option</option>
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 border d-flex align-items-center justify-content-end">
+                                                    <div class="py-1 text-black " style="text-align: right;">
+                                                        <h6 class="py-0 my-0">Packing</h6>
+                                                        <span style="font-size: 12px; ">(Optional)</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 border py-1 d-flex align-items-center">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <select class="form-select validate" id="packing" name="packing">
+                                                            <option value="" selected>Choose Option</option>
+                                                            {% for column_name in column_headers %}
+                                                                <option value="{{column_name}}">{{column_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row border">
+                                            <div class="col-sm-6 p-1">
+                                                {% if request.user.is_superuser or request.user.is_admin %}
+                                                <a href="{% url 'dashboard-upload-configuration' form_type=form_type dist_id=dist_id %}"><button type="button" class="btn btn-secondary w-100">
+                                                    Cancel
+                                                </button></a>
+                                                {% elif request.user.is_distributor %}
+                                                <a href="{% url 'distributor-upload-configuration' form_type=form_type %}"><button type="button" class="btn btn-secondary w-100">
+                                                   Cancel
+                                                </button></a>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-sm-6 p-1">
+                                                <button type="submit" class="btn btn-primary w-100" onclick="submitForm()">
+                                                    Submit
+                                                </button>
+                                            </div>                               
+                                         </div>
+                                        </form>
+                                        </div>
+                                    <div class="col-md-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+
+
+         {% block javascript %}
+         <script>
+            $(document).ready(function() {
+                $('.form-select').css('color', 'info');
+            $('.validate').on('change',function(){
+                if ($(this).val() !== "") {
+                    $(this).css('border-color', '#dee2e6');
+                }else {
+                    $(this).css('border-color', 'red');
+                }
+            })
+        });
+            function submitForm() {
+                var form = document.getElementById('myForm');
+                    if (form.checkValidity()) {
+                    form.submit();
+                } else {
+                    $(form).find(':invalid').css('border-color', 'red');
+                }
+            }
+        </script>
+         {% endblock %}
+
+       

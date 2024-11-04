@@ -1,0 +1,318 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+  <div id="position-spinner">
+    <div class="spinner-border text-primary visually-hidden" role="status" id="bg-spinner">
+      <span class="visually-hidden map_text">Loading...</span>
+    </div>
+    
+</div>
+  <div class="container mt-5 dist_prod_list">
+      <div class="row">
+        <div class="col s12">
+          <ul class="nav nav-tabs">
+            <li class="tab col s2">
+              <a href="#orders">
+                <span>
+                  Orders
+                </span>
+                <svg data-src="{% static "dashboard/images/style.svg" %}" width="24" height="24" />
+              </a>
+            </li>
+            <li class="tab col s2">
+              <a href="#details" >
+                <span>
+                  {% trans "Details" context "Product form tab" %}
+                </span>
+                <svg data-src="{% static "dashboard/images/edit.svg" %}" width="24" height="24" />
+              </a>
+            </li>
+             <li class="tab col s2">
+              <a href="#products" >
+                <span>
+                  Products
+                </span>
+                <svg data-src="{% static "dashboard/images/style.svg" %}" width="24" height="24" />
+              </a>
+            </li>
+            <li class="tab col s2">
+              <a href="#partydetails" >
+                <span>
+                  Party Details
+                </span>
+                <svg data-src="{% static "dashboard/images/style.svg" %}" width="24" height="24" />
+              </a>
+            </li>
+            <li class="col s2">
+              <a href="#configuaration">
+                <span>
+                  Configuration
+                </span>
+                <svg data-src="{% static "dashboard/images/style.svg" %}" width="24" height="24" />
+              </a>
+            </li>
+            {% if request.user.is_group_admin == False or request.user.is_region_admin == False  %}
+            <li class="tab col s2">
+              <a href="#history" >
+                <span>
+                  Log History
+                </span>
+                <svg data-src="{% static "dashboard/images/style.svg" %}" width="24" height="24" />
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+      
+
+      <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <h2>Upload Your File</h2>
+                <form method="POST" id="form_id" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="mb-3">
+                    <label for="file" class="form-label">Select File</label>
+                    <input type="file" class="form-control" id="id_file" name="file" required>
+                  </div>
+                  <div id="alertContainer"></div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+   
+  <div class="tab-content">
+    <div id="orders" class="tab-pane fade in active">
+      <form method="GET" class="col-md-6" style="display:inline-block">
+        {{ order_filter.form.non_field_errors }}
+        <div class="form-group">
+            <label for="{{ order_filter.form.id.id_for_label }}">Order ID:</label>
+            <input type="number"
+                   name="{{ order_filter.form.id.name }}"
+                   id="{{ order_filter.form.id.id_for_label }}"
+                   placeholder="Enter Order ID"
+                   value="{{ order_filter.form.id.value }}"
+                   class="form-control">
+        </div>
+        <button class="btn btn-success" type="submit">Search</button>
+    </form>
+      {% if orders %}
+    
+      <h2>Orders List</h2>
+      {% include 'distributor_order_list.html' with orders=orders dist_id=dist_id orderpagelist=orderpagelist %}
+
+      {% else %}
+      <h3>No Orders Found for distributor</h3>
+      {% endif %}
+    </div>
+    <div id="menu1" class="tab-pane fade in">
+      <h3>Menu 1</h3>
+      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div>
+    <div id="products" class="tab-pane fade in">
+            <a href="{% url 'product-creation' dist_id %}">
+          <button class="add-product-button">Add Product</button>
+        </a>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Upload Products 
+        </button>
+        <div class = 'row' style="margin:10px;">
+          <form method="GET" class="col-md-6" style="display:inline-block">
+            {{ pro_filter.form.as_p }}
+            <button class="btn btn-success" type="submit">Search</button> 
+          </form>
+        </div>
+        {% if distributor_products %}
+        {% include 'product_list.html' with distributor_products=distributor_products dist_id=dist_id is_dist_page=True totalpagelist=totalpagelist %}
+    {% else %}
+        <p>No products found for this distributor.</p>
+    {% endif %}
+    
+    </div>
+          <div id="details" class="tab-pane fade in">
+            <h3>Distributor Details</h3>
+            <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+        </div>
+        <div id="partydetails" class="tab-pane fade in">
+          <h3>Partdetails</h3>
+          <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+      </div>
+      <div id="configuaration" class="tab-pane fade in">
+          <h3>Configuration</h3>
+          <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+      </div>
+   </div>
+
+
+
+
+
+      
+
+        
+</div>
+
+
+
+
+<script type="text/javascript">
+  $(document).ready(function(){
+
+    var current = window.sessionStorage.getItem('currenttab');
+    if (current) {
+      $('.active').removeClass('active');
+      /* $(".nav-tabs .tab").find('a[href*="'+current+'"]').parent().addClass("active"); */
+      $(current).addClass("active show");
+    }
+    $('.nav-tabs .tab a').on('click', function(e)  {
+      var currentAttrValue = $(this).attr('href');
+      window.sessionStorage.setItem('currenttab', currentAttrValue)
+    });
+
+    $(".nav-tabs a").click(function(){
+    $(this).tab('show');
+    });
+  
+  <!-- upload validation -->
+  $('#form_id').on('submit', function(){
+    event.preventDefault();
+    btn_name="Submit"
+    $('#alertContainer').hide();
+    var formData = new FormData(this);
+    var file_input = $('#id_file')[0].files[0];
+    if (file_input.name.endsWith(".xlsx") || file_input.name.endsWith(".csv")) {
+        const maxSizeInBytes = 3 * 1024 * 1024; // 3MB in bytes
+        if (file_input.size > maxSizeInBytes) {
+          $('#bg-spinner').fadeOut(3000);
+              $('#alertContainer').show();
+                var alertHTML = `
+                <div class="alert file_warning">
+                  File size exceeds the limit of 3MB.
+              </div>
+                          `;
+              $('#alertContainer').html(alertHTML);
+        }else{
+            var spinner = $("#bg-spinner");
+            spinner.removeClass('visually-hidden'); 
+            $('.map_text').removeClass('visually-hidden')
+            formData.append('file', file_input);
+            $.ajax({
+            url: "{% url 'distrubutor-upload-stock' dist_id=dist_id %}",
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+              var status = response.status;
+              if (status == 400){
+                $('#bg-spinner').fadeOut(3000);
+                $('#alertContainer').show();
+                  var alertHTML = `
+                  <div class="alert file_warning">
+                  Uploaded file exceeds the limit of 40000 products!
+                </div>
+                            `;
+                $('#alertContainer').html(alertHTML);
+              }
+              else if (status == 205){
+                $('#bg-spinner').fadeOut(3000);
+                $('#alertContainer').show();
+                  var alertHTML = `
+                  <div class="alert file_warning">
+                  ${response.message}
+                </div>
+                            `;
+                $('#alertContainer').html(alertHTML);
+              }
+              else if (status == 204){
+                $('#bg-spinner').fadeOut(3000);
+                $('#alertContainer').show();
+                  var alertHTML = `
+                  <div class="alert file_warning">
+                  Uploaded file has no content!
+                </div>
+                            `;
+                $('#alertContainer').html(alertHTML);
+              }
+              else if(status == 200){
+                $('.map_text').text('Downloading File...');
+                location.reload();
+              /*  fetch("", {
+                      method: 'GET',
+                    })
+                    .then(response => response.blob())
+                    .then(blob => {
+                      // Create a temporary download link
+                      const downloadLink = document.createElement('a');
+                      const objectURL = URL.createObjectURL(blob);
+
+                      // Set the link attributes
+                      downloadLink.href = objectURL;
+                      downloadLink.download = 'skipped_products.xlsx';
+
+                      // Programmatically trigger the download
+                      document.body.appendChild(downloadLink);
+                      downloadLink.click();
+
+                      // Clean up
+                      URL.revokeObjectURL(objectURL);
+                      document.body.removeChild(downloadLink);
+                      $('.map_text').text('Reloading page...');
+                      location.reload();
+                    })
+                  .catch(error => {
+                    $('#bg-spinner').fadeOut(500);
+                    }); */
+                  }else{
+                    $('.map_text').text('Updating Failed...');
+                    $('#bg-spinner').fadeOut(3000);
+                    setTimeout(() => {
+                      location.reload();
+                    }, 3000);
+                  }
+              },
+            error: function(xhr, textStatus, errorThrown) {
+              // Handle any errors that occur during the request
+              $('#bg-spinner').fadeOut(500);
+              console.log('ajax exception')
+            }
+                  });
+                }
+
+      }else{
+        $('#bg-spinner').fadeOut(500);
+        $('#alertContainer').show();
+                var alertHTML = `
+                <div class="alert file_warning">
+                Please Upload Excel/csv File!
+              </div>
+                          `;
+              $('#alertContainer').html(alertHTML);
+          }
+
+    });
+
+ 
+  });
+
+
+ 
+</script>
+
+{% endblock %}

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+{% load static i18n %}
+{% load render_bundle from webpack_loader %}
+  {% load bootstrap5 %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+
+<html lang="{{ LANGUAGE_CODE }}" class="no-js">
+<head>
+  <title>
+    {% block title %}
+    {% trans "Dashboard - MedleyMed Network" context "Dashboard default page title" %}
+    {% endblock %}
+  </title>
+  {% block meta %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  {% endblock meta %}
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/static/dashboard/css/custom.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'dashboard/css/new_dashboard.css' %}">
+
+  {% block custom_css %}{% endblock %}
+</head>
+<style type="text/css">
+  .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all {
+    max-width: 800px!important;
+    max-height: 300px!important;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    font-size: smaller;
+    -webkit-transition: all 0!important;
+    -moz-transition: all 0!important;
+    transition: all 0!important;
+    z-index: 1500;
+  }
+  .ui-state-focus, .ui-widget-content {
+    border: none!important;
+    border-bottom: 1px solid #eee;
+  }
+  .ui-state-focus:hover, .ui-widget-content:hover {
+    border: none!important;
+  }
+  a[data-available="true"], a[data-available="true"] li {
+    border-radius: 0;    
+    background: none;
+    background-color: #7bf8b9;
+  }
+  a[data-available="true"]:hover.ui-corner-all.ui-state-focus {
+    background: #50ce8f;
+    border-radius: 0;    
+  }
+  a[data-available="lowQuantity"], a[data-available="lowQuantity"] li {
+        border-radius: 0;    
+        background: none;
+        background-color: #f8f57b ;
+  }
+  a[data-available="lowQuantity"]:hover.ui-corner-all.ui-state-focus {
+      background: #f3f098;
+      border-radius: 0;    
+  }
+  a[data-available="false"], a[data-available="false"] li {
+    border-radius: 0;    
+    background: none;
+    background-color: #f1c2c2;
+  }
+  a[data-available="false"]:hover.ui-corner-all.ui-state-focus {
+    background: #db9999;
+    border-radius: 0;
+    cursor: not-allowed;
+  }
+  .product-info-name {
+    font-weight: 700;
+  }
+  .product-info-price {
+    float: right;
+    margin-top: -30px;
+  }
+  .product-info-scheme {
+    float: right;
+    margin-top: -18px;
+    color: red;
+  }
+  .product-info-scheme-new {
+    /*float: right;*/
+    margin-top: -18px;
+    color: red;
+  }
+  .product-info-company {
+    display: block;
+  }
+  ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: #26a69a;
+  }
+  ::-moz-placeholder { /* Firefox 19+ */
+    color: #26a69a;
+  }
+  :-ms-input-placeholder { /* IE 10+ */
+    color: #26a69a;
+  }
+  :-moz-placeholder { /* Firefox 18- */
+    color: #26a69a;
+  }
+  .cart_top {
+    position: absolute;
+    z-index: 2;
+    top: 125px;
+    right: 10px;
+  }
+  .cart {
+    color: #26a69a;
+  }
+  .badge {
+    background: #2e3292;
+    top: -5px;
+    right: 30px;
+    position: relative;
+    padding: .25em .4em !important;
+    font-size: 90% !important;
+    font-weight: 300;
+    line-height: 1 !important;
+    color: #fff !important;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+    min-width: 1.5em !important;
+  }
+  .collapsible li.active i {
+    -ms-transform: rotate(180deg); /* IE 9 */
+    -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+    transform: rotate(180deg);
+  }
+
+  body{
+    font-family:Roboto, sans-serif !important;
+  }
+  .collapsible.no_padding{padding:0;}
+ 
+
+  .collapsible.collapsible-accordion no_padding.no_padding{
+    padding:0 !important;
+  }
+</style>
+</head>
+<body class="{% block body_class %}body-home{% endblock %}">
+  <header>
+    <nav class="top-nav navbar-fixed" id="top-nav">
+      <div class="nav-wrapper">
+        <div class="right">
+          <ul id="user-action" class="dropdown-content">
+            <li class="user-name">
+              {{ request.user }}
+            </li>
+            <li class="divider"></li>
+            <li>
+              <a href="{% url 'account_logout' %}" class="waves-effect waves-teal">
+                {% trans "Log out" context "Dashboard top navigation action" %}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <ul class="side-nav panel-group" id="accordion">
+          <li class="side-nav-section" id="first">
+            <ul class="menu-list" id="search_list">
+                  <!--Users tab starts here-->
+                    <li class="side-nav-section line_btm" id="first">
+                      <p class="collapsible-header waves-effect waves-teal">
+                        <i class="material-icons pos_abs">people</i>
+                        <span>{% trans "Users" context "Dashboard connections. `Sales' is noun of to sell" %}<i class="material-icons right">expand_more</i></span>
+                      </p>
+                      <li class="{% block menu_customers_class %}{% endblock %}">
+                          <a href="{% url 'partner-summary' %}">
+                            {% trans "Distributors" context "Dashboard customers list" %}
+                          </a>
+                      </li>
+                      <li class="{% block menu_retailer_class %}{% endblock %}">
+                        <a>
+                          {% trans "Retailers" context "Dashboard customers list" %}
+                        </a>
+                      </li>
+                      <li class="{% block menu_comission_classe %}{% endblock %}">
+                        <a href="{% url 'commissions-list' %}">
+                          {% trans "Commissions" context "Product commissions list" %}
+                        </a>
+                      </li>
+                      <li class="{% block menu_pincodes_classe %}{% endblock %}">
+                        <a href="{% url 'partner-summary' 'pincodesprofile' %}">
+                          {% trans "Partner Pincodes" context "Partner pincodes list" %}
+                        </a>
+                      </li>
+                      <li class="{% block menu_deals_classe %}{% endblock %}">
+                        <a href="{% url 'deals-list' %}">
+                          {% trans "Product Deals" context "Product Deals list" %}
+                        </a>
+                      </li>
+
+                    </div>
+                    </li>
+                  <!--Users tab ends here-->
+                </ul>
+              <!--Actions ends here-->
+            </ul>
+            {% comment %} position:sticky; bottom:0; background-color:#324292; padding:10px; z-index:-1; {% endcomment %}
+            <div class="" style="text-align: center; display: block; margin-bottom:17px;"><h5 id = "version" style="margin-top: -20px;"></h5> </div>
+            <script src="{% static "home/js/jquery.min.js" %}"></script> 
+            <script type="text/javascript" src="https://code.jquery.com/ui/1.10.1/jquery-ui.min.js"></script>
+            
+
+          </li>
+        </ul>
+      </div>
+      <div class="subheader top-nav">
+        <div class="nav-wrapper container">
+          {% block breadcrumbs %}
+          <ul class="breadcrumbs">
+            <li class="visible-s">
+              <a href="#">
+                {% trans "Home" context "Dashboard homepage" %}
+              </a>
+            </li>
+          </ul>
+          {% endblock %}
+          {% block header_extra %}{% endblock %}
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main class="main">
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+  <div id="base-modal" class="modal picked-up"></div>
+  <div id="base-modal-fixed" class="modal modal-fixed-footer"></div>
+  {% block jquery %}
+  <!-- Core Scripts - Include with every page -->
+ <!-- Bootstrap JS and jQuery (Make sure to include them at the beginning) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<!-- Other scripts that depend on jQuery and Bootstrap -->
+<script type="text/javascript" src="https://code.jquery.com/ui/1.10.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rome/2.1.22/rome.standalone.js"></script>
+<script src="{% static 'home/js/material-datetime-picker.js' %}"></script>
+
+
+  {% endblock %}
+  
+ 
+ 
+
+  {% block custom_js %}{% endblock %}
+
+
+<script>
+$(document).ready(function(){
+ var org_content = $('#search_list').html();
+ $("#search_input").on("keyup", function() {
+   var search_id = $('#search_list li');
+   if ($(search_id.val())) {
+   //$(search_id).parent().find('.collapsible-header').removeClass('active');
+     var value = $(this).val().toLowerCase();
+     if (value == '' || value == ' ') {
+      $('#search_list').html(org_content);
+      applyCollapse();
+     } else {
+       $(search_id).filter(function(e) {
+         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+         $(this).parent().find('.side-nav-section,.collapsible-header,.collapsible-accordion no_padding li').addClass('active');
+         $(this).closest('.collapsible-body').css('display','block');
+         //$(this).children('.collapsible-body >  ul li').css('display','block');
+       });
+     }
+   } else {
+     var activeClass = document.getElementsByClassName("active");
+     while (activeClass.length) {
+       activeClass[0].className = activeClass[0].className.replace('active', "");
+       console.log(activeClass[0].className);
+     }
+   }
+ });
+});
+</script>
+<script>
+   $(document).ready(function(){
+    $('.collapsible').collapsible();
+  });
+  function applyCollapse() {
+     $('.collapsible').collapsible();
+  }
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+   var elems = document.querySelectorAll('.collapsible');
+   var instances = M.Collapsible.init(elems, {});
+ });
+</script>
+<style>
+  .line_up{
+    border-top:1.5px solid #000;
+  }
+</style>
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+
+{% extends 'distributor_base.html' %}
+{% load humanize %}
+{% load static %}
+    <title>{% block title %}Orders List{% endblock %}</title>
+
+       {% block content %}
+    
+            <div class="content">
+                <div class="container-fluid">
+                    <!--content main header-->
+                    <div class="row ">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title">Orders Received</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row mb-2">
+                                <div class="col-xl-12">
+                                    <form class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between" method="GET">
+                                        {% csrf_token %}
+                                        <div class="col-sm-12 col-md-6 col-lg-2">
+                                            <label for="searchInput" class="visually-hidden">Search</label>
+                                            <input type="search" class="form-control" id="searchInput" name="search_order_details" placeholder="Search..." value="{{ request.GET.search_order_details }}">
+                                        </div>
+                                        
+                                        <div class="col-sm-12 col-md-6 col-lg-2">
+                                            <div class="input-group">
+                                                <label for="singledaterange" class="visually-hidden">Date Range</label>
+                                                <input type="text" class="form-control" id="singledaterange" data-toggle="date-picker" data-cancel-class="btn-warning" name="daterange" value="{{ request.GET.daterange }}">
+                                                <span class="input-group-text bg-primary border-primary text-white">
+                                                    <i class="mdi mdi-calendar-range font-13"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                          
+                    
+                                        <div class="col-sm-12 col-md-6 col-lg-4">
+                                            <div class="d-flex gap-2">
+                                                <button type="submit" class="btn btn-light bg-success text-white">Apply</button>
+                                                <a href="{% url 'dist-order-list' %}" class="btn btn-primary text-white">Reset</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--table-->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-centered table-nowrap mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th>Order Id</th>
+                                                    <th>Order Status</th>
+                                                    <th>Customer Store Name</th>
+                                                    <th>Placed On</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% if orders %}
+                                                {% for order in orders %}
+                                                <tr onclick="window.location='{% url 'dist-order-details' order_id=order.id %}';" style="cursor:pointer;">
+                                                  <td>{{forloop.counter0|add:orders.start_index }}</td>
+                                                  <td>{{order.id}}</td>
+                                                  <td><span class="badge rounded-pill {% if order.order_status == 'Billed' %}badge-success-lighten {% elif order.order_status == 'Cancelled' %}badge-danger-lighten {% elif order.order_status == 'Pending' %}badge-secondary-lighten {% else %}badge-info-lighten {% endif %}">{{ order.get_order_status_display }}</span></td>
+                                                  <td>{{ order.retailer_store_name }}</td>
+                                                  <td>{{ order.order_date }}</td>
+                                                  <td>{{currency}} {{ order.total_amount|floatformat:2|intcomma}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                                {% endif %}
+                                              </tbody>
+                                        </table>
+                                    </div>
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
+                        </div>
+
+                        {% include 'pagination.html' with data=orders %}
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var datePicker = document.getElementById('singledaterange');
+                    
+                    // Set the date range from today to the past 7 days
+                    var endDate = new Date();
+                    var startDate = new Date();
+                    startDate.setDate(endDate.getDate() - 365);
+                    
+                    var formattedStartDate = formatDate(startDate);
+                    var formattedEndDate = formatDate(endDate);
+                    
+                    // Set the date range in the input
+                    datePicker.value = formattedStartDate + ' - ' + formattedEndDate;
+                });
+            
+                function formatDate(date) {
+                    var month = date.getMonth() + 1; 
+                    var day = date.getDate();
+                    var year = date.getFullYear();
+                    
+                    if (day < 10) {
+                        day = '0' + day;
+                    }
+                    if (month < 10) {
+                        month = '0' + month;
+                    }
+                    return month + '/' + day + '/' + year;
+                }
+            </script>   
+      
+
+    {% endblock %}
+        

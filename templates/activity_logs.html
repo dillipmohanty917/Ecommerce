@@ -1,0 +1,135 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+<title>{% block title %}Activity-Log{% endblock %}</title>
+{% block content %}
+<div class="content">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Activity-Log</h4>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-header">
+                <div class="row mb-2">
+                    <div class="col-xl-12">
+                        <form class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
+                            <div>
+                                <form method="GET" action="{% url 'dashbord-activity-logs' %}">
+                                    {% csrf_token %}
+                                    <div class="row gy-2 gx-2 align-items-center justify-content-xl-start">
+                                        
+                                        <div class="col-sm-12 col-md-4 col-lg-4">
+                                            <input type="text" class="form-control" id="mobile_number" name="mobile_number" placeholder="Search User" value="{{ request.GET.mobile_number }}">
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 col-lg-4">
+                                            <div class="input-group">
+                                                <label for="singledaterange" class="visually-hidden">Date Range</label>
+                                                <input type="text" class="form-control" id="singledaterange" data-toggle="date-picker" data-cancel-class="btn-warning" name="daterange" value="{{ request.GET.daterange }}">
+                                                <span class="input-group-text bg-primary border-primary text-white">
+                                                    <i class="mdi mdi-calendar-range font-13"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-6 col-lg-3">
+                                            <div class="d-flex gap-2">
+    
+                                                <button type="submit"
+                                                    class="btn btn-light bg-success text-white">Apply</button>
+                                                    <a href="{% url 'dashbord-activity-logs' %}" class="btn btn-primary text-white">Reset</a>
+    
+                                            </div>
+                                        </div>    
+                                    </div>
+                                    
+    
+                                </form>
+                            </div>
+                        </form>
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+        
+        <!--table-->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table table-centered table-nowrap mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>SI No</th>
+                                    <th>Order ID</th>
+                                    <th>User</th>
+                                    <th>Customer/Distributor</th>
+                                    <th>Action</th>
+                                    <th>Created At</th>
+                                    <th>Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for activity_log in activity_logs %}
+                                    <tr>
+                                        <td scope="row">{{ forloop.counter0|add:activity_logs.start_index }}</td>
+                                        {% if activity_log.order_id %}
+                                           <td>#{{ activity_log.order_id }}</td>
+                                        {%else%}
+                                           <td></td>
+                                             
+                                        {% endif%}
+                                        <td>{{ activity_log.user.username }}</td>
+                                        {%if activity_log.order_id %}
+                                           <td>{{activity_log.order.retailer_store_name}}
+                                        {% else %}
+                                           {%if activity_log.to_user.is_retailer %}
+                                               <td>{{activity_log.to_user.get_retailer_name}}
+                                            {%else%}
+                                                {%if activity_log.to_user.is_distributor %}
+                                                  <td>{{activity_log.to_user.get_distributor_name}}
+                                                {%else%}
+                                                    <td></td>
+                                                {%endif%}
+                                               
+                                            {%endif%}
+
+                                        {%endif%}
+                                        <td>{{ activity_log.action }}</td>
+                                        <td>{{ activity_log.timestamp}}</td>
+                                        <td>{{ activity_log.details }}</td>
+                                    
+                                        
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                           
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'pagination.html' with data=activity_logs %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var today = new Date();
+        var endDate = new Date(today);
+        var startDate = new Date(today);
+        startDate.setDate(startDate.getDate() - 6); // Set start date to 7 days ago
+
+        // Format start and end dates as MM/DD/YYYY
+        var startDateFormatted = (startDate.getMonth() + 1) + '/' + startDate.getDate() + '/' + startDate.getFullYear();
+        var endDateFormatted = (endDate.getMonth() + 1) + '/' + endDate.getDate() + '/' + endDate.getFullYear();
+
+        // Set the input value
+        document.getElementById('singledaterange').value = startDateFormatted + ' - ' + endDateFormatted;
+    });
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,391 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+    <title>{% block title %}Add A New Partner{% endblock %}</title>
+
+       {% block content %}
+            <div class="content">
+                <div class="container-fluid">
+                    <!--content main header-->
+                    <div class="row ">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title">Add A New Partner</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="addPartnerForm" method="POST"  enctype="multipart/form-data" id="partnerForm" action="{% url 'add_partner' %}" class="customer-form needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="card">
+                            {% if error_message %}
+                            <div id="errorMessage" class="error-message">{{ error_message }}</div>
+                            {% endif %}
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">Partner Name *</label>
+                                        <input type="text" class="form-control"  name="name" data-provide="typeahead" id="storeNameInput"
+                                        value="{{ name }}" placeholder="Enter Name" required>
+                                        <small id="storeNameError" style="color: red; display: none;">Only 30 characters allowed</small>
+                                        
+                                    </div>
+
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">Partner Mobile Number *</label>
+                                        <input type="text" name="phone" class="form-control" data-provide="typeahead"
+                                            id="multiple-datasets" value="{{ phonee }}"  placeholder="Enter Phone Number" required>
+                                    </div>
+                        
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">Pincode *</label>
+                                        <input id="bloodhound" class="form-control" name="pincode" type="text" value="{{ pincode }}" placeholder="Enter Pincode" required>
+                                    </div>
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">Address *</label>
+                                        <input id="bloodhound" class="form-control" name="address" type="text" value="{{ address }}" placeholder="Enter Address" required>
+                                    </div>
+                        
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">City *</label>
+                                        <input type="text" class="form-control" name="city" data-provide="typeahead" id="prefetch"
+                                         value="{{ city }}" placeholder="Enter City" required>
+                                    </div>
+
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">State *</label>
+                                        <input type="text" class="form-control" name="state" data-provide="typeahead" id="prefetch"
+                                        value="{{ state }}" placeholder="Enter State" required>
+                                    </div>
+                        
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">GST Number *</label>
+                                        <input type="text" class="form-control" name="gstnumber" data-provide="typeahead" id="gstNumberInput"
+                                               value="{{ gstnumber }}" placeholder="Enter GST Number" required>
+                                        <div id="gstNumberError" style="color: red; display: none;">Only 15 alphanumeric characters allowed</div>
+                                    </div>
+
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">PAN Number *</label>
+                                        <input type="text" class="form-control" name="pan_number" data-provide="typeahead" id="panNumberInput"
+                                            value="{{ pan_number }}"  placeholder="Enter PAN Number" required>
+                                        <small id="panNumberError" style="color: red; display: none;">Only 30 alphanumeric characters allowed</small>
+                                    </div>
+                        
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">Aadhar Number *</label>
+                                        <input type="text" name="aadhaar" class="form-control" data-provide="typeahead"
+                                            id="aadharInput" value="{{ aadhaar }}" placeholder="Enter Aadhar Number" required>
+                                        <small id="aadharError" style="color: red; display: none;">Only numeric characters allowed</small>
+                                    </div>
+                        
+                                    
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">Drug License *</label>
+                                        <input type="text" name="licence" class="form-control" data-provide="typeahead" id="drugLicenseInput"
+                                               value="{{ licence }}" placeholder="Enter DL Number" required>
+                                        <div id="drugLicenseError" style="color: red; display: none;">Only 30 alphanumeric characters allowed</div>
+                                    </div>
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">Valid From *</label>
+                                        <input type="date" name="valide_from" class="form-control" value="{{ valide_from }}"  required>
+                                    </div>
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">Valid To *</label>
+                                        <input type="date" name="valide_to" class="form-control" value="{{ valide_to }}" required>
+                                    </div>
+                        
+                                    {% comment %} <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">BD Name</label>
+                                        <input type="text" name="bdname" class="form-control" data-provide="typeahead"
+                                            id="multiple-datasets" value="{{ bdname }}"  placeholder="Enter BD Name" required>
+                                    </div> {% endcomment %}
+
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">Email *</label>
+                                        <input type="text" name="email" class="form-control" data-provide="typeahead"
+                                            id="multiple-datasets" value="{{ email }}" placeholder="Enter Email" required>
+                                    </div>
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">Cart Value</label>
+                                        <input type="text" name="cart_value" class="form-control" data-provide="typeahead"
+                                            id="thresholdValueInput" value="0" placeholder="Enter Threshold Value" oninput="validateInput(this)">
+                                        <small id="thresholdValueError" style="color: red; display: none;">Invalid Input</small>
+                                    </div>
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">Payment Term</label>
+                                        <input type="text" class="form-control" name="payment_term" data-provide="typeahead" id="prefetch"
+                                        value="{{ payment_term }}" placeholder="Enter Payment Term">
+                                    </div>
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">Discount</label>
+                                        <input type="text" class="form-control" name="discount" id="discountInput" data-provide="typeahead" id="prefetch"
+                                               value="{{ discount }}" placeholder="Enter Discount">
+                                        <small id="discountError" class="text-danger"></small>
+                                    </div>
+                                    <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                        <label class="form-label">Speciality </label>
+                                        <input type="text" class="form-control" name="speciality" data-provide="typeahead" id="prefetch"
+                                        value="{{ speciality }}" placeholder="Enter Speciality">
+                                    </div>
+
+                                    
+                                    
+                                    {% comment %} <div class="mb-3 col-sm-12">
+                                        <textarea class="w-100 form-control" name="" id="" cols="30" rows="5" placeholder="Enter Your Text..."></textarea>
+                                    </div> {% endcomment %}
+
+                                    <div class="row">
+                                        <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                            <label class="form-label">Upload GST *</label>
+                                            <input type="file" name="gstcertificate" id="id_gstcertificate"  value="{{ gst_document }}"  class="form-control" required>
+                                        </div>
+    
+                                        {% comment %} <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                            <label class="form-label">Upload PAN</label>
+                                            <input type="file" name="pan" id="id_pan" value="{{ pan_document }}" class="form-control" required>
+                                        </div>
+    
+                                        <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                            <label class="form-label">Upload Aadhar</label>
+                                            <input type="file" name="adhar" id="id_adhar" value="{{ adhar_document }}" class="form-control" required>
+                                        </div> {% endcomment %}
+    
+                                        <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                            <label class="form-label">Drug License Form20 *</label>
+                                            <input type="file" name="doc_licence20" id="id_doc_licence20" value="{{drug_license_form20}}" class="form-control" required>
+                                        </div>
+                                        <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                            <label class="form-label">Drug License Form21 *</label>
+                                            <input type="file" name="doc_licence21" id="id_doc_licence21" value="{{drug_license_form21}}" class="form-control" required>
+                                        </div>
+                                        
+    
+                                        <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                            <label class="form-label">Upload LOGO </label>
+                                            <input type="file" name="logo" id="id_logo" value="{{logo}}" class="form-control" >
+                                        </div>
+                                    </div>
+
+                                  
+                                    <div class="col-md-4">
+                                        <a href="{% url 'partner-summary' %}">
+                                            <button class="btn btn-secondary card-body py-2 text-white w-100" type="button">Cancel</button></a>
+                                    </div>
+                                    <div class="col-md-4">
+                                        
+                                            <button id="addPartnerButton" class="btn btn-primary card-body py-2 text-white w-100" type="submit"onclick="saveToCache()">Add Partner</button></a>
+                                    </div>
+
+                                </div>
+
+                          
+                
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+<style>
+    .error-message {
+        color: red;
+    }
+    #errorMessage {
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #d9534f;
+        border-radius: 4px;
+        color: #d9534f;
+        background-color: #f2dede;
+    }
+    
+    #errorMessage.close {
+        display: none;
+    }
+</style>
+
+<script>
+    document.getElementById('addPartnerForm').addEventListener('submit', function(event) {
+        const button = document.getElementById('addPartnerButton');
+        button.disabled = true;
+    
+        // Re-enable the button after 5 seconds
+        setTimeout(function() {
+            button.disabled = false;
+        }, 5000); // 5000 milliseconds = 5 seconds
+    });
+</script>
+<script>
+    // Function to validate the discount input field
+    function validateDiscountInput() {
+        var discountInput = document.getElementById("discountInput");
+        var discountError = document.getElementById("discountError");
+        var discountValue = discountInput.value.trim(); // Trim whitespace from input
+
+        // Check if the value is not empty
+        if (discountValue === "") {
+            discountError.textContent = "Discount value cannot be empty.";
+            return false;
+        }
+
+        // Check if the value is a positive integer
+        if (!/^\d+$/.test(discountValue)) {
+            discountError.textContent = "Please enter a positive integer for the discount.";
+            discountInput.value = ""; // Clear input field
+            return false;
+        }
+
+        // Check if the value is not negative
+        if (parseInt(discountValue) < 1) {
+            discountError.textContent = "Discount value cannot be negative.";
+            discountInput.value = ""; // Clear input field
+            return false;
+        }
+
+        discountError.textContent = ""; // Clear error message if validation passes
+        return true; // Input is valid
+    }
+
+    // Add event listener for input validation
+    document.getElementById("discountInput").addEventListener("input", function() {
+        validateDiscountInput();
+    });
+</script>
+
+<script>
+        function setupInputValidation(inputId, errorId, regex, lengthLimit, errorMessageDelay) {
+            var input = document.getElementById(inputId);
+            var error = document.getElementById(errorId);
+            var timeoutId;
+
+            input.addEventListener('input', function () {
+                clearTimeout(timeoutId);
+
+                var value = input.value;
+
+                // Replace characters based on the specified regex
+                var sanitizedValue = value.replace(regex, '').slice(0, lengthLimit);
+
+                input.value = sanitizedValue;
+
+                if (sanitizedValue !== value) {
+                    error.style.display = 'block';
+                } else {
+                    error.style.display = 'none';
+                }
+
+                // Hide the error message after a delay
+                timeoutId = setTimeout(function () {
+                    error.style.display = 'none';
+                }, errorMessageDelay);
+            });
+        }
+
+        // Usage for GST Number with a 2-second delay
+        {% comment %} setupInputValidation('gstNumberInput', 'gstNumberError',  /.*/g, 30, 2000); {% endcomment %}
+        {% comment %} setupInputValidation('storeNameInput', 'storeNameError', /[^a-zA-Z\s]/g, 40, 2000); {% endcomment %}
+
+        // Usage for Drug License with a 2-second delay
+        {% comment %} setupInputValidation('drugLicenseInput', 'drugLicenseError', /.*/g, 30, 2000); {% endcomment %}
+
+        // Usage for Threshold Value with a 2-second delay, disallowing decimal values
+        
+        setupInputValidation('aadharInput', 'aadharError', /\D/g, 12, 2000);
+        setupInputValidation('panNumberInput', 'panNumberError', /[^a-zA-Z0-9]/g, 10, 2000);
+
+
+    
+        var fileInputGST = document.getElementById("id_gstcertificate");
+       
+        var fileInputLicence20 = document.getElementById("id_doc_licence20");
+        var fileInputLicence21 = document.getElementById("id_doc_licence21");
+        var fileInputLogo = document.getElementById("id_logo");
+
+        var errorMessageGST;
+        var errorMessageLicence20;
+        var errorMessageLicence21;
+        var errorMessageLogo;
+
+        fileInputGST.addEventListener("change", function() {
+            handleFileInputChange(fileInputGST, errorMessageGST);
+        });
+
+
+        fileInputLicence20.addEventListener("change", function() {
+            handleFileInputChange(fileInputLicence20, errorMessageLicence20);
+        });
+
+        fileInputLicence21.addEventListener("change", function() {
+            handleFileInputChange(fileInputLicence21, errorMessageLicence21);
+        });
+
+        fileInputLogo.addEventListener("change", function() {
+            handleFileInputlogo(fileInputLogo, errorMessageLogo);
+        });
+
+        function handleFileInputChange(fileInput, errorMessage) {
+            // Remove any existing error message
+            if (errorMessage && errorMessage.parentNode) {
+                errorMessage.parentNode.removeChild(errorMessage);
+            }
+
+            var file = fileInput.files[0];
+            var allowedExtensions = ['jpg','pdf', 'jpeg', 'png'];
+            var fileExtension = file ? file.name.split(".").pop().toLowerCase() : "";
+
+            if (file && !allowedExtensions.includes(fileExtension)) {
+                // Invalid file type, display the error message
+                fileInput.value = ""; // Clear the selected file
+                errorMessage = document.createElement("span");
+                errorMessage.className = "error-message";
+                errorMessage.textContent = "Only JPG,PDF,JPEG, and PNG files are allowed.";
+                fileInput.parentNode.appendChild(errorMessage);
+
+                // Set a timeout to hide the error message after 2 seconds
+                setTimeout(function() {
+                    if (errorMessage && errorMessage.parentNode) {
+                        errorMessage.parentNode.removeChild(errorMessage);
+                    }
+                }, 2000); // 2000 milliseconds = 2 seconds
+            }
+        }
+        function validateInput(input) {
+            // Remove spaces, dots, and special characters using regular expressions
+            input.value = input.value.replace(/[\s.~`!@#$%^&*()_=+[\]{}|\\;:'",<>/?]+/g, '');
+            
+            // Check if the value is empty or non-numeric
+            if (input.value === '' || isNaN(input.value)) {
+                document.getElementById('thresholdValueError').style.display = 'block';
+            } else {
+                document.getElementById('thresholdValueError').style.display = 'none';
+            }
+        }
+        function handleFileInputlogo(fileInput, errorMessage) {
+            // Remove any existing error message
+            if (errorMessage && errorMessage.parentNode) {
+                errorMessage.parentNode.removeChild(errorMessage);
+            }
+
+            var file = fileInput.files[0];
+            var allowedExtensions = ['jpg', 'jpeg', 'png'];
+            var fileExtension = file ? file.name.split(".").pop().toLowerCase() : "";
+
+            if (file && !allowedExtensions.includes(fileExtension)) {
+                // Invalid file type, display the error message
+                fileInput.value = ""; // Clear the selected file
+                errorMessage = document.createElement("span");
+                errorMessage.className = "error-message";
+                errorMessage.textContent = "Only JPG,JPEG, and PNG files are allowed.";
+                fileInput.parentNode.appendChild(errorMessage);
+
+                // Set a timeout to hide the error message after 2 seconds
+                setTimeout(function() {
+                    if (errorMessage && errorMessage.parentNode) {
+                        errorMessage.parentNode.removeChild(errorMessage);
+                    }
+                }, 2000); // 2000 milliseconds = 2 seconds
+            }
+        }
+       
+</script>         
+       {% endblock %}
+

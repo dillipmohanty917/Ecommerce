@@ -1,0 +1,104 @@
+{% comment %} {% extends "base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+{% trans "Customers" context "Dashboard customers list" %} - {{ block.super }}
+{% endblock %}
+
+{% block body_class %}body-customers{% endblock %}
+
+{% block menu_customers_class %}active{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumbs">
+  <li class="visible-s">
+    {% trans "Distributors" context "Dashboard customers list" %}
+  </li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<style type="text/css">
+  .data-table th,td {
+    padding: 0px 10px !important;
+  }
+  .filt_btn{
+    margin-top: 20px !important;
+  }
+  .right-aligned {
+    
+    margin-left: 258px;
+
+  }
+  .data-table-container table tr {
+    border-bottom: 1px solid #ddd; 
+  }
+  .data-table-container table tr:nth-child(even) {
+    background: #ccc;
+  }
+  .filt_btn{
+    margin-top: 20px !important;
+  }
+  
+</style>
+
+
+{# You can also use the filter in the template #}
+
+<div class="">
+  <div class="card-content text-center">
+    <form action="{% url 'customer_list' %}" method="GET" novalidate>
+    </form>
+    <form method="GET">
+    
+    </form>
+  </div>  
+  <div class="data-table-header-action right-aligned">
+    <a href="{% url 'add_partner' %}" class="bordered highlight responsive data-table"  title="{% trans "Add Distributor Helper" context "Sale (discount) list add button text" %}">
+      {% trans "Add Distributor" context "Dashboard add action" %}
+    </a>
+  </div>
+</div>
+
+{% if customers %}
+<div class="">
+  <div class="">
+    <div class="data-table-container right-aligned">
+      <table class="bordered highlight responsive data-table">
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>{% trans "Store Name" context "Customers table header" %}</th>
+            <th>{% trans "Phone" context "Customers table header" %}</th>
+            <th>{% trans "Email" context "Customers table header" %}</th>
+            <th>{% trans "Address" context "Customers table header" %}</th>
+            <th>{% trans "Active Status" context "Customers table header" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for customer in customers %}
+          <tr onclick="window.location='{% url 'customer-details' pk=customer.user.pk %}';" style="cursor:pointer;">
+            <td>{{ forloop.counter0|add:customers.start_index }}</td>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.user.phone_number}}</td>
+            <td>{{ customer.user.email }}</td>
+            <td>{{ customer.address }}</td>
+            <td>{{ customer.user.is_active }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+</div>
+{% else %}
+<div class="card-content card-content--no-data not-found">
+  <p class="grey-text">
+    {% trans "No distributors found." context "Empty customers table message" %}
+  </p>
+</div>
+{% endif %}
+
+{% endblock %} {% endcomment %}

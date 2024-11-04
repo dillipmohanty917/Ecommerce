@@ -1,0 +1,432 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Chatbot</title>
+  <link href="{% static 'assets/css/custom-style.css' %}" rel="stylesheet" type="text/css" id="app-style" />
+  <link rel="icon" href="{% static 'assets/images/bot-mini.svg' %}">
+  <!-- <link href='https://b2b2qa.medleymed.com/static/assets/css/custom-style.css' rel="stylesheet" type="text/css" id="app-style" /> -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <div id="template"></div>
+</body>
+<script>
+  const csrfToken = "{{ csrf_token }}";
+  const botAvatar = "{% static 'assets/images/bot-mini.svg' %}";
+  const prompts = [["hi", "hey", "hello", "good morning", "good afternoon"], ["how are you", "how is life", "how are things"],], replies = [["Hello!", "Hi!", "Hey!", "Hi there!", "Howdy"], ["Fine... how are you?", "Pretty well, how are you?", "Fantastic, how are you?"],], alternative = ["Please choose from menu options"], coronavirus = ["Please choose from menu options"]; 
+  function output_voice(e) {
+    let t, n = e.toLowerCase();
+    t = compare(prompts, replies, n = n.replace(/ a /g, " ").replace(/i feel /g, "").replace(/whats/g, "what is").replace(/please /g, "").replace(/ please/g, "").replace(/r u/g, "are you")) ? compare(prompts, replies, n) : n.match(/thank/gi) ? "You're welcome!" : n.match(/(corona|covid|virus)/gi) ? coronavirus[Math.floor(Math.random() * coronavirus.length)] : alternative[Math.floor(Math.random() * alternative.length)];
+    let a = n.includes("cat"),
+        i = n.includes("product"),
+        s = n.includes("alternative"),
+        o = n.includes("complaints"),
+        l = n.includes("order status"),
+        m = n.includes("advisor"),
+        v = n.includes("contact"),
+        b = localStorage.getItem("orderId");
+    d = localStorage.getItem("alternativedata"), r = localStorage.getItem("selectedDoctorId"), c = localStorage.getItem("selectedSlotTime"), localStorage.getItem("complaint");
+    let p = !1,
+        h = !1,
+        f = 0;
+    
+    if (o===true) {localStorage.removeItem("alternativedata");localStorage.removeItem("orderId");localStorage.removeItem("medicinename")}
+    
+    if (null != d && (u = d), null != r && (p = !0), null != c && (h = !0), null != b && (f = !0), !0 === a) fetch("https://catfact.ninja/fact").then(e => e.json()).then(n => {
+        addChat(e, t = n.fact)
+    });
+    else if (!0 === o) {
+        t = I = `<div class="sub-menu-items">
+  <div class="sub-menu-heading">Complaints</div>
+  <div class="sub-menu-item"  onclick="itemsClicked('contact')">Contact US</div>
+  <div class="sub-menu-item"  onclick="itemsClicked('advisor')">Talk to your advisor</div>
+  </div>`,localStorage.removeItem("questions");
+var g = "select below frequently asked questions";
+addChat(e, t, "", g, "menu")
+}
+else if (!0 === i) !0 === n.includes("product details") ? addChat(e, t = "Please give  me the product id") : fetch("https://dummyjson.com/products/" + n.split(" ").data[4]).then(e => e.json()).then(n => {
+    addChat(e, t = n.title + "\n " + n.description + " price " + n.price + " discount percentage " + n.discountPercentage + " stock " + n.stock)
+});
+else if (!0 === l) localStorage.removeItem("alternativedata"), SpeechText = "Please enter Order Id", t = I = '<div class="menu-heading">Please enter Order Id </div>', localStorage.setItem("orderId", !0), addChat(e, t, "", SpeechText, "");
+else if (!0 === s) localStorage.removeItem("orderId"), SpeechText = "Please enter Medicine name or Composition", t = I = '<div class="menu-heading">Please enter Medicine name or Composition </div>', localStorage.setItem("alternativedata", !0), addChat(e, t, "", SpeechText, "");
+else if (!0 === f) {
+    const csrfToken = getCSRFToken('csrftoken');
+    var k = localStorage.getItem("token"),
+        I = "";
+    let y;
+    fetch("https://b2b2qa.medleymed.com/api/order_status/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                //'X-CSRFToken': csrfToken,
+                //AccessToken: `${k}`
+            },
+            body: JSON.stringify({
+                order_id: n
+            }),
+           // mode: 'no-cors'
+        
+        }).then(e => e.json()).then(t => {
+            console.log(t)
+                t.status ? (SpeechText = "Please find the Order details", addChat(e, I = `<div class="sub-sub-menu-heading">Please find the Order details</div>
+      <dl class="patient-info">
+      <dt>Order Id:</dt><dd>${n}</dd>
+      <dt>Order Status:</dt><dd>${t.status}</dd>
+      </dl>  <div class = "menu-section-confirmation" > Would you like to continue with Main Menu <div class = "sub-menu-item-btn-sec"> <button class = "sub-menu-item-btn"
+ onclick = "loadMainMenu()" > YES </button> <button class="sub-menu-item-btn" onclick="thanks()">NO</button > </div></div> `,"",SpeechText,"")):(SpeechText=` Order details not found for Order Id: ${n}`
+ ,addChat(e,I=`Order details not found  for Order Id: ${n} < div class = "menu-section-confirmation" > Would you like to
+ continue with Main Menu <div class = "sub-menu-item-btn-sec" > <button class = "sub-menu-item-btn" onclick = "loadMainMenu()" > YES </button> <button class="sub-menu-item-btn" onclick="thanks()">NO</button> </div></div> `,"",SpeechText,""))}).catch(e=>console.log("error",e))}
+    else if("true"==d){var $=n,M=1;M=M||localStorage.setItem("page",1),localStorage.setItem("medicinename",`${$}`),localStorage.setItem("form",""),localStorage.setItem("page",`${M}`);
+ const csrftoken = getCSRFToken('csrftoken');
+ let P={method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({searchname:$,form:"",page:M})};analyze(),fetch("https://b2b2qa.medleymed.com/api/product-search-bot/",P).then(e=>e.json()).then(a=>{let i="alternative medicine fetched Sucessfully";if(document.getElementById("bot1")&&document.getElementById("bot1").remove(),a.data.length>0){var s=[];for(let o in a.data)s.push(` <div class = "summary-accordion" >
+          <details>
+            <summary>${a.data[o].name} ${a.data[o].Strength?a.data[o].Strength:""}  MRP:${a.data[o].max_retail_price}</summary>
+            <article>
+              <dl class="profile-info">
+                <dt>Manufacturer:</dt><dd>${a.data[o].manufacturer}</dd>
+                <dt>Packing:</dt><dd> ${a.data[o].packing}</dd>
+                <dt>MPR:</dt><dd>${a.data[o].max_retail_price}</dd>
+                <dt>Composition:</dt><dd>${a.data[o].composition}</dd>                                    
+              </dl>
+              <div class="profile-info-btn-sec"><button class="profile-info-btn" onclick="showAlternatives('${a.data[o].name}',' ${a.data[o].form}','1','1')">Get Alternative</button></div>
+ 
+            </article>
+          </details>
+        </div>`);i=`<div class="menu-heading">${n=`Please find the results for ${$}`}</div> <strong>${s.join("")}</strong>`;var l=`${n} `}else i=`No Alternative / Substitute Medicines for ${$} <div class="menu-section-confirmation"> Would you like to continue with Main Menu <div class="sub-menu-item-btn-sec"><button class="sub-menu-item-btn" onclick="loadMainMenu()">YES</button> <button class="sub-menu-item-btn" onclick="thanks()">NO</button></div></div>`,l=`No Alternative / Substitute Medicines for ${$}`,localStorage.removeItem("medicinename"),localStorage.removeItem("form"),localStorage.removeItem("page");addChat(e,t=i,"",l,"");var m=document.getElementById("messages");m.scrollTop=m.scrollHeight,m.animate({scrollTop:m.scrollHeight})})}else if(!0===o){t=I=`<div class="sub-menu-items">
+  <div class="sub-menu-heading">Complaint</div>
+  
+  <div class="sub-menu-item"  onclick="itemsClicked('contact')">Contact US</div>
+  <div class="sub-menu-item"  onclick="itemsClicked('advisor')">Talk to your advisor</div>
+  </div>`,localStorage.removeItem("questions");var g="select below frequently asked questions";addChat(e,t,"",g,"menu")}
+  
+  else if(m==true){localStorage.removeItem("alternativedata"),localStorage.removeItem("orderId"),t=I='<div class="menu-heading">Please contact Advisor <a href="mailto:support@medleymednetwork.com">support@medleymednetwork.com </a></div>',localStorage.setItem("checkadvisor",!0),localStorage.removeItem("checkadvisor");var w="Please contact Advisor support@medleymednetwork.com";addChat(e,t,"",w,"")}
+  else if(v==true){localStorage.removeItem("alternativedata"),localStorage.removeItem("orderId"),t=I=`<div class="sub-sub-menu-heading">Contact us</div>
+  <dl class="patient-info">
+  <dt>Address :</dt><dd>3rd Floor NCC House,Madhapur, Hyderabad, Telangana 500081</dd>
+  <dt>Phone:</dt><dd><a href="tel:(+91) 950-295-2277">(+91) 950-295-2277</a></dd>
+  <dt>Email Id:</dt><dd><a href="mailto:support@medleymednetwork.com">support@medleymednetwork.com </a></dd>
+  </dl>  <div class="menu-section-confirmation">Would you like to continue with Main Menu <div class="sub-menu-item-btn-sec"><button class="sub-menu-item-btn" onclick="loadMainMenu()">YES</button> <button class="sub-menu-item-btn" onclick="thanks()">NO</button></div></div>`,localStorage.removeItem("checkadvisor");var w="Please contact Advisor support@medleymednetwork.com";addChat(e,t,"",w,"")}else console.log("---main else contion----"),addChat(e,t)} function compare(e, t, a) { let n, o = !1; for (let s = 0; s < e.length; s++) { for (let i = 0; i < e[s].length; i++)if (e[s][i] === a) { let l = t[s]; n = l[Math.floor(Math.random() * l.length)], o = !0; break } if (o) break } return n } function addChat(e, t, a = "", n = "", o = "") { let s = document.getElementById("messages"), i = document.createElement("div"); i.id = "user", i.className = "user response", "" != e && ("" != a ? i.innerHTML = `<div class="no-border">${e}</div><img src="{% static 'assets/images/user.png' %}" class="avatar">` : i.innerHTML = `<div class="border">${e}</div><img src="{% static 'assets/images/user.png' %}" class="avatar">`, s.appendChild(i)); let l = document.createElement("span"), d = document.createElement("img"), r = document.createElement("div"); l.id = "bot", d.src = botAvatar, d.className = "avatar", l.className = "bot response", "" == o && (r.className = "bot-chat-txt"), r.innerHTML = "Typing...", l.appendChild(d), l.appendChild(r), s.appendChild(l), s.scrollTop = s.scrollHeight - s.clientHeight, textToSpeechs("" != n ? n : t), r.innerHTML = `${t}`; var c = document.getElementById("messages"); c.scrollTop = c.scrollHeight, c.animate({ scrollTop: c.scrollHeight }) } function convertTo24HourFormat(e) { let t = new Date("2000-01-01 " + e), a = t.getHours(), n = t.getMinutes(), o = a % 12 + (e.toLowerCase().includes("pm") ? 12 : 0), s = o.toString().padStart(2, "0"), i = n.toString().padStart(2, "0"); return `${s}:${i}` } function getLocalStream() { navigator.mediaDevices.getUserMedia({ video: !1, audio: !0 }).then(e => { window.localStream = e, window.localAudio.srcObject = e, window.localAudio.autoplay = !0 }).catch(e => { console.error(`you got an error: ${e}`) }) } function refresh() {
+    let e = `
+<div class="notification-alert alert-warning" role="alert">
+  <div>
+    <span class="notification-txt">Are you sure, you want clear the chat history</span>
+    <button type="button" class="notification-close" data-dismiss="alert" aria-label="Close" onclick="hideNotification()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="notification-btn-sec">
+    <button type="button" class="notification-btn">
+      <span aria-hidden="true" onclick="clearChat();">Yes</span>
+    </button>
+    <button type="button" class="notification-btn">
+      <span aria-hidden="true" onclick="hideNotification();">No</span>
+    </button>
+  </div>
+</div>`; document.getElementById("notification").innerHTML = e
+}
+
+function clearChat() {
+    document.getElementById("messages").innerHTML = "", document.getElementById("notification").innerHTML = "", localStorage.clear(), loadMainMenu()
+}
+
+function hideNotification() {
+    document.getElementById("notification").innerHTML = ""
+}
+
+function loadScript(e) {
+    return new Promise(function(t, a) {
+        let n = document.createElement("script");
+        n.src = e, n.async = !1, n.onload = function() {
+            t(e)
+        }, n.onerror = function() {
+            a(e)
+        }, document.body.appendChild(n)
+    })
+}
+document.addEventListener("DOMContentLoaded", () => {
+        window.localStorage.clear() 
+        chatbotTemplate("template");
+        let e = document.getElementById("btn_text"),
+            t = document.getElementById("send-btn");
+        document.getElementById("theme-selector"), changeTheme("yellow"), e.addEventListener("keydown", t => {
+            if ("Enter" === t.code || "NumpadEnter" === t.code) {
+                let a = e.value;
+                e.value = "", output_voice(a)
+            }
+        }), t.addEventListener("click", function() {
+            let t = e.value;
+            e.value = "", output_voice(t)
+        }), loadToken()
+    }), itemsClicked = e => {
+        output_voice(e)
+    }, toggleChat = () => {
+        var e = document.getElementById("bots");
+        e.style.display = "none" == e.style.display ? "flex" : "none"
+    }, toggle = () => {
+        var e = document.getElementById("bots");
+        e.classList.toggle("maximize"), e.classList.toggle("minimize")
+    }, runSpeechRecog = () => {
+        document.getElementById("speak-btn-txt").innerHTML = "Speak now....";
+        var e = document.getElementById("output"),
+            t = document.getElementById("btn_text");
+        let a = new webkitSpeechRecognition;
+        a.onresult = t => {
+            var a;
+            output_voice(t.results[0][0].transcript), e.classList.remove("hide"), document.getElementById("speak-btn-txt").innerHTML = ""
+        }, a.continuous = !0, a.start()
+    }, chatbotTemplate = e => {
+        let t = [];
+        ["https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css", "{% static 'assets/css/custom-style.css' %}", "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0", "https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0", ].forEach(function(e) {
+            t.push(fetchStyle(e))
+        }), Promise.all(t).then(function() {
+            console.log("all scripts loaded"), setTimeout(() => {
+                loadMainMenu()
+            }, 2e3)
+        }).catch(function(e) {
+            console.log(e + "css failed to load")
+        });
+        let a = `<div class="chatbot-container">
+
+<div class="chat-bot-main minimize" id="bots">
+  <div id="AIPlayerWrapper" class="avatar-content-sec">
+  </div>
+
+  <div id="chat" class="chat chat-content-sec">
+    <div class="messages-header">
+    
+      <div class="messages-header-actions">
+      <i class="messages-header-title-ico " onclick="toggleSound('disableSound')"  id="disableSound">
+      <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="1.1em" height="1.1em" viewBox="0 0 75 75"
+stroke="white" stroke-width="5">
+<path d="m39,14-17,15H6V48H22l17,15z" fill="white" stroke-linejoin="round"/>
+<path d="m49,26 20,24m0-24-20,24" fill="none" stroke-linecap="round"/>
+</svg>
+</i>
+<i class="messages-header-title-ico hide-avatar" onclick="toggleSound('enableSound')"  id="enableSound">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="1.1em" height="1.1em" viewBox="0 0 75 75">
+<path d="M39.389,13.769 L22.235,28.606 L6,28.606 L6,47.699 L21.989,47.699 L39.389,62.75 L39.389,13.769z" style="stroke:white;stroke-width:5;stroke-linejoin:round;fill:white;"/>
+<path d="M48,27.6a19.5,19.5 0 0 1 0,21.4M55.1,20.5a30,30 0 0 1 0,35.6M61.6,14a38.8,38.8 0 0 1 0,48.6" style="fill:none;stroke:white;stroke-width:5;stroke-linecap:round"/>
+</svg>
+        </i>
+        <i class="messages-header-title-ico"   alt="avatar" onclick="refresh()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 1536 1536"><path fill="white" d="M1511 928q0 5-1 7q-64 268-268 434.5T764 1536q-146 0-282.5-55T238 1324l-129 129q-19 19-45 19t-45-19t-19-45V960q0-26 19-45t45-19h448q26 0 45 19t19 45t-19 45l-137 137q71 66 161 102t187 36q134 0 250-65t186-179q11-17 53-117q8-23 30-23h192q13 0 22.5 9.5t9.5 22.5m25-800v448q0 26-19 45t-45 19h-448q-26 0-45-19t-19-45t19-45l138-138Q969 256 768 256q-134 0-250 65T332 500q-11 17-53 117q-8 23-30 23H50q-13 0-22.5-9.5T18 608v-7q65-268 270-434.5T768 0q146 0 284 55.5T1297 212l130-129q19-19 45-19t45 19t19 45"/></svg>
+        </i>
+
+      </div>         
+    </div>
+    <div class="notification-sec">
+    <div id="notification"></div>
+
+     
+    </div>      
+    <div id="messages" class="messages"></div>
+    <div id="soundStatus" value="0"></div>
+    <div class="chatbot-footer">
+    <input class="" id="btn_text" type="text" spellcheck="true"
+    placeholder="Type your message here" autocomplete="off" autofocus="true" x-webkit-speech /><button id="send-btn" class="send-btn">
+    <svg id="Layer_1" data-name="Layer 1" xmlns="
+    http://www.w3.org/2000/svg"
+    version="1.1" viewBox="0 0 256 256" width="40px" height="40px">			  
+    <path class="cls-1" d="M35.5,32.4s4.2,19.7,9.3,43.4c8.8,41.6,9.3,43,11,43.5,1,.3,27.2,2.2,58.4,4.3,31,2.1,56.6,4,56.8,4.2s.2.5,0,.6-25.8,2.1-56.8,4.2c-31,2.2-57.3,4.2-58.4,4.5-1.8.5-2.2,2.1-11,43.5-5,23.7-9.1,43.2-9,43.2.3.3,193.6-95.2,193.6-95.7S38.7,33.4,36.2,32.4c-.3-.2-.6-.2-.6,0Z"/>
+    </svg>
+    </button>
+      <div class="speak-btn-sec">
+      <span class="speak-btn">
+        <i class="" id="output" onclick="runSpeechRecog()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 384 512"><path d="M192 0C139 0 96 43 96 96V256c0 53 43 96 96 96s96-43 96-96V96c0-53-43-96-96-96zM64 216c0-13.3-10.7-24-24-24s-24 10.7-24 24v40c0 89.1 66.2 162.7 152 174.4V464H120c-13.3 0-24 10.7-24 24s10.7 24 24 24h72 72c13.3 0 24-10.7 24-24s-10.7-24-24-24H216V430.4c85.8-11.7 152-85.3 152-174.4V216c0-13.3-10.7-24-24-24s-24 10.7-24 24v40c0 70.7-57.3 128-128 128s-128-57.3-128-128V216z"/></svg>
+        </i>
+      </span>
+      <span id="speak-btn-txt" class="speak-btn-txt"></span>
+      </div>
+    </div>
+  </div>
+</div>
+<button class="chatbot-toggler" id="chatbot-toggler" onclick="toggleChat();">
+  <span class="material-symbols-rounded">mode_comment</span>
+  <span class="material-symbols-outlined">close</span>
+</button>
+
+</div>`;
+document.getElementById(e).innerHTML = a
+};
+let fetchStyle = function(e) {
+    return new Promise((t, a) => {
+        let n = document.createElement("link");
+        n.type = "text/css", n.rel = "stylesheet", n.onload = () => t(), n.onerror = () => a(), n.href = e;
+        let o = document.querySelector("script");
+        o.parentNode.insertBefore(n, o)
+    })
+};
+redirect = e => {
+    window.open(e)
+}, loadMainMenu = () => {
+    localStorage.removeItem("alternativedata"), localStorage.removeItem("orderId"), input = "", window.localStorage.clear(), loadToken();
+    var e = "Hey Welcome to MedleyMed ,I would like to help you on the below items";
+    addChat(input, product = message = `<div class="menu-items">
+<div class="menu-heading">Hey, Welcome to MedleyMed ,I would like to help you on the below items</div>
+<div class="menu-item" id="Health" value='apply loan' onclick="itemsClicked('Alternative')">Alternative Medicine</div>
+<div class="menu-item" id="Wealth" onclick="itemsClicked('order status');">Order Status </div>
+<div class="menu-item" id="Wealth" onclick="itemsClicked('Complaints');">Complaints </div>
+</div>`, "menu", e, "menu")
+};
+const synth = window.speechSynthesis;
+
+function calculateReadingTime(e) {
+    let t = e.trim().split(/\s+/).length;
+    return 6e4 * Math.ceil(t / 200)
+}
+const textToSpeech = e => {
+        let t = new SpeechSynthesisUtterance(e);
+        [t.voice] = speechSynthesis.getVoices(), speechSynthesis.speak(t)
+    },
+    textToSpeechs = e => {
+        let t = new SpeechSynthesisUtterance(e);
+        window.speechSynthesis && speechSynthesis.cancel();
+        var a = window.speechSynthesis.getVoices();
+        if (console.log(a), t.pitch = 1, t.lang = "en-US", t.voice = a[7], document.getElementById("soundStatus")) {
+            var n = document.getElementById("soundStatus").value;
+            if ("0" == n || "undefined" == document.getElementById("soundStatus")) window.speechSynthesis && speechSynthesis.speak(t);
+            else if ("0" == n) window.speechSynthesis && speechSynthesis.speak(t);
+            else var o = "not sound"
+        }
+    };
+
+function changeTheme(e) {
+    "orange" === e ? (document.documentElement.style.setProperty("--background-color-default", "linear-gradient(62deg, #FBAB7E 0%, #F7CE68 100%)"), document.documentElement.style.setProperty("--background-color-default-2", "#f9e4b2"), document.documentElement.style.setProperty("--background-color-default-3", "#FBAB7E"), document.documentElement.style.setProperty("--avatar-background-color", "#f9e4b2")) : "green" === e ? (document.documentElement.style.setProperty("--background-color-default", "linear-gradient(to right, #43e97b 0%, #38f9d7 100%)"), document.documentElement.style.setProperty("--background-color-default-2", "#bdf5d5"), document.documentElement.style.setProperty("--background-color-default-3", "#43ea7c"), document.documentElement.style.setProperty("--avatar-background-color", "#bdf5d5")) : "pink" === e ? (document.documentElement.style.setProperty("--background-color-default", "linear-gradient(120deg, #f093fb 0%, #f5576c 100%)"), document.documentElement.style.setProperty("--background-color-default-2", "#f093fb"), document.documentElement.style.setProperty("--background-color-default-3", "#f5576c"), document.documentElement.style.setProperty("--avatar-background-color", "#f093fb")) : "yellow" === e ? (document.documentElement.style.setProperty("--background-color-default", "linear-gradient(120deg, #efd307 0%, #efd307 100%)"), document.documentElement.style.setProperty("--background-color-default-2", "#f2e379"), document.documentElement.style.setProperty("--background-color-default-3", "#efd307"), document.documentElement.style.setProperty("--avatar-background-color", "#f2e379")) : (document.documentElement.style.setProperty("--background-color-default", "linear-gradient(90deg, rgba(39,46,220,1) 0%, rgba(28,92,229,1) 35%, rgba(2,197,254,1) 100%)"), document.documentElement.style.setProperty("--background-color-default-2", "#7ec9e1"), document.documentElement.style.setProperty("--background-color-default-3", "#272edc"), document.documentElement.style.setProperty("--avatar-background-color", "#7ec9e17a"))
+}
+
+function saveThemePreference(e) {
+    localStorage.setItem("theme", e)
+}
+function getCSRFToken(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+showAlternatives = (e, t = "", a = "", n = "") => {
+    var o = [];
+    a = a || localStorage.setItem("page", 1), localStorage.setItem("medicinename", `${e}`), localStorage.setItem("form", `${t}`), localStorage.setItem("page", `${a}`);
+    var s = "";
+    const csrftoken = getCSRFToken('csrftoken');
+    analyze();
+    let i = {
+            searchname: e,
+            form: t.trim(),
+            page: a
+        },
+        l = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                //'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify(i),
+            //mode: 'no-cors'  // Add 
+        };
+    
+     fetch("https://b2b2qa.medleymed.com/api/product-search-bot/", l).then(e => e.json()).then(a => {let o = "alternative medicine fetched Sucessfully";
+        if (document.getElementById("bot1")) {
+            let i = document.getElementById("bot1");
+            i.remove()
+        }
+        if (a.data.length > 0) {
+            var l = [];
+            for (let d in a.data) l.push(` <div class="summary-accordion"><details>
+            <summary>${a.data[d].name} ${a.data[d].Strength ? a.data[d].Strength : ""}  MRP:${a.data[d].max_retail_price}</summary>
+            <article >
+              <dl class="profile-info">
+                <dt>Manufacturer:</dt><dd>${a.data[d].manufacturer}</dd>
+                <dt>Packing:</dt><dd> ${a.data[d].packing}</dd>
+                <dt>MPR:</dt><dd>${a.data[d].max_retail_price}</dd>
+                <dt>Composition:</dt><dd>${a.data[d].composition}</dd>
+               </dl>
+              <div class="profile-info-btn-sec"><button class="profile-info-btn" onclick="showAlternatives('${a.data[d].name}',' ${a.data[d].form}','1','1')">Get Alternative</button></div>
+            </article>
+          </details>
+        </div>`);
+            var r = l.join("");
+            o = `<div class="menu-heading">${s = "" != t ? `Please find the Alternative / Substitute Medicines for ${e}` : `Please find the results for ${e}`}</div> <strong>${r}</strong> <div class="menu-section-confirmation"> Would you like to continue with Main Menu <div class="sub-menu-item-btn-sec"><button class="sub-menu-item-btn" onclick="loadMainMenu()">YES</button> <button class="sub-menu-item-btn" onclick="thanks()">NO</button></div></div>`;
+            var c = `${s} `
+        } else o = `No Alternative / Substitute Medicines for ${e}`, c = `No Alternative / Substitute Medicines for ${e}`;
+        if ("" == n) {
+            var u = document.getElementsByClassName("bot-chat-txt"),
+                m = u[u.length - 1];
+            m.innerHTML += r
+        } else addChat(e, o, "", c, "")
+    }).catch(e => console.log("error", e));
+    var d = document.getElementById("messages");
+    d.scrollTop = d.scrollHeight, d.animate({
+        scrollTop: d.scrollHeight
+    })
+}, analyze = () => {
+    let e = document.getElementById("messages"),
+        t = document.createElement("span"),
+        a = document.createElement("img"),
+        n = document.createElement("div");
+    t.id = "bot1", a.src = botAvatar, a.className = "avatar", t.className = "bot response", n.innerHTML = `<div class="bot-chat-txt loader">Loading please wait<svg version="1.1" id="L5" xmlns="
+http://www.w3.org/2000/svg"
+xmlns:xlink="
+http://www.w3.org/1999/xlink"
+x="0px" y="0px" width="50" height="50"
+  viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+<circle fill="#f00" stroke="none" cx="6" cy="50" r="6">
+<animateTransform 
+       attributeName="transform" 
+       dur="1s" 
+       type="translate" 
+       values="0 15 ; 0 -15; 0 15" 
+       repeatCount="indefinite" 
+       begin="0.1"/>
+</circle>
+<circle fill="#f00" stroke="none" cx="30" cy="50" r="6">
+<animateTransform 
+       attributeName="transform" 
+       dur="1s" 
+       type="translate" 
+       values="0 10 ; 0 -10; 0 10" 
+       repeatCount="indefinite" 
+       begin="0.2"/>
+</circle>
+<circle fill="#f00" stroke="none" cx="54" cy="50" r="6">
+<animateTransform 
+       attributeName="transform" 
+       dur="1s" 
+       type="translate" 
+       values="0 5 ; 0 -5; 0 5" 
+       repeatCount="indefinite" 
+       begin="0.3"/>
+</circle>
+</svg></div>`, t.appendChild(a), t.appendChild(n), e.appendChild(t);
+    var o = document.getElementById("messages");
+    o.scrollTop = o.scrollHeight, o.animate({
+        scrollTop: o.scrollHeight
+    })
+};
+const savedTheme = localStorage.getItem("theme");
+savedTheme && (changeTheme(savedTheme), themeSelector.value = savedTheme), toggleSound = e => {
+    var t = document.getElementById(e);
+    "enableSound" == e ? (document.getElementById("disableSound").className = "show-avatar", document.getElementById("enableSound").className = "hide-avatar", document.getElementById("soundStatus").value = "1") : (document.getElementById("enableSound").className = "show-avatar", document.getElementById("disableSound").className = "hide-avatar", document.getElementById("soundStatus").value = "0")
+}, thanks = () => {
+    localStorage.removeItem("alternativedata"), localStorage.removeItem("orderId"), SpeechText = "Thanks for using MedleyMed Network ", product = message = '<div class="menu-heading">Thanks for using MedleyMed Network </div>', localStorage.setItem("alternativedata", !0), addChat(input, product, "", SpeechText, "")
+}, loadToken = () => {
+    localStorage.removeItem("token");
+    var e = "";
+    let t = new URLSearchParams(window.location.search);
+    e = t.has("token") ? t.get("token") : "", localStorage.setItem("token", e)
+};</script>
+
+</html>

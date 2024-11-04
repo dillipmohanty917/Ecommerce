@@ -1,0 +1,103 @@
+{% extends "dashboard.html" %}
+{% load i18n %}
+
+{% block title %}
+  {% trans "Feedback" context "Feedback-List" %} - {{ block.super }}
+{% endblock %}
+
+{% block body_class %}
+  body-customers
+{% endblock %}
+
+{% block menu_customers_class %}
+  active
+{% endblock %}
+
+{% block breadcrumbs %}
+  <ul class="breadcrumbs">
+    <li class="visible-s">
+      {% trans "Feedback" context "Feedback List" %}
+    </li>
+  </ul>
+{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 30px;
+    }
+    
+    th, td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+    
+    th {
+        background-color: #f2f2f2;
+    }
+    
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    
+    tr:hover {
+        background-color: #e6f7ff;
+    } 
+</style>
+
+<h4>Feedback</h4>
+<br>
+<div class="card-header">
+  <div class="row mb-2">
+      <div class="col-xl-12">
+          <form action="" method="get" class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
+              <div class="col-sm-12 col-md-6 col-lg-2">
+                  <form method="GET" action="{% url 'feedbacks-list' %}">
+                      {% csrf_token %}
+                      <label for="searchInput" class="visually-hidden">Search</label>
+                      <input type="search" class="form-control" id="searchInput" name="search_feedback" placeholder="Search..." value="{{ request.GET.search_feedback }}">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4">
+                  <div class="d-flex gap-2">
+                      <button type="submit" class="btn bg-success text-white">Apply</button>
+                      <a href="{% url 'feedbacks-list' %}" class="btn btn-primary text-white">Reset</a>
+                  </div>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+
+
+<table>
+    <thead>
+        <tr>
+            <th>SI No</th>
+            <th>Store Name</th>
+            <th>Phone Number</th>
+            <th>Created At</th>
+            <th>Feedback</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for feedback in feedbacks %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ feedback.retailer.store_name|title }}</td>
+                <td>{{ feedback.retailer.user.username }}</td>
+                <td>{{ feedback.created_at }}</td>
+                <td>{{ feedback.description|title }}</td>
+                
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% include 'pagination.html' with data=products %}
+
+{% endblock %}

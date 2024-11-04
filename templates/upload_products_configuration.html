@@ -1,0 +1,135 @@
+{% extends template_to_extend %}
+{% load static %}
+    <title>{% block title %}Add A New Product{% endblock %}</title>
+    {% block custom_css %}
+    {% endblock %}
+
+       {% block content %}
+       <style>
+       
+        .file-input {
+            position: absolute;
+            left: 14px;
+            top: 27px;
+            height: 57%;
+            width: 46%;
+            cursor: pointer;
+            opacity: 0;
+        }
+        .file-input {
+            overflow-x: auto;
+        }
+    </style>
+       <div class="content">
+        <div class="container-fluid">
+            <!--content main header-->
+            <div class="row ">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <h4 class="page-title">Downloads</h4>
+                    </div>
+                </div>
+            </div>
+
+           
+           
+            <div class="card">
+                <div class="row">
+
+                    <div class="col-sm-12 col-md-6 card-body">
+
+                        <!-- File Upload -->
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="hidden" name="form_type" value="products">
+                            <div class="dropzone">
+                            <div class="fallback file-drop-area">
+                                <input type="file" class="file-input" name="file" value="" accept="xsl,xslx,csv" required>
+                            </div>
+
+                            <div class="dz-message needsclick">
+                                <i class="h1 text-muted ri-upload-cloud-2-line"></i>
+                                <h3 class="js-set-number">click here to upload.</h3>
+                                <!-- <span class="text-muted font-13" >(This is just a demo dropzone. Selected files
+                                    are
+                                    <strong>not</strong> actually uploaded.)</span> -->
+                            </div>
+                        </div>
+
+                            <div class="row my-2">
+                                <h5>Header Row </h5>
+                                <div class="col-lg-6 mb-2">
+                                    <input type="text" class="form-control" data-provide="typeahead" id="prefetch" 
+                                    placeholder="Enter Row">
+                                </div>
+                                <div class="col-lg-6">
+                                    <input type="submit" class="form-control bg-primary text-white" data-provide="typeahead" 
+                                    id="prefetch" value="Submit">
+                                </div>
+                            </div>
+                            
+                        </form>
+
+                    
+
+                    </div><!-- end col -->
+
+                    <div class="col-sm-12 col-md-6 card-body relative">
+                        <div class="visibe">
+                            <button class="btn btn-secondary visibe" data-toggle="popover">See Demo</button>
+                        </div>
+                        <img class="w-100 mt-3 d-none"
+                            src="https://zennx.in/assets/img/zennx-upload-order-sample-header-row.png"
+                            alt="">
+                        
+                    </div>
+                    <div id="myDropzone"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+        {% endblock %}
+
+        {% block scripts %}
+        {{block.super}}
+         <script src="{% static 'assets/vendor/dropzone/min/dropzone.min.js' %}"></script>
+         <script src="{% static 'assets/js/ui/component.fileupload.js' %}"></script> 
+        {% endblock %}
+        {% block javascript %}
+        <script>
+          $(document).ready(function(){
+            $('[data-toggle="popover"]').popover({
+                trigger : 'hover',
+                      html : true,
+                      content : '<div class="media"><img src="https://zennx.in/assets/img/zennx-upload-order-sample-header-row.png"></a></div>'
+                  });
+            var $fileInput = $('.file-input');
+            var $droparea = $('.file-drop-area');
+          // highlight drag area
+          $fileInput.on('dragenter focus click', function() {
+            console.log('focus')
+            $droparea.addClass('is-active');
+          });
+          // back to normal state
+          $fileInput.on('dragleave blur drop', function() {
+            $droparea.removeClass('is-active');
+          });
+          // change inner text
+          $fileInput.on('change', function() {
+            console.log('something')
+            var filesCount = $(this)[0].files.length;
+            var $textContainer = $('.js-set-number');
+            if (filesCount === 1) {
+              // if single file then show file name
+              $textContainer.text($(this).val().split('\\').pop());
+            } else {
+              // otherwise show number of files
+              $textContainer.text(filesCount + ' files selected');
+            }
+          });
+        });
+     </script>
+       {% endblock %}
+            <!-- content -->
+

@@ -1,0 +1,99 @@
+
+{% extends 'dashboard.html' %}
+{% load static %}
+    <title>{% block title %}Partner Coverage{% endblock %}</title>
+    {% block custom_css %}
+    <link href="{% static 'assets/css/custom.css' %}" rel="stylesheet" type="text/css" />
+    {% endblock %}
+       {% block content %}
+            <div class="content">
+                <div class="container-fluid">
+                    <!--content main header-->
+                    <div class="row ">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title">Partner Coverage Pincodes</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row mb-2">
+                                <div class="col-xl-12">
+                                    <form action="" method="GET"
+                                        class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
+                                        <div class="col-sm-12 col-md-8 col-lg-4 d-flex gap-2"> 
+                                          <div class="relative w-100">
+                                            <input type="hidden" id="selectedPartnerId" value="{{ request.GET.selectedPartnerId }}" name="selectedPartnerId">
+                                            <input  class="form-control" id="partner_search" name="partner_name" type="search" value="{{ request.GET.partner_name }}" placeholder="Search partners" autocomplete="off">
+                                            <div class="list-group" id="show-list">
+                                             
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-8 col-lg-4 d-flex gap-2"> 
+                                          <button type="submit" class="btn bg-success text-white">Apply</button>
+                                          <a href="{% url 'partner-summary' 'pincodesprofile' %}" class="btn btn-primary text-white">Reset</a>
+                                          <a href="{% url 'partner-summary' 'all' %}" class="btn btn-secondary w-100 text-white">Download All</a>
+                                      
+                                        </div>
+                                        
+                                    </form>
+                                </div>
+                            </div>
+                            </div>
+                        <!--table-->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="table-responsive">
+                                        <table class="table table-centered table-nowrap mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th>Partner Name</th>
+                                                    <th>Partner ID</th>
+                                                    <th>Phone</th>
+                                                    <th>Email</th>
+                                                    <th>Address</th>
+                                                    <th>Active Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% if customers %}
+                                                {% for customer in customers %}
+                                                    <tr onclick="window.location='{% url 'dist-serviceble-picodes-list' pk=customer.user.pk %}';" style="cursor:pointer;">
+                                                      <td>{{ forloop.counter0|add:customers.start_index }}</td>
+                                                      <td>{{ customer.name }}</td>
+                                                      <td>{{ customer.id }}</td>
+                                                      <td>{{ customer.user.username}}</td>
+                                                      <td>{{ customer.user.email }}</td>
+                                                      <td>{{ customer.address }}</td>
+                                                      <td>{{ customer.is_activated }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                {% endif %}
+                                              </tbody>
+                                        </table>
+                                    </div>
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
+                        </div>
+
+                        {% include 'pagination.html' with data=customers %}
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+            {% endblock %}
+            <!-- content -->
+
+{% block scripts %}
+    {{block.super}}
+    <script src="{% static 'assets/js/partner_search.js' %}"></script>
+{% endblock %}

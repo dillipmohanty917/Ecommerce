@@ -1,0 +1,109 @@
+{% extends "distributor_base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+{% endblock %}
+{% block home_tab %}active{% endblock %}
+{% block content %}
+
+<style type="text/css">
+    .data-table th,td {
+      padding: 0px 10px !important;
+    }
+  
+    .right-aligned {
+      
+      margin-left: 258px;
+  
+    }
+        /* Apply basic styling to the table */
+    .data-table-container {
+        margin-top: 20px;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    /* Style table header */
+    .data-table thead th {
+        background-color: #f2f2f2;
+        text-align: left;
+        padding: 10px;
+        font-weight: bold;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Style table rows */
+    .data-table tbody tr {
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Style alternate rows for better readability */
+    .data-table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    /* Style table cells */
+    .data-table td {
+        padding: 10px;
+    }
+
+    /* Add some spacing between cells in the last two columns */
+    .data-table td:nth-last-child(-n+2) {
+        padding-right: 20px;
+    }
+
+    /* Style hover effect on rows */
+    .data-table tbody tr:hover {
+        background-color: #e0e0e0;
+    }
+
+
+  </style>
+    
+{% if orders %}
+
+    
+    <div class="">
+        <div class="data-table-container right-aligned">
+        <table class="bordered highlight responsive data-table">
+            <thead>
+                <tr>
+                    <th scope="col">Sl No</th>
+                    <th scope="col">Order Id</th>
+                    <th scope="col">Order Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Create At</th>
+                    <th scope="col">Total Amount</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            
+            {% for order in orders %}
+            <tr>
+              <td scope="row">{{forloop.counter}}</td>
+              <td>{{order.id}}</td>
+              <td>{{order.order_date|date:"M. d, Y" }}</td>
+              <td>{{order.order_status}}</td>
+              <td>{{order.created_at}}</td>
+              <td>{{order.total_amount}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+{% else %}
+    <div class="card-content card-content--no-data not-found" style="text-align: center;">
+    <p class="grey-text">
+        {% trans "No orders found." context "" %}
+    </p>
+    </div>
+{% endif %} 
+
+{% endblock %}

@@ -1,0 +1,363 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+
+<title>{% block title %}Customers Assigned{% endblock %}</title>
+
+{% block content %}
+<style>
+    #show-list {
+        max-height: 200px; /* Adjust the height as needed */
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px; /* Adjust the gap between items as needed */
+    }
+    
+    .list-group-item {
+        width: 100%; /* Each item takes the full width of the container */
+        padding: 10px; /* Adjust padding as needed */
+    }
+    
+    .list-group-item:nth-child(odd) {
+        width: 80%; /* Increase width for odd-numbered items */
+    }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <!--content main header-->
+        <div class="row ">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Customers Assigned</h4>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="row mb-2">
+                    <div class="col-xl-12">
+                        <form action="" method="get" class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
+                            <div class="">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    
+                            </div>
+                            <div class="col-sm-12 col-md-4 col-lg-2">
+                                <input type="text" class="form-control" id="store_name" name="store_name" placeholder="Search Store Name" value="{{ request.GET.store_name }}">
+                            </div>
+                            <div class="col-sm-12 col-md-4 col-lg-2">
+                                    <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Search Mobile Name" value="{{ request.GET.user_name }}">
+                            </div>
+                            <div class="col-sm-12 col-md-4 col-lg-2">
+                                <input type="text" class="form-control" id="medley_id" name="medley_id" placeholder="Search Medley ID" value="{{ request.GET.medley_id }}">
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn bg-success text-white">Apply</button>
+                                    <a href="{% url 'retailer-assignment' pk=sales_person_pk %}" class="btn btn-primary text-white">Reset</a>
+                                    <a href="#" class="btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                       Add Customer
+                                    </a>
+                                    {% if sales_executive.distributor == None %}
+                                        <a href="#" class="btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#uploadSfa">Upload</a>
+                                    {% endif %}
+                                    
+                                </div>
+                                
+                            </div>
+                            
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Add Customer</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST"  action="{% url 'retailer-assignment' pk=sales_person_pk %}">
+                            {%csrf_token%}
+                            <div class="row mb-3">
+                            </div>
+                            <div class="relative w-100">
+                                <input type="hidden" name="pk" value="{{ sales_person_pk }}">
+                                <input type="hidden" id="selectedRetailerId" value="{{ request.GET.selectedRetailerId }}" name="selectedRetailerId">
+                                <input  class="form-control" id="retailer_search" name="retailer_name" type="search" value="{{ request.GET.retailer_name }}" placeholder="Search Customer" autocomplete="off">
+                                
+                                <div class="list-group" id="show-list">
+                                 
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button class="btn btn-info" >Submit</button>
+                              </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!--table-->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Store Name</th>
+                                        <th>Mobile</th>
+                                        <th>Medley ID</th>
+                                        <th>City</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if retailers_list %}
+                                        {% for retailer in retailers_list %}
+                                            <tr>
+                                                <td scope="row">{{forloop.counter0|add:retailers_list.start_index}}</td>
+                                                <td>{{retailer.store_name|title}}</td>
+                                                <td>{{retailer.user.username}}</td> 
+
+                                                <td>{{retailer.medleyId}}</td>
+                                                <td>{{retailer.city}}</td>
+                                                <td>
+                                                    <form method="POST" action="{% url 'retailer-assignment' pk=sales_person_pk %}?retailer_id={{retailer.id}}">
+                                                        {% csrf_token %}
+                                                        
+                                                            <input type="hidden" name="action" value="remove">
+                                                            <button class="btn btn-secondary text-white w-100" name="deactivate" type="submit">Remove</button>
+                                                        
+                                                    </form>
+                                                </td>
+
+                                                
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                    </div> 
+                </div> 
+            </div>
+            {% include 'pagination.html' with data=retailers_list %}
+        </div>
+    </div>
+</div>
+<div id="loader"></div>
+<!-- Modal -->
+<div class="modal fade" id="uploadSfa" tabindex="-1" aria-labelledby="uploadSfaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header p-2 bg-info">
+            <h5 class="modal-title text-white" id="uploadSfaLabel">Bulk Upload</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-1">
+                <input type="hidden" name="upload_sfa_file">
+                <label for="id_file" class="form-label">Upload Your File</label>
+                <input type="file" class="form-control" id="fileInput" name="file" accept=".csv, .xlsx, .xls" required>
+                <p id="errorMessage" class="error-message"></p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info" onclick="validateAndUpload()">Submit</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+ {% endblock %}
+
+{% block javascript %}
+<script src="{% static 'assets/js/retailer_search.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.10.1/jquery-ui.min.js"></script>
+<script src="{% static "home/js/jquery.min.js" %}"></script> 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    function resetPage() {
+        location.reload();
+    }
+
+    function showAlert(message, i_status, title_status) {
+        Swal.fire({
+            icon: i_status,
+            title: title_status,
+            text: message,
+            showConfirmButton: true,
+            timer: 10000,
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
+                location.reload();
+            }
+        });
+    }
+  
+    function getCSRFToken() {
+        const csrfCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('csrftoken='));
+        if (csrfCookie) {
+            return csrfCookie.split('=')[1];
+        }
+        return null;
+    }
+
+    function uploadFile(file){        
+        const uploadURL = "{% url 'retailer-assignment' pk=sales_person_pk %}"; 
+        const formData = new FormData();
+        formData.append('file', file);        
+
+        showLoader();
+        fetch(uploadURL, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCSRFToken('csrftoken')
+            }
+        })
+        .then(response => {
+            hideLoader();
+            if (response.ok) {
+                const contentType = response.headers.get('Content-Type');
+                if (contentType && contentType.includes('text/csv')) {
+                    return response.blob();
+                } else {
+                    showAlert("The file has been Uploaded successfully.", "success", "Success!");
+                }
+            } else {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error);
+                });
+            }
+        })
+        .then(blobData => {
+            if (blobData) {
+                const url = window.URL.createObjectURL(blobData);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'SFA_wrong_data.csv';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                showAlert("The file has been Uploaded successfully.", "success", "Success!");
+            }
+        })
+        .catch(error => {
+            showAlert(error.message, "error", "Error!");
+        });
+    }
+
+    function showLoader() {
+        const loader = document.getElementById('loader');
+        loader.style.display = 'block';
+    }
+
+    function hideLoader() {
+        const loader = document.getElementById('loader');
+        loader.style.display = 'none';
+    }
+
+    function validateAndUpload() {
+        const fileInput = document.getElementById('fileInput');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        if (fileInput.files.length === 0) {
+          errorMessage.textContent = "Please choose a file before uploading.";
+          errorMessage.style.color = "red";
+        } else {
+          const allowedExtensions = ["xlsx", "xls", "csv"];
+          const selectedFile = fileInput.files[0];
+          const fileName = selectedFile.name;
+          const fileExtension = fileName.split('.').pop().toLowerCase();
+          
+          if (allowedExtensions.includes(fileExtension)) {
+            errorMessage.textContent = ""; 
+            uploadFile(selectedFile);
+          } else {
+            errorMessage.textContent = "Please select an Excel (XLSX/XLS) or CSV file.";
+            errorMessage.style.color = "red";
+          }
+        }
+    }
+</script>
+
+<script src="{% static 'assets/js/retailer_search.js' %}"></script>
+{% comment %} <script src="path/to/your/script.js"></script> {% endcomment %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+{% comment %} <script>
+    function getCSRFToken() {
+        const csrfCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('csrftoken='));
+        if (csrfCookie) {
+            return csrfCookie.split('=')[1];
+        }
+        return null;
+    }
+
+
+    //-----------------------------------------------------------------
+
+    function validateAndUpload(file) {
+        var retailer_id = document.getElementById("selectedRetailerId").value;
+        var sales_person_pk = {{sales_person_pk}}
+        console.log(sales_person_pk,"sales_person_pk")
+
+        const uploadURL = '{% url "assigned-retailer" pk=0  %}';  
+ 
+
+        const formData = new FormData();
+        formData.append('retailer_id', retailer_id);
+        formData.append('pk', sales_person_pk);
+      
+        $.ajax({
+            url: uploadURL,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRFToken': getCSRFToken('csrftoken')
+            },
+            success: function(response) {
+                console.log(response.status);
+                
+                if (response && response.status==200) {
+                    location.reload();
+                } else {
+                    location.reload();
+                    
+                }   
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.error('Error:', textStatus);
+                
+            }
+        });
+      }
+  
+</script> {% endcomment %}
+
+
+{% endblock %}

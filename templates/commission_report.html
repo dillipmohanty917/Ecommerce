@@ -1,0 +1,81 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+<title>{% block title %}Commissions Report Download{% endblock %}</title>
+{% block content %}
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Commission Report</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4 justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <form method="POST" class="form-inline">
+                    {% csrf_token %}
+                    <div class="form-group mb-2 w-100">
+                        <label for="distributors" class="mr-2">Partner:</label>
+                        <select name="distributors" id="distributors" class="form-control w-100">
+                            <option value="select">Select...</option>
+                            {% if distributors %}
+                                <option value="all">All</option>
+                                {% for dist in distributors %}
+                                    <option value="{{ dist.distributor.id }}">{{ dist.distributor.name|title}}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-2 w-100" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
+                        <i class="fa fa-calendar mr-2"></i>
+                        <span id="reportrange"><span></span> <i class="fa fa-caret-down"></i></span>
+                    </div>
+
+                    <input type="hidden" name="start_date" id="start_date">
+                    <input type="hidden" name="end_date" id="end_date">
+
+                    <button type="submit" class="btn btn-warning w-100">Download</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+<script>
+    $(function() {
+        var start = moment().subtract(29, 'days');
+        var end = moment();
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY, HH:mm') + ' - ' + end.format('MMMM D, YYYY, HH:mm'));
+            $('#start_date').val(start.format('YYYY-MM-DD HH:mm'));
+            $('#end_date').val(end.format('YYYY-MM-DD HH:mm'));
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+               'Today': [moment(), moment()],
+               'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+               'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+               'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+               'This Month': [moment().startOf('month'), moment().endOf('month')],
+               'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+    });
+</script>
+
+{% endblock %}

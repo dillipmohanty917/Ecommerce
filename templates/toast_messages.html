@@ -1,0 +1,38 @@
+{% if messages %}
+    <script type="text/javascript">
+        {% for message in messages %}
+            {% if 'success' in message.tags %}
+                $.toast({
+                    heading: 'Success',
+                    text: '{{ message|safe|escapejs }}',
+                    icon: 'success',
+                    position: 'bottom-right',
+                    bgColor: 'rgb(59 122 84)',
+                    textColor: 'white',
+                    showHideTransition: 'plain'
+                });
+            {% elif 'warning' in message.tags %}
+                $.toast({
+                    heading: 'Warning',
+                    text: '{{ message|safe|escapejs }}',
+                    icon: 'warning',
+                    position: 'bottom-right',
+                    bgColor: 'rgb(183 135 29)',
+                    textColor: 'white',
+                    showHideTransition: 'plain'
+                });
+            {% elif 'error' in message.tags %}
+                $.toast({
+                    heading: 'Error',
+                    text: '{{ message|safe|escapejs }}',
+                    icon: 'error',
+                    position: 'bottom-right',
+                    bgColor: 'rgb(215 21 48)',
+                    textColor: 'white',
+                    hideAfter:6000,
+                    showHideTransition: 'plain'
+                });
+            {% endif %}
+        {% endfor %}
+    </script>
+{% endif %}

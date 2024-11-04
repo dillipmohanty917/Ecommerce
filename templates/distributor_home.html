@@ -1,0 +1,156 @@
+
+{% extends 'distributor_base.html' %}
+{% load static %}
+{% load humanize %}
+    <title>{% block title %}Distributor-Dashboard{% endblock %}</title>
+    
+       {% block content %}
+
+            <div class="content">
+                <div class="container-fluid">
+                    <!--content main header-->
+                
+                    <div class="row mt-4">
+                        
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="float-end">
+                                        <i class="mdi mdi-account-multiple widget-icon bg-success-lighten text-success"></i>
+                                    </div>
+                                    <h5 class="text-muted fw-normal mt-0" title="Number of Orders">
+                                        Total Active Retailers
+                                    </h5>
+                                    <h3 class="mt-3 mb-3">
+                                        {%if  retailer_count  %}
+                                          {{retailer_count}}
+                                        {%else%}
+                                            0
+                                        {%endif%}
+
+
+                                    </h3>
+                                    {% comment %} <p class="mb-0 text-muted">
+                                        <span class="text-success me-2"><i
+                                                class="mdi mdi-arrow-up-bold"></i>
+                                            0.00%</span>
+                                        <span class="text-nowrap">Since last Day</span>
+                                    </p> {% endcomment %}
+                                </div> 
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="float-end">
+                                        <i
+                                            class="mdi mdi-gift widget-icon bg-success-lighten text-success"></i>
+                                    </div>
+                                    <h5 class="text-muted fw-normal mt-0" title="Number of Orders">
+                                        Total Orders
+                                    </h5>
+                                    <h3 class="mt-3 mb-3">{% if total_orders %}
+                                        {{total_orders}}
+                                        {%else%}
+                                         0
+                                        {%endif%}
+                                    </h3>
+                                    {% comment %} <p class="mb-0 text-muted">
+                                        <span class="text-success me-2"><i
+                                                class="mdi mdi-arrow-up-bold"></i>
+                                            0.00%</span>
+                                        <span class="text-nowrap">Since last Day</span>
+                                    </p> {% endcomment %}
+                                </div> 
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="float-end">
+                                        <i class="mdi mdi-cash widget-icon bg-success-lighten text-success"></i>
+                                    </div>
+                                    <h5 class="text-muted fw-normal mt-0" title="Number of Orders">
+                                        Today's Ordered Amount
+                                    </h5>
+                                    <h3 class="mt-3 mb-3">
+                                        {% if today_order_amount %}
+                                        {{ currency }} {{today_order_amount|floatformat:2|intcomma}} </h3>
+                                        {%else%}
+                                        {{ currency }} 0.00
+                                        {%endif%}</h3>
+                                    </h3>
+                                    {% comment %} <p class="mb-0 text-muted">
+                                        <span class="text-success me-2"><i
+                                                class="mdi mdi-arrow-up-bold"></i>
+                                            0.00%</span>
+                                        <span class="text-nowrap">Since last Day</span>
+                                    </p> {% endcomment %}
+                                </div> 
+                            </div>
+                        </div>
+                        
+                    </div>                 
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title">Orders to be processed</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+
+                        <!--table-->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-centered table-nowrap mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th>Order Id</th>
+                                                    <th>Order Status</th>
+                                                    <th>Customer Store Name</th>
+                                                    <th>Placed On</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% if orders %}
+                                                {% for order in orders %}
+                                                <tr onclick="window.location='{% url 'dist-order-details' order_id=order.id %}';" style="cursor:pointer;">
+                                                  <td>{{forloop.counter0|add:orders.start_index}}</td>
+                                                  <td>{{order.id}}</td>
+                                                  <td><span class="badge rounded-pill {% if order.order_status == 'Billed' %}badge-success-lighten {% elif order.order_status == 'Cancelled' %}badge-danger-lighten {% elif order.order_status == 'Pending' %}badge-secondary-lighten {% else %}badge-info-lighten {% endif %}">{{ order.get_order_status_display }}</span></td>
+                                                  <td>{{ order.retailer_store_name }}</td>
+                                                  <td>{{ order.order_date }}</td>
+                                                  <td>{{ currency }} {{ order.total_amount|floatformat:2|intcomma }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                                {% endif %}
+                                              </tbody>
+                                        </table>
+                                    </div>
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
+                        </div>
+
+                        {% include 'pagination.html' with data=orders %}
+
+
+                    </div>
+
+
+
+                </div>
+            </div>
+
+       
+
+    {% endblock %}
+    
+
+  

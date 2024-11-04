@@ -1,0 +1,82 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% block title %}Enable To Retailer - MedleyMed Network{% endblock %}
+{% block custom_css %}
+{% endblock %}
+{% block content %}
+<style>    
+    .button {
+        width: 80px; 
+        height: 30px; 
+        position: relative;
+        background: linear-gradient(135deg, #3498db, #2980b9); 
+        border: none; 
+        border-radius: 20px; 
+        text-align: center;
+        color: white; 
+        font-weight: bold; 
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+      }
+      
+      .button:hover {
+        background: linear-gradient(135deg, #2980b9, #3498db); 
+      }  
+    
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Enable Retailer</h4>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>SI No.</th>
+                                        <th>Store Name</th>
+                                        <th>Phone Number</th>
+                                        <th>User ID</th>
+                                        <th>Active</th>
+                                        <th>Created At</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in disabled_retailers %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ user.retailer.store_name|title }}</td>
+                                            <td>{{ user.username }}</td>
+                                            <td>#{{ user.id }}</td>
+                                            <td>{{ user.is_active }}</td>
+                                            <td>{{ user.retailer.created_at }}</td>
+                                            <td>
+                                                <form method="POST">
+                                                    {% csrf_token %}
+                                                    <button class="button" type="submit" name="user_id" value="{{user.id}}"><span>Active</span></button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> 
+                    {% include 'pagination.html' with data=disabled_retailers %} 
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

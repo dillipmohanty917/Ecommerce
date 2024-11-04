@@ -1,0 +1,234 @@
+{% extends template_to_extend %}
+{% load static %}
+    <title>{% block title %}Add A New Product{% endblock %}</title>
+
+       {% block content %}
+            <div class="content">
+                <div class="container-fluid">
+                    <!--content main header-->
+                    <div class="row ">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title">Add A New Product</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                          <form method="post" action="" id="product_create" class="needs-validation" novalidate>
+                            {% csrf_token %}
+                            
+                            <div class="row">
+
+                                <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                    <label class="form-label">Name<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="name" data-provide="typeahead" name="name" maxlength="255" required>
+                                </div>
+                                {% if request.user.is_superuser or request.user.is_admin %}
+                                <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                    <label class="form-label">Choose Partner<span class="text-danger">*</span></label>
+                                  <div >
+                                    <select class="form-select form-control" id="partner" name="partner" required>
+                                        <option value="" selected disabled hidden>Select Partner</option>
+                                        {% for distributor in distributors %}
+                                        <option value={{distributor.id}}>{{distributor.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                  </div>
+                              </div>
+                              {% endif %}
+                                
+                                <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                    <label class="form-label">Distributor SKU<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="distributor_sku" name="distributor_sku" maxlength="128"  required>
+                                    <div class="alert alert-dismissible d-none" id="error-alert" role="alert">
+                                    </div>
+                                </div>
+
+                                <!-- <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                    <label class="form-label">Scheme Billed</label>
+                                    <input type="number" class="form-control" id="scheme_billed" name="scheme_billed" placeholder="Enter scheme_billed" required>
+                                </div>
+
+                                <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                    <label class="form-label">Scheme Free</label>
+                                    <input type="number" class="form-control" id="scheme_free" name="scheme_free" placeholder="Enter scheme_free" required>
+                                </div> -->
+
+                                <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                    <label class="form-label">HSN</label>
+                                    <input type="text" class="form-control" data-provide="typeahead"
+                                    id="hsn" name="hsn" maxlength="20">
+                                </div>
+
+                                <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                  <label class="form-label">Product Salt</label>
+                                  <input type="text" class="form-control"  data-provide="typeahead" 
+                                  id="product_salt" name="product_salt" maxlength="255">
+                              </div>
+
+                              <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                <label class="form-label">Product Class</label>
+                                <input type="text" class="form-control" data-provide="typeahead" id="product_class" 
+                                name="product_class" maxlength="50">
+                            </div>
+
+                            <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                              <div >
+                                <label class="form-label" class="form-label">Product Category</label>
+                                  <select class="form-select" id="product_category" name="product_category">
+                                      {% for value, label in product_category_choices %}
+                                          <option value="{{ value }}">{{ label }}</option>
+                                      {% endfor %}
+                                  </select>
+                              </div>
+                          </div>
+
+                          <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <div >
+                              <label class="form-label" class="form-label">Product Type</label>
+                                <select class="form-select" id="product_type" name="product_type">
+                                  {% for value, label in product_type_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                  {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                              <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                  <label class="form-label">Product Composition</label>
+                                  <textarea class="form-control" id="id_product_composition" name="product_composition"></textarea>
+                              </div>
+
+                                <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                    <label class="form-label">Quantity<span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" data-provide="typeahead"
+                                    id="quantity" name="quantity"  required>
+                                </div>
+
+
+                                <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                    <label class="form-label">GST</label>
+                                    <input type="number" step="1" class="form-control" id="gst" name="gst" placeholder="Enter GST" value="0" required>
+                                    <span id="gstError" class="text-danger"></span>
+                                </div>
+
+                              <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                  <label class="form-label">PTR<span class="text-danger">*</span></label>
+                                  <input type="text" step="1" class="form-control" data-provide="typeahead"
+                                  id="ptr" name="ptr" required>
+                                  <span id="ptrError" class="text-danger"></span>
+                              </div>
+
+                              <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                <label class="form-label">MRP<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" data-provide="typeahead" 
+                                id="mrp" name="mrp"  required>
+                                <span id="mrpError" class="text-danger"></span>
+                            </div>
+
+                                <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                  <label class="form-label">Discount</label>
+                                  <input type="number" class="form-control" data-provide="typeahead"
+                                  id="discount" name="discount" >
+                              </div>
+
+                              <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                <label class="form-label">Manufacturer</label>
+                                <input type="text" class="form-control" data-provide="typeahead"
+                                id="manufacturer" name="manufacturer" maxlength="255">
+                            </div>
+
+                            <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                                <label class="form-label">Batch No</label>
+                                <input type="text" class="form-control" data-provide="typeahead"
+                                id="batch_number" name="batch_number" maxlength="255" >
+                            </div>
+
+                            <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                              <label class="form-label">Expiry Date</label>
+                              <input type="date" class="form-control" data-provide="typeahead"
+                              id="expiry_date" name="expiry_date" >
+                          </div>
+
+                          <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">Packing</label>
+                            <input type="text" class="form-control" data-provide="typeahead"
+                            id="packing" name="packing">
+                        </div>
+
+
+                            </div>
+
+                            <div class="row d-flex align-items-center justify-content-end">                              
+                              <div class="col-md-3">
+                                {% if request.user.is_superuser or request.user.is_admin %}
+                                <a href="{% url 'dashboard-products' %}">
+                                <button class="btn btn-danger card-body py-2 text-white  w-100" type="button">Cancel</button>
+                                </a>
+                                {% elif request.user.is_distributor %}
+                                <a href="{% url 'distributor-products' %}">
+                                    <button class="btn btn-danger card-body py-2 text-white  w-100" type="button">Cancel</button>
+                                    </a>
+                                {% endif %}
+                                
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-primary card-body py-2 text-white  w-100" type="submit">Submit</button>
+                            </div>
+                          </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       {% endblock %}
+            <!-- content -->
+
+{% block scripts %}
+    {{ block.super }}
+    <!-- plugin js -->
+    <script src="{% static 'assets/vendor/dropzone/min/dropzone.min.js' %}"></script>
+    <!-- init js -->
+    <script src="{% static 'assets/js/ui/component.fileupload.js' %}"></script>
+{% endblock %}
+{% block javascript %}
+<script>
+    $(document).ready(function() {
+        // Handle form submission
+        $("#product_create").submit(function(event) {
+            // Clear previous error messages
+            $(".text-danger").text("");
+
+            // Validate GST field
+            var gstValue = $("#gst").val();
+            if (!gstValue || isNaN(gstValue) || gstValue > 18) {
+                $("#gstError").text("Please enter a valid GST value (maximum 18).");
+                event.preventDefault();
+            }
+
+            // Validate PTR field
+            var ptrValue = $("#ptr").val();
+            var mrpValue = $("#mrp").val();
+            console.log(ptrValue,'lll',mrpValue)
+            if (parseFloat(ptrValue)>parseFloat(mrpValue) ) {
+                $("#ptrError").text("PTR cannot be greater than MRP.");
+                event.preventDefault();
+            }
+            if (/[^0-9.]/.test(ptrValue)) {
+                $("#ptrError").text("Please enter a valid PTR");
+                event.preventDefault();
+            }
+            if (/[^0-9.]/.test(mrpValue)) {
+                $("#mrpError").text("Please enter a valid MRP");
+                event.preventDefault();
+            }
+
+           
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,222 @@
+
+{% comment %} {% load materializecss %} {% endcomment %}
+{% load static %}
+{% load i18n %}
+
+<!-- {% block title %}{% trans " Registration" context "Signup page title" %} {% endblock %} -->
+
+<!-- {% block content %} -->
+<html>
+<head>
+
+
+    <link rel="stylesheet" href="{% static "home_v2/lib/bootstrap/css/bootstrap.min.css" %}" >
+    <link rel="stylesheet" href="{% static "home_v2/css/style.css" %}">
+    
+    <link rel="stylesheet" href="{% static "home_v2/lib/animate/animate.min.css" %}" >
+    
+    
+    
+   <style>
+
+
+body{
+    background:#F5F5F5;
+}
+.navbar.navbar-custom.navbar-fixed-top{
+    border-bottom: 0 !important;
+}
+            .container.mt-5.pt-4{
+                margin-top: 0!important;
+                padding-top: 0 !important;
+            }
+            .main_content{
+                margin-top: 0 !important;
+    min-height: 0 !important;
+            }
+            .login_box{
+                background:#fff;
+                /* margin: 70px auto; */
+                margin: 164px auto;
+                width:600px;
+                height:440px;
+                box-shadow: 0px 12px 24px #00000029;
+                border-radius: 12px;
+                
+            }
+            .login_box_inner{
+                padding:50px 100px 0px 50px;
+            }
+            .login_h{
+               margin:0 0 5px 0;
+               color:#303030;
+               font-family:'Roboto', sans-serif;
+               font-size: 18px;
+               font-weight:600;
+            }
+            .login_info{
+                margin:0;
+                color:#303030;
+               font-family:'Roboto', sans-serif;
+               font-size: 14px;
+            }
+            .mobile_number_box{
+                width:350px;
+                margin:auto;
+                padding-top:55px;
+            }
+            .mobile_number_box input{
+               border:1px solid #DCDCDC ;
+               border-radius: 4px;
+               min-height:40px;
+               width:350px;
+               outline: none;
+               padding-left:15px;
+            }
+
+            .mobile_number_box .form-control:focus{
+                /* border-color:0 !important; */
+                outline: none !important;
+                outline: 0 !important;
+                box-shadow: none !important;
+            }
+            .submit_btn:focus{
+                outline: none !important;
+                outline: 0 !important;
+                box-shadow: none !important;
+            }
+            .mobile_number_h{
+                color:#303030;
+               font-family:'Roboto', sans-serif;
+               font-size: 15px;
+               margin:0 0 5px 0;
+               font-weight: 600;
+            }
+            .submit_btn:hover{
+                background: #00B7CE ;
+            }
+            .submit_btn{
+                cursor:pointer;
+                margin-top: 15px !important; 
+                background: #2E3192 ;
+border-radius: 4px;
+color:#fff;
+width:350px;
+height:40px;
+font-family:'Roboto', sans-serif;
+border: 0;
+text-transform: capitalize !important;
+            }
+            .agree{
+                 color:#303030;
+                 font-size:13px;
+                 font-family: 'Roboto', sans-serif;
+                 width: 224px;
+    margin: auto;
+    padding-top: 30px;
+    text-align: center;
+            }
+            .tnc{
+                color: #303030;
+    font-size: 13px;
+    font-family: 'Roboto', sans-serif;
+    
+    text-align: center;
+            }
+            .tnc a{
+                color: #00B7CE !important;
+                font-size: 13px;
+                font-family: 'Roboto', sans-serif;
+                cursor:pointer !important;
+            }
+            footer{
+        box-shadow: 12px 12px 12px 12px rgb(0 0 0 / 10%);
+    }
+            </style> 
+   
+</head>
+
+<body>
+<header id="header" class="fixed-top">
+    <div class="container">
+       <div class="logo float-left">
+          <!-- Uncomment below if you prefer to use an image logo -->
+          <!-- <h1 class="text-light"><a href="#header"><span>MedleyMed Biz</span></a></h1> -->
+
+          <a href="{% url "home" %}" class="scrollto"><img src="{% static "home_v2/img/logo.png" %}" alt="" class="img-fluid"/></a>
+       </div>
+       <nav class="main-nav float-right d-none d-lg-block">
+          <div class="hlp_right">
+             <a class="nav_top">Need Help? Questions?<span>(+91) 950-295-2277</span></a>
+          </div>
+          <ul class="second_menu">
+          <li class="active"><a href="#intro">Home</a></li>
+          <li><a href="#main_object">Our Services</a></li>
+          <li><a  href="#reviews1">Retailer Reviews</a></li>
+          <li>
+             {% comment %} <a class="login_top" href="{% url "account_login" %}"><button class="log_btn1" type="button">Admin Login</button></a> {% endcomment %}
+             {% comment %} <a class="login_top" href="{% url "register" %}"><button class="log_btn" type="button">Lo</button></a> {% endcomment %}
+          </li>
+       </nav>
+       <!-- .main-nav -->
+    </div>
+ </header>
+<div class="container mt-5 pt-4">
+    
+    <div class="col-12 mx-auto">
+      
+       
+
+            <div class="login_box">
+                <div class="login_box_inner">
+           
+            <form method="post">
+                    {% csrf_token %}
+
+                {% if message %}
+                <div class="alert alert-{{class}}">
+                    {{message}}
+                </div>
+                {% endif %}
+                <p class="login_h">Login / Signup</p>
+                <p class="login_info">Please enter your mobile number to receive one time password (OTP)</p>
+                <div class="form-group col-12 mobile_number_box">
+                    <p class="mobile_number_h">Mobile Number</p>
+                    <input type="text" placeholder="Enter Mobile Number" class="form-control" name="phone" id="">
+                    <button class="submit_btn">Proceed</button>
+                </div>
+                
+            </form>
+           
+        </div>
+        <div class="col-12">
+            <p class="agree">By continuing you agree to our </p>
+             <p class="tnc"><a  target="_blank">Terms & Conditions</a> and <a  target="_blank">Privacy Policy.</a></p>
+             </div>
+            </div>
+            
+            
+        
+    </div>
+
+</div>
+
+
+  
+
+<div class="row">
+<div class="col-lg-12 col-md-12">
+  
+      {% comment %} {% include 'account/footer.html' %} {% endcomment %}
+   </div>
+   
+ </div>
+
+
+
+ <script src="{% static "home_v2/js/main.js" %}"></script>
+ </body>
+ </html>
+
+ <!-- {% endblock %} -->
+ <!-- #footer -->

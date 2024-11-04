@@ -1,0 +1,471 @@
+{% extends template_to_extend %}
+{% load global_tags %}
+
+{% load static %}
+    <title>{% block title %}Product List{% endblock %}</title>
+    {% block custom_css %}
+    <link href="{% static 'assets/css/custom.css' %}" rel="stylesheet" type="text/css" />
+    {% endblock %}
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+       {% block content %}
+    <div id="bg-spinner">
+      <div id="position-spinner">
+        <span id="spinner" ></span>
+        <div class='map_text'>Updating Products Qty...</div>
+      </div>
+    </div>
+            <div class="content">
+                <div class="container-fluid">
+                    <!--content main header-->
+                    <div class="row ">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title">Products</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                          {% if request.user.is_superuser or request.user.is_admin %}
+                            <div class="row mb-2">
+                                <div class="col-xl-12">
+                                    <form action="{% url 'dashboard-products' %}" method="GET"
+                                        class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
+                                        <div class="col-sm-12 col-md-8 col-lg-3 d-flex gap-2"> 
+                                          <input type="search" class="form-control" id="searchInput" name="search_query" placeholder="Search product" value="{{ request.GET.search_query }}">
+
+                                        </div>
+                                        <div class="col-sm-12 col-md-8 col-lg-3 d-flex gap-2"> 
+                                          <input type="search" class="form-control" id="product_sku" name="product_sku" placeholder="Search product SKU" value="{{ request.GET.product_sku }}">
+
+                                        </div>
+                                        <div class="col-sm-12 col-md-8 col-lg-4 d-flex gap-2"> 
+                                          <div class="relative w-100">
+                                            <input type="hidden" id="selectedPartnerId" value="{{ request.GET.selectedPartnerId }}" name="selectedPartnerId">
+                                            <input  class="form-control" id="partner_search" name="partner_name" type="search" value="{{ request.GET.partner_name }}" placeholder="Search partners" autocomplete="off">
+                                            <div class="list-group" id="show-list">
+                                             
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-8 col-lg-2 d-flex gap-2"> 
+                                          <button type="submit" class="btn bg-success text-white">Apply</button>
+                                          <a href="{% url redirect_url %}" class="btn btn-primary text-white">Reset</a>
+                                      
+                                        </div>
+                                        
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="row mb-2">
+                              <div class="col-sm-12 col-md-8 col-lg-12 d-flex gap-2"> 
+                                <a href="{% url prod_create_url %}" class="btn btn-primary align-items-center">
+                                  <i class="mdi mdi-medical-bag"></i> Add New Product
+                              </a>
+                              <a href="{% url 'product-creation' %}" class="btn btn-warning text-black align-items-center" data-bs-toggle="modal" data-bs-target="#upload_stock">
+                                  <i class="mdi mdi-medical-bag"></i> Upload Products
+                              </a>
+                              <form method="POST" action="{% url 'dashboard-products' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="dashboard-products">
+                                <button type="button" id="downloadButton" class="btn btn-secondary text-white" data-bs-toggle="modal" data-bs-target="#partnerModal">
+                                    Download Products
+                                </button>
+                            
+                                <div id="partnerModal" class="modal fade" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Select Partner</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="relative w-100">
+                                                    <input type="hidden" id="selectedPartnerId1" name="selectedPartnerId1" value="{{ request.GET.selectedPartnerId1 }}">
+                                                    <input class="form-control" id="partner_search1" name="partner_name1" type="search" value="{{ request.GET.partner_name1 }}" placeholder="Search partners" autocomplete="off">
+                                                    <div class="list-group" id="show-list1">
+                                                        <!-- Dynamic search results here -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button id="downloadModalButton" type="submit" name="dashboard-products" class="btn btn-warning text-black">Download</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                              </form>
+          
+                              </div>               
+                              <div class="col-sm-12 col-md-8 col-lg-3 d-flex gap-2"> 
+
+                              </div>
+                              <div class="col-sm-12 col-md-8 col-lg-3 d-flex gap-2"> 
+                               
+                              </div>
+              
+                            </div>
+                            {% else %}
+                            <div class="row mb-2">
+                              <div class="col-xl-12">
+                                  <form action="{% url 'distributor-products' %}" method="GET"
+                                      class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
+                                      <div class="col-sm-12 col-md-8 col-lg-3 d-flex gap-2"> 
+                                        <input type="search" class="form-control" id="searchInput" name="search_query" placeholder="Search product" value="{{ request.GET.search_query }}">
+
+                                      </div>
+                                      <div class="col-sm-12 col-md-8 col-lg-2 d-flex gap-2"> 
+                                        <input type="search" class="form-control" id="product_sku" name="product_sku" placeholder="Product SKU" value="{{ request.GET.product_sku }}">
+
+                                      </div>
+                                    
+                                      <div class="col-sm-12 col-md-8 col-lg-2 d-flex gap-2"> 
+                                        <button type="submit" class="btn bg-success text-white">Apply</button>
+                                        <a href="{% url redirect_url %}" class="btn btn-primary text-white">Reset</a>
+                                    
+                                      </div>
+
+                                      <div class="col-sm-12 col-md-8 col-lg-5 d-flex gap-2"> 
+                                        <a href="{% url prod_create_url %}" class="btn btn-primary align-items-center">
+                                          <i class="mdi mdi-medical-bag"></i> Add New Product
+                                      </a>
+                                      <a href="{% url 'product-creation' %}" class="btn btn-warning text-black align-items-center" data-bs-toggle="modal" data-bs-target="#upload_stock">
+                                          <i class="mdi mdi-medical-bag"></i> Upload Products
+                                      </a>
+                                      </div>
+                                      
+                                  </form>
+                              </div>
+                          </div>
+                          {% endif %}
+
+                          
+                        </div>
+
+                        <!--table-->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="table-responsive">
+                                        <table class="table table-centered table-nowrap mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th>Name</th>
+                                                    <th>Category</th>
+                                                    <th>Quantity</th>
+                                                    <th>PTR</th>
+                                                    <th>MRP</th>
+                                                    <th>Scheme</th>
+                                                    <th>Partner ID</th>
+                                                    <th>Partner Name</th>
+                                                    <th>City</th>
+                                                    <th>Distributor SKU</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% if distributor_products %}
+                                                {% for dist_prod in distributor_products %}
+                                                {% if request.user.is_superuser or request.user.is_admin %}
+                                                    <tr onclick="window.location='{% url 'product-edit' prod_id=dist_prod.id %}';" style="cursor:pointer;">
+                                                  {% elif request.user.is_distributor %}
+                                                    <tr onclick="window.location='{% url 'distributor-product-edit' prod_id=dist_prod.id %}';" style="cursor:pointer;">
+                                                  {% endif %}
+                                                  <td>{{forloop.counter0|add:distributor_products.start_index }}</td>
+                                                  <td>{{dist_prod.name}}</td>
+                                                  <td>{{dist_prod.product_category}}</td>
+                                                  <td>{{ dist_prod.total_quantity }}</td>
+                                                  <td>{{currency}} {{ dist_prod.ptr }}</td>
+                                                  <td>{{currency}} {{ dist_prod.mrp }}</td>
+                                                  <td>{{ dist_prod.concatenated_scheme }}</td>
+                                                  <td>#{{ dist_prod.distributor.id}}</td>
+                                                  <td>{{ dist_prod.distributor.name}}</td>
+                                                  <td>{{ dist_prod.distributor.city}}</td>
+                                                  <td>{{ dist_prod.distributor_sku}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                                {% endif %}
+                                              </tbody>
+                                        </table>
+                                    </div>
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
+                        </div>
+
+                        {% include 'pagination.html' with data=distributor_products  %}
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+            <!-- Modal -->
+        <div class="modal fade" id="upload_stock" tabindex="-1" aria-labelledby="upload_stockLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header p-2 bg-info">
+                  <h5 class="modal-title text-white" id="upload_stockLabel">Bulk Upload</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form method="post" id="form_id" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-1">
+                      <label for="id_file" class="form-label">Upload Your File</label>
+                      <input type="file" class="form-control" id="id_file" name="file" accept=".csv, .xlsx, .xls" required>
+                  </div>
+                  {% if request.user.is_superuser or request.user.is_admin %}
+                  <div class="mb-1">
+                      <label for="distributor_id" class="form-label">Partner ID</label>
+                      <input type="text"  class="form-control"  name="distributor_id"  placeholder="Enter Partner ID" required>
+                  </div>
+                  {% endif %}
+                  <div id="alertContainer"></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-info">Submit</button>
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+    {% endblock %}
+
+    {% block scripts %}
+              {{block.super}}
+              <script src="{% static 'assets/js/partner_search.js' %}"></script>
+          {% endblock %}
+
+      {% block javascript %}
+      <script>
+        $(document).ready(function(){
+          var debounceTimer;
+      
+          $('#partner_search1').on('input', function(){
+              var searchText = $(this).val();
+              
+              clearTimeout(debounceTimer);
+              // Clear dropdown content immediately when input is empty
+              if (!searchText.trim()) {
+                $('#show-list1').empty();
+                $('#selectedPartnerId1').val("");
+                return;
+            }
+              debounceTimer = setTimeout(function() {
+                  if(searchText){
+                      $.ajax({
+                          url: '/partner/names',
+                          type: 'GET',
+                          data: { filter: searchText },
+                          success: function(data) {
+                              $('#show-list1').empty();
+                              data.forEach(function(partner) {
+                                  const item_name = partner.name;
+                                  const substring = new RegExp(searchText, "gi");
+                                  const original = item_name;
+                                  let x = original.replace(substring, `<strong>${searchText}</strong>`);
+                                  $('#show-list1').append(`
+                                      <div class='dropdown_data_pos' data-partner-id=${partner.id} data-partner-name="${partner.name}">
+                                          <div class='dropdown_item_name col'>${x}</div>
+                                          <div class='mar-l-r-0 d-flex'>
+                                              <div class='dropdown_item_details col-7'>
+                                                  <span>City: <strong>${partner.city}</strong></span>
+                                              </div>                                                 
+                                              <div class='dropdown_item_details col-5'>
+                                                  <span>ID: <strong>${partner.id}</strong></span>
+                                              </div> 
+                                          </div>
+                                      </div>
+                                  `);
+                              });
+                          },
+                          error: function(xhr, status, error) {
+                              console.error('Error fetching data:', error);
+                          }
+                      });
+                  }
+              }, 200);
+          });
+      
+      
+          $(document).on('click', '.dropdown_data_pos' ,function(){
+              console.log('event')
+              var partner_id = $(this).data('partner-id');
+              var partner_name = $(this).data('partner-name');
+              $('#partner_search1').val(partner_name);
+              $('#selectedPartnerId1').val(partner_id);
+              $('#show-list1').empty();
+              $('#partner_search1').focus();
+      
+            });
+        });
+      </script>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the download modal button element
+            var downloadModalButton = document.getElementById('downloadModalButton');
+        
+            // Add a click event listener to the download modal button
+            downloadModalButton.addEventListener('click', function() {
+                // Close the modal when the download button inside the modal is clicked
+                $('#partnerModal').modal('hide');
+        
+                // Submit the download form
+                document.getElementById('downloadForm').submit();
+            });
+        
+            // Clear the modal input fields when the modal is hidden
+            $('#partnerModal').on('hidden.bs.modal', function() {
+              // Clear input fields
+              document.getElementById('partner_search').value = '';
+              document.getElementById('selectedPartnerId').value = '';
+              document.getElementById('partner_search1').value = '';
+              document.getElementById('selectedPartnerId1').value = '';
+          
+             
+            });
+        });
+      </script>
+    
+    
+          <script>
+            var form_enabled = true;
+            $(document).ready(function(){
+              $('#form_id').on('submit', function(){
+                event.preventDefault();
+                btn_name="Submit"
+                $('#alertContainer').hide();
+                var formData = new FormData(this);
+                var file_input = $('#id_file')[0].files[0];
+                if (file_input.name.endsWith(".xlsx") || file_input.name.endsWith(".csv") || file_input.name.endsWith(".xls")) {
+                    const maxSizeInBytes = 3 * 1024 * 1024; // 3MB in bytes
+                    if (file_input.size > maxSizeInBytes) {
+                      $('#bg-spinner').fadeOut(3000);
+                          $('#alertContainer').show();
+                            var alertHTML = `
+                            <div class="alert file_warning">
+                              File size exceeds the limit of 3MB.
+                          </div>
+                                      `;
+                          $('#alertContainer').html(alertHTML);
+                    }else{
+                      $('#upload_stock').modal('hide');
+                        $('#bg-spinner').fadeIn(500); 
+                        formData.append('file', file_input);
+                        $.ajax({
+                        url: "{% url 'distrubutor-upload-stock' %}",
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                          var status = response.status;
+                          if (status == 400){
+                            $('#bg-spinner').fadeOut(7000);
+                            $('#alertContainer').show();
+                              var alertHTML = `
+                              <div class="alert file_warning">
+                              Uploaded file exceeds the limit of 40000 products!
+                            </div>
+                                        `;
+                            $('#alertContainer').html(alertHTML);
+                          }
+                          else if (status == 404){
+                            $('.map_text').text(response.message);
+                            $('#bg-spinner').fadeOut(6000);
+                            setTimeout(() => {
+                             window.location.reload();
+                            }, 3000);
+                          }
+                          else if (status == 204){
+                            $('#bg-spinner').fadeOut(4000);
+                            $('#alertContainer').show();
+                              var alertHTML = `
+                              <div class="alert file_warning">
+                              Uploaded file has no content!
+                            </div>
+                                        `;
+                            $('#alertContainer').html(alertHTML);
+                          }
+                          else if (status == 302){
+                            $('.map_text').text('Distributor Does Not exist!');
+                            $('#bg-spinner').fadeOut(5000);
+                            setTimeout(() => {
+                             window.location.reload();
+                            }, 3000);
+                          }
+                          else if(status == 200){
+                           /* $('.map_text').text('Downloading File...');*/
+                           $('#bg-spinner').fadeOut(8000);
+                           window.location.reload();
+          
+                          /*  fetch("", {
+                                  method: 'GET',
+                                })
+                                .then(response => response.blob())
+                                .then(blob => {
+                                  // Create a temporary download link
+                                  const downloadLink = document.createElement('a');
+                                  const objectURL = URL.createObjectURL(blob);
+        
+                                  // Set the link attributes
+                                  downloadLink.href = objectURL;
+                                  downloadLink.download = 'skipped_products.xlsx';
+        
+                                  // Programmatically trigger the download
+                                  document.body.appendChild(downloadLink);
+                                  downloadLink.click();
+        
+                                  // Clean up
+                                  URL.revokeObjectURL(objectURL);
+                                  document.body.removeChild(downloadLink);
+                                  $('.map_text').text('Reloading page...');
+                                  location.reload();
+                                })
+                              .catch(error => {
+                                $('#bg-spinner').fadeOut(500);
+                                }); */
+                              }else{
+                                $('.map_text').text('Updating Failed...');
+                                $('#bg-spinner').fadeOut(5000);
+                                setTimeout(() => {
+                                  window.location.reload();
+                                }, 3000);
+                              }
+                          },
+                        error: function(xhr, textStatus, errorThrown) {
+                          // Handle any errors that occur during the request
+                          $('#bg-spinner').fadeOut(5000);
+                          console.log('ajax exception',errorThrown)
+                        }
+                              });
+                            }
+          
+                }else{
+                  $('#bg-spinner').fadeOut(5000);
+                  $('#alertContainer').show();
+                          var alertHTML = `
+                          <div class="alert file_warning">
+                          Please Upload Excel/csv File!
+                        </div>
+                                    `;
+                        $('#alertContainer').html(alertHTML);
+                    }
+            
+                            });
+              });
+            </script>
+      {% endblock %}
+            <!-- content -->
+

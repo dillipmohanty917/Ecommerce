@@ -1,0 +1,471 @@
+
+{% extends 'distributor_base.html' %}
+{% load static %}
+{% load humanize %}
+    <title>{% block title %}Orders Summary{% endblock %}</title>
+
+       {% block content %}
+       <style>
+        /* Adjust the height as needed */
+    .table-responsive {
+        max-height: 300px; /* Example height */
+        overflow-y: auto;
+      }
+      /* Style to fix the table header */
+    .table-fixed thead {
+        position: sticky;
+        top: 0;
+        background-color: #ffffff; /* Adjust as needed */
+        z-index: 999;
+      }
+       </style>
+    <div class="content">
+      <div class="container-fluid">
+          <!--content main header-->
+          <div class="row ">
+              <div class="col-12">
+                  <div class="page-title-box">
+                      <h4 class="page-title">Orders Summary</h4>
+                  </div>
+              </div>
+          </div>
+
+          <ul class="nav nav-tabs nav-justified nav-bordered mb-3">
+              <li class="nav-item">
+                  <a href="#home-b2" data-bs-toggle="tab" aria-expanded="true" class="nav-link active">
+                      <i class="mdi mdi-home-variant d-md-none d-block"></i>
+                      <span class="d-none d-md-block">Details</span>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="#profile-b2" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                      <i class="mdi mdi-account-circle d-md-none d-block"></i>
+                      <span class="d-none d-md-block">History</span>
+                  </a>
+              </li>
+          </ul>
+          
+          <div class="tab-content">
+              <div class="tab-pane show active" id="home-b2">
+                  <div class="card">
+                      <!--table-->
+                      <div class="row">
+                          <div class="col-12">
+                              <div class="bg-white px-3 py-1 text-white">
+                                  <div class="row">
+                                      <div class="col-sm-3 ">
+                                          <div class="mt-3">
+                                              <p class="font-13 text-black"><strong>Customer Name : </strong> &nbsp;&nbsp;&nbsp;
+                                                {{customer.store_name}}</p>
+                                          </div>
+                                      </div><!-- end col -->
+                                      <div class="col-sm-3 ">
+                                          <div class="mt-3">
+                                              <p class="font-13 text-black"><strong>Drug License Number : </strong>
+                                                   {{drug_license_number}}</p>
+                                                 
+
+                                          </div>
+                                      </div><!-- end col -->
+
+        
+                                      <div class="col-sm-3 ">
+                                        <div class="gap-1 d-flex align-items-center mt-2">
+                                            {% if drug_license_form20 %}
+                                            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#scrollable-modal-DL20">Form 20</button>
+
+                                                <div>
+                                                    <div class="modal fade" id="scrollable-modal-DL20" tabindex="-1" role="dialog" aria-labelledby="scrollableModalTitle" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body">
+                                                                    {% if customer.user.documents.drug_license_form20.name|lower|slice:'-3:' == 'pdf' %}
+                                                                       <iframe src="{{ drug_license_form20 }}" width="100%" height="400" style="border:none;"></iframe>
+                                                                    {% else %}
+                                                                       <img src="{{ drug_license_form20 }}" alt="Drug License Form 20" style="max-width: 100%; height: auto;">
+                                                                    {% endif %}
+                                                            
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                </div>
+                                                            </div><!-- /.modal-content -->
+                                                        </div><!-- /.modal-dialog -->
+                                                    </div><!-- /.modal -->  
+                                                </div>
+                                                <!-- end Scrollable modal -->
+                                            {% endif%}
+                                            {% if drug_license_form21 %}
+                                                <button  type="button" class="btn btn-sm btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#scrollable-modal-DL21">Form 21</button>
+                                                <div>
+                                                    <div class="modal fade" id="scrollable-modal-DL21" tabindex="-1" role="dialog" aria-labelledby="scrollableModalTitle" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body">
+                                                                    {% if customer.user.documents.drug_license_form21.name|lower|slice:'-3:' == 'pdf' %}
+                                                                      <iframe src="{{ drug_license_form21 }}" width="100%" height="400" style="border:none;"></iframe>
+                                                                    {% else %}
+                                                                      <img src="{{ drug_license_form21 }}" alt="Drug License Form 21" style="max-width: 100%; height: auto;">
+                                                                    {% endif %}
+                                                            
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                </div>
+                                                            </div><!-- /.modal-content -->
+                                                        </div><!-- /.modal-dialog -->
+                                                    </div><!-- /.modal -->  
+                                                </div>
+                                                <!-- end Scrollable modal -->
+                                            {% endif%}
+                                        </div>
+                                    </div><!-- end col -->
+                                    {% if party_code %}
+                                    <div class="col-sm-3 ">
+                                        
+                                        <div class="mt-3">
+                                            <p class="font-13 text-black"><strong>Party Code : </strong> &nbsp;&nbsp;&nbsp;
+                                              {{party_code.party_code}}</p>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                  </div>
+                                  <div class="row mb-2">
+                                 
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-md-4"> 
+                                          <h4 class="text-black d-flex text-nowrap">Order ID : #{{order_instance.id}} <span class="badge px-1 mx-4 rounded-pill me-5 {% if order_instance.order_status == 'Billed' %}badge-success-lighten {% elif order_instance.order_status == 'Cancelled' %}badge-danger-lighten {% elif order_instance.order_status == 'Pending' %}badge-secondary-lighten {% else %}badge-info-lighten {% endif %}">{{order_instance.get_order_status_display}}</span>
+                                          </h4>
+                                      </div>
+                                      {% if order_instance.order_status != 'Pending' and order_instance.order_status != 'Cancelled' %}
+                                      <div class="col-md-2">
+                                          <button type="button" id="upload_btn_bill" class="btn w-100 bg-warning text-dark" data-bs-toggle="modal" data-bs-target="#upload_stock"><i
+                                                  class="uil-upload"></i> Upload</button>
+                                      </div>
+                                      {% if invoice %}
+                                      <div class="col-md-3">
+                                          <button type="button" class="btn w-100 bg-info text-white" data-bs-toggle="modal" data-bs-target="#info-header-modal"><i
+                                                  class="uil-file"></i> Fill Invoice Details</button>
+                                      </div>
+                                      {% endif %}
+                                      <div class="col-md-3">
+                                        <a href="{% url "download-order-details" order_id=order_instance.id %}">
+                                          <button type="button" class="btn w-100 bg-primary text-white"><i
+                                                  class="uil-download-alt"></i> Download</button>
+                                        </a>
+                                      </div>
+                                      {% endif %}
+
+                                  </div>
+                              </div>
+                              <div class="card">
+                                  <div class="table-responsive">
+                                      <table class="table table-hover table-centered table-nowrap mb-0 table-fixed">
+                                          <thead class="table-light">
+                                            <tr>
+                                              <th scope="col">S.No</th>
+                                              <th scope="col">Item SKU</th>
+                                              <th scope="col">Item</th>
+                                              <th scope="col">Packing</th>
+                                              <th scope="col">Price(PTR)</th>
+                                              <th scope="col">Ordered Qty</th>
+                                              <th scope="col">Billed Qty</th>
+                                              <th scope="col">Billed Free</th>
+                                              <th scope="col">Total</th> 
+                                          </tr>
+                                          </thead>
+                                          <tbody>
+                                            {% for item in order_items %}
+                                              <tr>
+                                                  <th scope="row">{{forloop.counter}}</th>
+                                                  <td>{{item.product.distributor_sku}}</td>
+                                                  <td>{{item.product.name}}</td>
+                                                  <td>{{item.product.packing}}</td>
+                                                  <td>{{currency}} {{item.unit_price}}</td>
+                                                  <td><span class="badge badge-primary-lighten rounded-pill">{{item.quantity}}</span></td>
+                                                  <td><span class="badge badge-success-lighten rounded-pill {% if item.build_qty %}{% else %}badge-danger-lighten rounded-pill{% endif %} ">{{item.build_qty}}</span></td>
+                                                  <td><span class="badge badge-success-lighten rounded-pill {% if item.build_free %}{% else %}badge-danger-lighten rounded-pill{% endif %} ">{{item.build_free}}</span></td>
+                                                  <td>{{currency}} {{item.get_total_price|floatformat:2|intcomma }}</td>
+                                              </tr>
+                                              {% endfor %}
+                                          </tbody>
+                                      </table>
+                                  </div>
+                              </div> <!-- end card-->
+                          </div> <!-- end col -->
+                      </div>
+                      {% if order_instance.order_status == "Pending" %}
+                      <div class="d-print-none mt-0 mb-2 mx-4">
+                          <div class="text-end">
+                              <a href="" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#fill-danger-modal">Cancel Order</a>
+                              <a href="" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fill-info-modal">Accept Order</a>
+                          </div>
+                      </div>
+                      {% endif %}
+
+                      {% if order_instance.order_status == 'Billed' %}
+                     {% for invoice in order_instance.get_invoices %} 
+                     {% if invoice.invoice_file %}
+                      <div class="d-print-none mt-0 mb-2 mx-4">
+                          <div class="text-start">
+                              <a href="" class="btn btn-secondary">{{invoice.invoice_number}}</a>
+                              <a href="{{invoice_image}}" target="_blank" class="btn btn-primary">View Invoice</a>
+                          </div>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+                      {% endif %}
+                  </div>
+                  <div class="row">
+                      <div class="col-sm-12 col-md-6">
+                          <!-- Personal-Information -->
+                          <div class="card">
+                              <div class="card-body">
+                                  <h4 class="header-title mt-0 mb-3 ">Shipping Address</h4>
+                                  <hr>
+                                  <div class="text-start">
+                                    <p class="text-muted"><strong><i class="mdi mdi-store-plus"></i> {{customer.store_name}}</strong></p>
+                                    <p class="text-muted"><strong>{{customer.address}}</strong></p>
+                                    <p class="text-muted"><strong>{{customer.city}} {{customer.postal_code}}</strong></p>
+                                    <p class="text-muted"><strong>{{customer.state}}</strong></p>
+                                    <p class="text-muted"><strong>{{customer.country}}</strong></p>
+                                    <p class="text-muted"><strong><i class="mdi mdi-cellphone-basic"></i> {{customer.user.phone_number}}</strong></p>
+                                    <p class="text-muted"><strong><i class="mdi mdi-email"> </i> {{customer.store_email}}</strong></p>
+                                  </div>
+                              </div>
+                          </div>
+                          <!-- Personal-Information -->
+                      </div>
+
+                      <div class="col-sm-12 col-md-6">
+                          <!-- Personal-Information -->
+                          <div class="card">
+                              <div class="card-body">
+                                  <h4 class="header-title mt-0 mb-3">Billing Address</h4>
+                                  <hr>
+                                  <div class="text-start">
+                                      <p class="text-muted"><strong><i class="mdi mdi-store-plus"></i> {{customer.store_name}}</strong></p>
+                                      <p class="text-muted"><strong>{{customer.address}}</strong></p>
+                                      <p class="text-muted"><strong>{{customer.city}} {{customer.postal_code}}</strong></p>
+                                      <p class="text-muted"><strong>{{customer.state}}</strong></p>
+                                      <p class="text-muted"><strong>{{customer.country}}</strong></p>
+                                      <p class="text-muted"><strong><i class="mdi mdi-cellphone-basic"></i> {{customer.user.phone_number}}</strong></p>
+                                      <p class="text-muted"><strong><i class="mdi mdi-email"> </i> {{customer.store_email}}</strong></p>
+                                  </div>
+                              </div>
+                          </div>
+                          <!-- Personal-Information -->
+                      </div>
+                      
+                  </div>
+              </div>
+              <div class="tab-pane" id="profile-b2">
+                  <div class="card">
+                      <!--table-->
+                      <div class="row">
+                          <div class="col-12">
+                              <div class="bg-white px-3 py-1 text-white">
+                                  <div class="row">
+                                      <div class="col-sm-12">
+                                          <div class="mt-3">
+                                              <h4 class="text-black">Order History </h4>
+                                          </div>
+                                      </div><!-- end col -->
+                                  </div>
+                              </div>
+                              <div class="card">
+                                {% if invoice_history %}
+                                  <div class="table-responsive">
+                                      <table class="table table-centered table-nowrap mb-0">
+                                          <thead class="table-light">
+                                              <tr>
+                                                  <th>S.No</th>
+                                                  <th>Date</th>
+                                                  <th>User</th>
+                                                  <th>Action</th>
+                                                  <th>Details</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody>
+                                            {% for action in invoice_history %}
+                                              <tr>
+                                                  <td>{{forloop.counter}}</td>
+                                                  <td>{{action.timestamp}}</td>
+                                                  <td>{{action.user}}</td>
+                                                  <td>{{action.action}}</td>
+                                                  <td>{{action.details}}</td>
+                                              </tr>
+                                              {% endfor %}
+                                          </tbody>
+                                      </table>
+                                  </div>
+                                  {% else %}
+                                  <h3>No History Found !</h3>
+                                  {%endif %}
+                              </div> <!-- end card-->
+                          </div> <!-- end col -->
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+            <!-- Modal -->
+            <form method="post" id="form_id" action="{% url 'upload-bill-details' order_id=order_instance.id %}" enctype="multipart/form-data">
+              {% csrf_token %}  
+        <div class="modal fade" id="upload_stock" tabindex="-1" aria-labelledby="upload_stockLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">            
+              <div class="modal-content">
+                <div class="modal-header p-2 bg-info">
+                  <h5 class="modal-title text-light" id="upload_stockLabel">Order Bill Details</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                    <label class="form-label">Upload Your File</label>
+                      <input type="file" class="form-control" id="id_file" name="details_doc" accept=".csv, .xlsx, .xls" required>
+                      </div>
+                    <div id="alertContainer"></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" id="upload_bill_submit_btn" class="btn btn-info">Submit &nbsp;<span id="spinner" class="spinner-border spinner-border-sm" role="status" style="display: none;" aria-hidden="true"></span></button>
+                
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+          <div id="fill-info-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fill-info-modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content modal-filled bg-info">
+                    <div class="modal-header p-1">
+                        <h4 class="modal-title" id="fill-info-modalLabel">Accept Order</h4>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-hidden="true"></button>
+                    </div>
+                    <form action="" method="post">
+                      {% csrf_token %}
+                    <div class="modal-body">
+                      After this action order can not be rejected at your end.
+                      <input type="hidden" name="status" value="Accepted">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-light">Accept Order</button>
+                    </div>
+                  </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+
+        <div id="fill-danger-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fill-danger-modalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content modal-filled bg-danger">
+                  <div class="modal-header p-1">
+                      <h4 class="modal-title" id="fill-danger-modalLabel">Cancel Order</h4>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-hidden="true"></button>
+                  </div>
+                  <form action="" method="post">
+                    {% csrf_token %}
+                  <div class="modal-body">
+                    After this action order can not be process at your end.
+                    <input type="hidden" name="status" value="Cancelled">
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-info" data-bs-dismiss="modal">Do Not Cancel Order</button>
+                      <button type="submit" class="btn btn-light">Cancel Order</button>
+                  </div>
+                  </form>
+              </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      {% include 'distributor_fill_invoice_modal.html' with invoice=invoice %}
+                                                
+
+    {% endblock %}
+    {% block javascript %}
+    <script>
+        $(document).ready(function(){
+            $("#upload_btn_bill").on("click",function(){
+                $("#alertContainer").hide();
+            });
+
+            
+            $("#form_id").submit(function () {
+                $("#upload_bill_submit_btn").attr("disabled", true);
+                $("#spinner").show();
+                return true; // Submit the form
+            });
+
+            $("#invoice_form_id").submit(function () {
+                $("#upload_invoice_submit_btn").attr("disabled", true);
+                $("#invoice_spinner").show();
+                return true; // Submit the form
+            });
+
+            var $fileInput = $('#id_file');
+            var alertHTML = '<span class="alert alert-danger">' +
+                'Invalid file format. Only CSV, XLSX, and XLS formats are allowed.' +
+              '</span>';
+            $fileInput.on('change', function(event) {
+                var validFileTypes = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel", "text/csv", ".csv"];
+                var isValidFileType = Array.from($fileInput[0].files).every(file => validFileTypes.includes(file.type) || validFileTypes.includes(file.name.split('.').pop().toLowerCase()));
+                if (!isValidFileType) {
+                    // Prevent form submission
+                    event.preventDefault();
+                    $fileInput.val('');
+                    $("#alertContainer").show();
+                    $("#alertContainer").html(alertHTML);
+                }else{
+                    $("#alertContainer").hide();
+                }
+              });
+              
+
+              var $fileInput2 = $('#invoice_file');
+
+              var alertHTML = '<span class="alert alert-danger">' +
+                'Invalid file format. Only images (JPEG, PNG, etc.) and PDF files are allowed.' +
+              '</span>';
+                $fileInput2.on('change', function(event) {
+                    var validFileTypes = ["image/jpeg", "image/png", "application/pdf"];
+                    var isValidFileType = Array.from(this.files).every(file => validFileTypes.includes(file.type));
+                    if (!isValidFileType) {
+                        event.preventDefault();
+                        $fileInput2.val('');
+                        $("#invoice_alertContainer").show();
+                        $("#invoice_alertContainer").html(alertHTML);
+                    } else {
+                        $("#invoice_alertContainer").hide();
+                    }
+                });
+
+
+
+
+              $('.drug_img').click(function() {
+                event.preventDefault(); 
+                var objectKey = $(this).data('object-key');
+                $.ajax({
+                    url: "{% url 'generate-presigned-url' %}",  // URL to your Django view that generates pre-signed URL
+                    type: 'GET',
+                    data: {
+                        object_key: objectKey // Replace with your object key
+                    },
+                    success: function(response) {
+                        var presignedUrl = response.presigned_url;
+                        window.open(presignedUrl, '_blank');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+    {% endblock %}

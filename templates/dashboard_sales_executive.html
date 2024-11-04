@@ -1,0 +1,279 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+
+<title>{% block title %}Sales Executive{% endblock %}</title>
+
+{% block content %}
+<style>
+    #loader {
+        display: none;
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #3498db;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 2s linear infinite;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+<div class="content">
+    <div class="container-fluid">
+        <!--content main header-->
+        <div class="row ">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Sales Executive</h4>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="row mb-2">
+                    <div class="col-xl-12">
+                        <form action="" method="get" class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
+                            <div class="">
+                                <form method="GET" action="{% url 'sales-executive' %}">
+                                    {% csrf_token %}
+                            </div>
+                                <div class="col-sm-12 col-md-4 col-lg-2">
+                                    <input type="text" class="form-control" id="executive_name" name="executive_name" placeholder="Search Executive Name" value="{{ request.GET.executive_name }}">
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-lg-2">
+                                        <input type="text" class="form-control" id="partner_name" name="partner_name" placeholder="Search Partner Name" value="{{ request.GET.partner_name }}">
+                                </div>
+                               
+                            <div class="col-sm-12 col-md-6 col-lg-8">
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn bg-success text-white">Apply</button>
+                                    <a href="{% url 'sales-executive' %}" class="btn btn-primary text-white">Reset</a>
+                                    {% comment %} <a href="#" class="btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        Add Retailer
+                                    </a> {% endcomment %}
+                                    <button type="button" class="btn btn-warning text-black align-items-center" data-bs-toggle="modal" data-bs-target="#upload_stock" onclick="setForSFA(false)"><i class="mdi mdi-medical-bag"></i> Upload by Partner</button>
+                                    <button type="button" class="btn btn-warning text-black align-items-center" data-bs-toggle="modal" data-bs-target="#upload_stock" onclick="setForSFA(true)"><i class="mdi mdi-medical-bag"></i> Upload by Medley</button>
+                                    
+                                    <button class="btn btn-secondary text-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Download Format</button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'download_file' 'upload_sfa' %}">Upload by Partner</a>
+                                        <a class="dropdown-item" href="{% url 'download_file' 'upload_sfa_with_override' %}">Upload by Medley</a>
+                                    </div>
+                                </div>
+                            </div> 
+                            
+                        </form>  
+                    </div>
+                </div>
+            </div>
+
+            
+
+            <!--table-->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Sales Executive Name</th>
+                                        <th>Partner</th>
+                                        <th>Created</th>  
+                                        <th>Customers Assigned</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if sales_executive %}
+                                        {% for executive in sales_executive %}
+                                            <tr onclick="window.location='{% url 'retailer-assignment' pk=executive.id %}';">
+                                                <td scope="row">{{forloop.counter}}</td>
+                                                <td>{{executive.user.first_name|title}}</td>
+                                                {% if executive.distributor %}
+                                                    <td>{{executive.distributor.name|title}}</td>
+                                                {% else %}
+                                                    <td>MedleyMed Network</td>
+                                                {% endif %}
+                                                <td>{{executive.created_at}}</td> 
+
+                                                <td>{{executive.get_retailer_count}}</td>
+                                                
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> 
+                </div> 
+            </div>
+            {% include 'pagination.html' with data=sales_executive %}
+        </div>
+    </div>
+</div>
+
+<div id="loader"></div>
+
+<div class="modal fade" id="upload_stock" tabindex="-1" aria-labelledby="upload_stockLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header p-2 bg-info">
+            <h5 class="modal-title text-white" id="upload_stockLabel">Bulk Upload</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-1">
+                <label for="id_file" class="form-label">Upload Your File</label>
+                <input type="file" class="form-control" id="fileInput" name="_file" accept=".csv, .xlsx, .xls" required>
+                <p id="errorMessage" class="error-message"></p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" id="for_sfa_upload" class="btn btn-info">Submit</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+  
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'assets/js/retailer_search.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.10.1/jquery-ui.min.js"></script>
+<script src="{% static "home/js/jquery.min.js" %}"></script> 
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+        function getCSRFToken() {
+            const csrfCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('csrftoken='));
+            if (csrfCookie) {
+                return csrfCookie.split('=')[1];
+            }
+            return null;
+        }
+
+    //-------------UPLOAD FILE PROCESS START----------------------
+
+    function showAlert(message, i_status, title_status) {
+        Swal.fire({
+            icon: i_status,
+            title: title_status,
+            text: message,
+            showConfirmButton: true,
+            timer: 10000,
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
+                location.reload();
+            }
+        });
+    }
+  
+    function getCSRFToken() {
+        const csrfCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('csrftoken='));
+        if (csrfCookie) {
+            return csrfCookie.split('=')[1];
+        }
+        return null;
+    }
+    
+    function uploadFile(file, override){        
+        const uploadURL = "{% url 'sfa-file-upload-by-admin' %}"; 
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('data', override); 
+
+        showLoader();
+        fetch(uploadURL, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCSRFToken('csrftoken')
+            }
+        })
+        .then(response => {
+            hideLoader();
+            if (response.ok) {
+                const contentType = response.headers.get('Content-Type');
+                if (contentType && contentType.includes('text/csv')) {
+                    return response.blob();
+                } else {
+                    showAlert("The file has been Uploaded successfully.", "success", "Success!");
+                }
+            } else {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error);
+                });
+            }
+        })
+        .then(blobData => {
+            if (blobData) {
+                const url = window.URL.createObjectURL(blobData);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'SFA_wrong_data.csv';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                showAlert("The file has been Uploaded successfully.", "success", "Success!");
+            }
+        })
+        .catch(error => {
+            showAlert(error.message, "error", "Error!");
+        });
+    }
+
+    function showLoader() {
+        const loader = document.getElementById('loader');
+        loader.style.display = 'block';
+    }
+
+    function hideLoader() {
+        const loader = document.getElementById('loader');
+        loader.style.display = 'none';
+    }
+
+    function validateAndUpload(retailer_override) {
+        const fileInput = document.getElementById('fileInput');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        if (fileInput.files.length === 0) {
+          errorMessage.textContent = "Please choose a file before uploading.";
+          errorMessage.style.color = "red";
+        } else {
+          const allowedExtensions = ["xlsx", "xls", "csv"];
+          const selectedFile = fileInput.files[0];
+          const fileName = selectedFile.name;
+          const fileExtension = fileName.split('.').pop().toLowerCase();
+          
+          if (allowedExtensions.includes(fileExtension)) {
+            errorMessage.textContent = ""; 
+            uploadFile(selectedFile, retailer_override);
+          } else {
+            errorMessage.textContent = "Please select an Excel (XLSX/XLS) or CSV file.";
+            errorMessage.style.color = "red";
+          }
+        }
+    }
+
+    function setForSFA(value) {
+        var for_sfa_upload = document.getElementById('for_sfa_upload');
+        for_sfa_upload.setAttribute('onclick', 'validateAndUpload("' + value + '")');
+    }
+     
+</script>
+
+{% endblock %}

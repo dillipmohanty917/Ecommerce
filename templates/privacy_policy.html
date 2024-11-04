@@ -1,0 +1,97 @@
+<html lang="en">
+      {% load i18n %}
+      {% load static %}
+      {% load render_bundle from webpack_loader %}
+      {% load i18n %}
+   <head>
+      <meta charset="utf-8">
+      <title>MedleyMed Network</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no,  minimal-ui" />
+      <meta content="" name="keywords">
+      <meta content="" name="description">
+      <!-- Favicons -->
+
+      <link rel="shortcut icon" href="{% static "assets/images/favicon.ico" %}">
+      <!-- Google Tag Manager -->
+      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-N3JJZ7H');</script>
+      <!-- End Google Tag Manager -->
+      <!-- Bootstrap CSS File -->
+      <link rel="stylesheet" href="{% static "home_v2/lib/bootstrap/css/bootstrap.min.css" %}" >
+      <!-- Libraries CSS Files -->
+      {# <link rel="stylesheet" type="text/css" href="{% static "home_v2/font-awesome/css/font-awesome.min.css" %}"> #}
+      <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="{% static "home_v2/lib/animate/animate.min.css" %}" >
+      <!-- Auto complete css File -->
+      <link rel="stylesheet" href="{% static "home_v2/lib/auto-complete/jquery-ui.css" %}">
+      <!-- Main Stylesheet File -->
+      <link rel="stylesheet" href="{% static "home_v2/css/style.css" %}">
+   </head>
+   <body>
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N3JJZ7H"
+         height="0" width="0" style="display:none;visibility:hidden"></iframe>
+      </noscript>
+      <!--==========================
+         Header
+         ============================-->
+         {% include 'header.html' %}
+      <!-- #header -->
+
+      
+<div class="container" style="margin-top: 150px;">
+
+
+<div class="privacy_policy">
+    <h2 style="text-align:center;margin-bottom:45px;">Privacy Policy</h2>
+<div  slot="content" class="privay_content">
+    <div>
+
+
+<p style="font-family: 'Roboto', sans-serif">
+    This privacy notice discloses the privacy practices for&nbsp;http://www.medleymednetwork.com. This privacy notice applies solely to information collected by this website. It will notify you of the following:
+       </p>
+       <ul>
+       <li style="font-family: 'Roboto', sans-serif"> What personally identifiable information is collected from you through the website, how it is used and with whom it may be shared.</li>
+       <li style="font-family: 'Roboto', sans-serif"> What choices are available to you regarding the use of your data.</li>
+       <li style="font-family: 'Roboto', sans-serif"> The security procedures in place to protect the misuse of your information.</li>
+       <li style="font-family: 'Roboto', sans-serif"> How you can correct any inaccuracies in the information.</li>
+    </ul>
+    <h5 style="font-family: 'Roboto', sans-serif">INFORMATION COLLECTION, USE, AND SHARING</h5>
+      <ul>
+       <li style="font-family: 'Roboto', sans-serif">We are the sole owners of the information collected on this site. We only have access to/collect information that you voluntarily give us via email or other direct contact from you. We will not sell or rent this information to anyone.</li>
+        
+        <li style="font-family: 'Roboto', sans-serif"> We will use your information to respond to you, regarding the reason you contacted us. We will not share your information with any third party outside of our organization, other than as necessary to fulfill your request, e.g. to ship an order.</li>
+        
+        <li style="font-family: 'Roboto', sans-serif">Unless you ask us not to, we may contact you via email in the future to tell you about specials, new products or services, or changes to this privacy policy.</li>
+        </ul>
+            <h5 style="font-family: 'Roboto', sans-serif">YOUR ACCESS TO AND CONTROL OVER INFORMATION</h5>
+    <p style="font-family: 'Roboto', sans-serif">You may opt out of any future contacts from us at any time. You can do the following at any time by contacting us via the email address or phone number given on our website:
+       <ul>
+        <li>See what data we have about you, if any.</li>
+            <li>Change/correct any data we have about you.</li>
+                <li>Have us delete any data we have about you.</li>
+                    <li>Express any concern you have about our use of your data.</li>
+                </ul>
+    </p>
+    <h5 style="font-family: 'Roboto', sans-serif">SECURITY</h5>
+    <p style="font-family: 'Roboto', sans-serif;margin-bottom: 200px;">We take precautions to protect your information. When you submit sensitive information via the website, your information is protected both online and offline.
+    Wherever we collect sensitive information (such as credit card data), that information is encrypted and transmitted to us in a secure way. You can verify this by looking for a lock icon in the address bar and looking for "https" at the beginning of the address of the Web page.
+    While we use encryption to protect sensitive information transmitted online, we also protect your information offline. Only employees who need the information to perform a specific job (for example, billing or customer service) are granted access to personally identifiable information. The computers/servers in which we store personally identifiable information are kept in a secure environment.
+    If you feel that we are not abiding by this privacy policy, you should contact us immediately&nbsp;via email at&nbsp;info@medleymednetwork.com</p>
+
+
+</div>
+</div>
+</div>
+</div>
+ 
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 text-center" style="box-shadow: 16px 6px 15px 13px rgb(0 0 0 / 10%);">      
+          {% include 'footer.html' %}
+       </div>       
+     </div>
+</body>

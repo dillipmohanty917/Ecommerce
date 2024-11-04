@@ -1,0 +1,208 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% load humanize%}
+    <title>{% block title %}Master Orders{% endblock %}</title>
+    {% block custom_css %}
+    <link href="{% static 'assets/css/custom.css' %}" rel="stylesheet" type="text/css" />
+    {% comment %} <link rel="stylesheet" href="assets/vendor/daterangepicker/daterangepicker.css" type="text/css" /> {% endcomment %}
+    <!-- Daterangepicker js -->
+    {% comment %} <script src="assets/vendor/daterangepicker/moment.min.js"></script>
+    <script src="assets/vendor/daterangepicker/daterangepicker.js"></script> {% endcomment %}
+    {% endblock %}
+
+       {% block content %}
+            <div class="content">
+                <div class="container-fluid">
+                    <!--content main header-->
+                    <div class="row ">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title">Master Orders</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row mb-2">
+                                <div class="col-xl-12">
+                                    <form method="GET" action="{% url 'master_order_list' %}">
+                                        <div class="row gy-2 gx-2 align-items-center justify-content-xl-start">
+                                            <div class="col-sm-12 col-md-4 col-lg-3">
+                                                <input type="text" class="form-control" id="order_id" name="order_id" placeholder="Search Order ID" value="{{ request.GET.order_id }}">
+                                            </div>
+                                            
+                                            <div class="col-sm-12 col-md-4 col-lg-3">
+                                                <input type="text" class="form-control" id="mobile_number" name="retailer_name" placeholder="Search Customer Name" value="{{ request.GET.retailer_name }}">
+                                            </div>
+                                            
+                                            <div class="col-sm-12 col-md-4 col-lg-3">
+                                                <div class="relative w-100">
+                                                    <input type="hidden" id="selectedPartnerId" name="selectedPartnerId" value="{{ request.GET.selectedPartnerId }}">
+                                                    <input  class="form-control" id="partner_search" name="partner_name" type="search" value="{{ request.GET.partner_name }}" placeholder="Search partners" autocomplete="off">
+                                                    <div class="list-group" id="show-list">
+                                                     
+                                                    </div>
+                                                  </div>
+                                                
+                                            </div>
+                                            <div class="col-sm-12 col-md-4 col-lg-3 gap-2 d-flex justify-content-end align-items-center">
+                                                <button type="submit" class="btn btn-light w-100 bg-success text-white">Apply</button>
+                                                <a href="{% url 'master_order_list' %}" class="btn btn-primary w-100 text-white">Reset</a>
+                                               
+                                            </div>
+                                          <div class="col-sm-12 col-md-4 col-lg-3">
+                                            <form id="date_range_form" action="{% url 'master_order_list' %}" method="get">
+                                                <div class="">
+                                                    <div id="reportrange" class="daterange_padding">
+                                                        <input class="form-control date" id="datepicker_display" name="datetimes_display" data-toggle="date-picker">
+                                                        <input type="hidden" id="datepicker_start" name="datetimes_start" value="{{datetimes_start}}">
+                                                        <input type="hidden" id="datepicker_end" name="datetimes_end" value="{{ datetimes_end}}">
+                                                        <input type="hidden" id="action" name="action" value="">
+                                                    </div>
+                                                </div>
+                                            </form>                                         
+                                            </div>
+                                            <div class="col-sm-12 col-md-4 col-lg-3">
+                                                <a class="btn btn-warning text-black w-100" href="#" id="download_link">Download Itemwise Report</a>
+                                            </div>
+                                            <div class="col-sm-12 col-md-4 col-lg-3">
+                                                <a class="btn btn-secondary text-white w-100" href="#" id="download_order">Download Orderwise Report</a>
+                                            </div>                                   
+                                                                  
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        
+
+                        <!--table-->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-centered table-nowrap mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th>Order ID</th>
+                                                    <th>Status</th>
+                                                    <th>Customer Name</th>
+                                                    <th>Partner Name </th>
+                                                    {% comment %} <th>City</th> {% endcomment %}
+                                                    <th>No.of Items</th>
+                                                    <th>Order Value</th>
+                                                    <th>Placed On</th>
+                                                    
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                 {% for order in orders %}
+                                                    <tr onclick="window.location='{% url 'dashboard-order-details' order_id=order.id %}';" style="cursor:pointer;">
+                                                        <td>{{ forloop.counter0|add:orders.start_index  }}</td>
+                                                        <td>#{{order.id}}</td>
+                                                        <td><span class="badge rounded-pill {% if order.order_status == 'Billed' %}badge-success-lighten {% elif order.order_status == 'Cancelled' %}badge-danger-lighten {% elif order.order_status == 'Pending' %}badge-secondary-lighten {% else %}badge-info-lighten {% endif %}">{{ order.get_order_status_display }}</span></td>
+                                                        <td>{{order.retailer_store_name}}</td>
+                                                        <td>{{order.distributor.name}}</td>
+                                                        {% comment %} <td>{{order.retailer_city}}</td> {% endcomment %}
+                                                        <td>{{order.get_order_item_number}}</td>
+                                                        <td>{{order.total_amount|floatformat:2|intcomma}}</td>
+                                                        <td>{{order.created_at}}</td>
+                                                        
+                                                    </tr>
+                                                {% endfor %} 
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
+                        </div>
+
+                        {% include 'pagination.html' with data=orders %} 
+                    </div>
+
+
+
+
+                </div>
+            </div>
+            {% endblock %}
+            <!-- content -->
+
+        {% block scripts %}
+            {{block.super}}
+            <script src="{% static 'assets/js/partner_search.js' %}"></script>
+            <script>
+                $(document).ready(function() {
+                    // Get the current date and the date one week ago
+                    var endDate = moment();
+                    var startDate = moment().subtract(7, 'days');
+            
+                    // Set the default date input field values
+                    $('#datepicker_start').val(startDate.format('YYYY-MM-DD'));
+                    $('#datepicker_end').val(endDate.format('YYYY-MM-DD'));
+            
+                    // Initialize date range picker
+                    $('#reportrange').daterangepicker({
+                        autoUpdateInput: false,
+                        startDate: startDate, // Set start date to one week ago
+                        endDate: endDate,   // Set end date to today
+                        locale: {
+                            format: 'YYYY-MM-DD'
+                        },
+                        maxDate: moment() // Set maximum date to today
+                    });
+            
+                    // Set the initial value in the display input field
+                    $('#datepicker_display').val(startDate.format('YYYY-MM-DD') + ' / ' + endDate.format('YYYY-MM-DD'));
+            
+                    // Handle date range selection
+                    $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
+                        // Check if end date is greater than today's date
+                        if (picker.endDate > moment()) {
+                            // Set end date to today's date
+                            picker.endDate = moment();
+                        }
+            
+                        // Update the display input field with the selected date range
+                        $('#datepicker_display').val(picker.startDate.format('YYYY-MM-DD') + ' / ' + picker.endDate.format('YYYY-MM-DD'));
+                        
+                        // Update hidden input fields with selected dates
+                        $('#datepicker_start').val(picker.startDate.format('YYYY-MM-DD'));
+                        $('#datepicker_end').val(picker.endDate.format('YYYY-MM-DD'));
+                        
+                        // Update download links with selected dates
+                        var downloadLinkUrl = '{% url "master_order_list" %}?download=true&datetimes_start=' + $('#datepicker_start').val() + '&datetimes_end=' + $('#datepicker_end').val();
+                        $('#download_link').attr('href', downloadLinkUrl);
+            
+                        var downloadOrderUrl = '{% url "master_order_list" %}?download_order_wise=true&datetimes_start=' + $('#datepicker_start').val() + '&datetimes_end=' + $('#datepicker_end').val();
+                        $('#download_order').attr('href', downloadOrderUrl);
+                    });
+            
+                    // Handle download link click event
+                    $('#download_link, #download_order').click(function(e) {
+                        // Check if dates are selected
+                        if ($('#datepicker_start').val() && $('#datepicker_end').val()) {
+                            // Proceed with download
+                            return true;
+                        } else {
+                            // Prevent default action if dates are not selected
+                            e.preventDefault();
+                            alert('Please select a date range first.');
+                        }
+                    });
+            
+                    // Set the initial download links with the default date range
+                    var initialDownloadLinkUrl = '{% url "master_order_list" %}?download=true&datetimes_start=' + startDate.format('YYYY-MM-DD') + '&datetimes_end=' + endDate.format('YYYY-MM-DD');
+                    $('#download_link').attr('href', initialDownloadLinkUrl);
+            
+                    var initialDownloadOrderUrl = '{% url "master_order_list" %}?download_order_wise=true&datetimes_start=' + startDate.format('YYYY-MM-DD') + '&datetimes_end=' + endDate.format('YYYY-MM-DD');
+                    $('#download_order').attr('href', initialDownloadOrderUrl);
+                });
+            </script>       
+            
+                 
+        {% endblock %}

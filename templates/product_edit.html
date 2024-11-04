@@ -1,0 +1,169 @@
+
+{% extends template_to_extend %}
+{% load static %}
+<title>{% block title %}Edit Product{% endblock %}</title>
+{% block custom_css %}
+{% endblock %}
+
+{% block content %}
+<style>
+  .form-label {
+      color: #333;
+  }
+  .form-control ,.form-select{
+      color: #3685cb;
+  }
+</style>
+ <div class="content">
+  <div class="container-fluid">
+      <!--content main header-->
+      <div class="row ">
+          <div class="col-12">
+              <div class="page-title-box">
+                  <h4 class="page-title">Product Details</h4>
+              </div>
+          </div>
+      </div>
+
+      <div class="card">
+          <div class="card-header">
+              <form method="post" action="" id="updateForm">
+                  {% csrf_token %}
+              <div class="row">
+
+                  <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                      <label class="form-label">Product Name</label>
+                      <input type="text" name="name" id="name" value="{{product.name}}" class="form-control" required>
+                  </div>
+                  <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                      <label class="form-label">Product SKU</label>
+                      <input type="text" name="distributor_sku" id="distributor_sku" value="{{product.distributor_sku}}" class="form-control" required>
+                  </div>
+
+                  <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                    <label class="form-label">Unit Price</label>
+                    <input type="text" name="ptr" id="ptr" value="{{product.ptr}}" class="form-control" required>
+                </div>
+
+                  <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                      <label class="form-label">Max Retail Price</label>
+                      <input type="text" name="mrp" id="mrp" value="{{product.mrp}}" class="form-control" required>
+                  </div>
+
+
+                  <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                      <label class="form-label">Product class</label>
+                      <input type="text" name="product_class" id="product_class" value="{{product.product_class}}" class="form-control" >
+                  </div>
+
+                  <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                      <label class="form-label">Packing</label>
+                      <input type="text" name="packing" id="packing" value="{{product.packing}}" class="form-control" >
+                  </div>
+
+                  <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                      <label class="form-label">HSN Code</label>
+                      <input type="text" name="hsn" id="hsn" value="{{product.hsn}}" class="form-control">
+                  </div>
+
+                  <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                    <label class="form-label">Scheme Billed</label>
+                    <input type="text" name="scheme_billed" id="scheme_billed" value="{{product.scheme_billed}}" class="form-control" >
+                </div>
+
+                <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                  <label class="form-label">Scheme Free</label>
+                  <input type="text" name="scheme_free" id="scheme_free" value="{{product.scheme_free}}" class="form-control" >
+              </div>
+              <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                <label class="form-label">Product Category</label>
+                    <select class="form-select" id="floatingSelect" name="product_category" id="product_category" aria-label="Floating label select example">
+                        {% for value, label in product.product_category_choices %}
+                        <option value="{{ value }}" {% if label == product.product_category %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+
+                  <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                      <label class="form-label">Product Salt</label>
+                      <input type="text" name="product_salt" id="product_salt" value="{{product.product_salt}}" class="form-control" >
+                  </div>
+              
+                  <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                      <label class="form-label">Product Composition</label>
+                      <input type="text" name="product_composition" id="product_composition" value="{{product.product_composition}}" class="form-control">
+                  </div>
+              </div>
+              <input type="hidden" name="upload_flag" id="upload_flag" value="">
+
+              <div class="row d-flex align-items-center justify-content-end">
+                <div class="col-md-3">
+                    {% if request.user.is_superuser or request.user.is_admin %}
+                    <a href="{% url 'dashboard-products' %}">
+                    <button class="btn btn-danger card-body py-2 text-white  w-100" type="button">Cancel</button>
+                    </a>
+                    {% elif request.user.is_distributor %}
+                    <a href="{% url 'distributor-products' %}">
+                        <button class="btn btn-danger card-body py-2 text-white  w-100" type="button">Cancel</button>
+                        </a>
+                    {% endif %}
+                    
+                </div>
+                  <div class="col-md-3">
+                      <button class="btn btn-info card-body py-2 text-white  w-100" type="submit">Update</button>
+                  </div>
+              </div>
+          </form>
+          </div>
+
+
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-centered table-nowrap mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Batch No</th>
+                                    <th>Quantity</th>
+                                    <th>Expiry_date</th>
+                                    <th>Discount</th>
+                                    <th>GST</th>
+                                  
+                                </tr>
+                            </thead>
+                            <tbody>
+                              {% for product in distributor_stock_instances %}
+                                <tr>
+                                  <td>{{forloop.counter}}</td>
+                                  <td>{{product.batch_number}}</td>
+                                  <td>{{product.quantity}}</td>
+                                  <td>{{product.expiry_date}}</td>
+                                  <td>{{currency}} {{product.discount}}</td>
+                                  <td>{{currency}} {{product.gst}}</td>
+                                </tr>
+                                {% endfor %}
+                              </tbody>
+                        </table>
+                    </div>
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+        </div>
+
+
+    </div>
+
+
+
+  </div>
+
+
+
+</div>
+{% endblock %}

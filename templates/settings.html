@@ -1,0 +1,338 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% block title %}Configurations - MedleyMed Network{% endblock %}
+{% block custom_css %}
+{% endblock %}
+{% block content %}
+
+<style>
+
+    /* Style the table header */
+    #settingTable thead th {
+        background-color: #f0f0f0;
+        font-weight: bold;
+    }
+
+    /* Style the table rows */
+    #settingTable tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    /* Style the hover effect on rows */
+    #settingTable tbody tr:hover {
+        background-color: #f0f0f0;
+    }
+
+    /* Style the action buttons */
+    #settingTable tbody tr td button {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    /* Style the edit button */
+    #settingTable tbody tr td button.edit-button i {
+        color: green;
+    }
+
+    /* Style the delete button */
+    #settingTable tbody tr td button.delete-button i {
+        color: red;
+    }
+
+    #settingTable tbody tr td .action-buttons {
+        display: flex; /* Use flexbox to align buttons horizontally */
+        align-items: center; /* Center buttons vertically */
+    }
+
+    #settingTable tbody tr td .action-buttons button {
+        margin-right: 7px; 
+    }
+
+    .card-header .flex-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .card-header .col-sm-12,
+    .card-header .col-md-6,
+    .card-header .col-lg-2,
+    .card-header .col-lg-6 {
+        flex-grow: 1;
+        max-width: 100%;
+    }
+
+    .form-control {
+        width: calc(100% - 10px);
+        margin-right: 10px;
+    }
+
+    .btn {
+        display: inline-block;
+    }
+
+
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Configurations</h4>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="row mb-2">
+                    <div class="col-xl-12 flex-container">
+                        <div class="col-sm-12 col-md-6 col-lg-2">
+                            <input type="search" class="form-control" id="searchInput" placeholder="Search..." required>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <div class="d-flex gap-2">
+                                <button id="addNewButton" class="btn bg-success text-white">Add New</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--table-->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap mb-0" id="settingTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>SI No.</th>
+                                        <th>Key</th>
+                                        <th>Type</th>
+                                        <th>Value</th>
+                                        <th>Active</th>
+                                        <th>Created At</th>
+                                        <th>Updated At</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for setting in settings %}
+                                        <tr id="setting_id_{{setting.id}}">
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ setting.key }}</td>
+                                            <td>{{ setting.type }}</td>
+                                            <td><b>{{ setting.value }}</b></td>
+                                            <td>{{ setting.is_active }}</td>
+                                            <td>{{ setting.created_at }}</td>
+                                            <td>{{ setting.updated_at }}</td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="edit-button" onclick="editFunction({{setting.id}})">
+                                                        <i class="mdi mdi-square-edit-outline"></i>
+                                                    </button>
+                                                    
+                                                    <form method="POST">
+                                                        {% csrf_token %}
+                                                        <button class="delete-button" type="submit" name="delete" value="{{ setting.id }}" onclick="return confirm('Are you sure you want to delete this Configuration?')">
+                                                            <i class="fa-solid fa-trash-can"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> 
+                </div> 
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addNewModal" tabindex="-1" aria-labelledby="addNewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addNewModalLabel">Add New Configuration</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addNewForm" method="POST" onsubmit="return checkTypeAndValueType()">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="key" class="form-label">Key</label>
+                        <input type="text" class="form-control" placeholder="Characters Recomended" id="key" name="key" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Type</label>
+                        <select class="form-select" id="data_type" name="type" required>
+                            <option value="-----">Select Type</option>
+                            <option value="JSON">JSON</option>
+                            <option value="LIST">LIST</option>
+                            <option value="STRING">STRING</option>
+                            <option value="INTEGER">INTEGER</option>
+                            <option value="BOOLEAN">BOOLEAN</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="valueField">
+                        <label for="value" class="form-label">Value</label>
+                        <input type="text" class="form-control" id="value" name="value" required>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="is_active" name="is_active">
+                        <label class="form-check-label" for="is_active">Is Active</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("key").addEventListener("input", function() {
+        this.value = this.value.toUpperCase();
+    });
+
+
+    document.getElementById("addNewButton").addEventListener("click", function() {
+        var myModal = new bootstrap.Modal(document.getElementById('addNewModal'));
+        myModal.show();
+    });
+
+
+    document.getElementById("data_type").addEventListener("change", function() {
+        var dataType = this.value;
+        var valueInputField = document.getElementById("value");
+
+        if (dataType === "JSON") {
+            valueInputField.setAttribute("placeholder", "{'key1':'value1',  'key2':'value2'}");
+        } else if (dataType === "LIST") {
+            valueInputField.setAttribute("placeholder", "['1234567891',  '2345678901']");
+        } else if (dataType === "STRING") {
+            valueInputField.setAttribute("placeholder", "medleymed");
+        } else if (dataType === "INTEGER") {
+            valueInputField.setAttribute("placeholder", "123456");
+        } else if (dataType === "BOOLEAN") {
+            valueInputField.setAttribute("placeholder", "True/False");
+        } else {
+            valueInputField.setAttribute("placeholder", "");
+        }
+    });
+
+    function editFunction(id){
+        var myModal = new bootstrap.Modal(document.getElementById('addNewModal'));
+        var rowValues = document.getElementById("setting_id_" + id);
+        var tdCells = rowValues.getElementsByTagName("td");
+        document.getElementById("key").value = tdCells[1].textContent;
+        document.getElementById("data_type").value = tdCells[2].textContent;
+        document.getElementById("value").value = tdCells[3].textContent;
+        var isActiveCheckbox = document.getElementById("is_active");
+        isActiveCheckbox.checked = (tdCells[4].textContent.toLowerCase() === 'true');
+        myModal.show();
+    }
+
+
+    document.getElementById("searchInput").addEventListener("input", function() {
+        var searchText = this.value.toLowerCase();
+        console.log(searchText)
+        var rows = document.querySelectorAll("#settingTable tbody tr");
+    
+        rows.forEach(function(row) {
+            var key = row.cells[1].textContent.toLowerCase();
+            var type = row.cells[2].textContent.toLowerCase();
+            var value = row.cells[3].textContent.toLowerCase();
+            var isActive = row.cells[4].textContent.toLowerCase();
+    
+            if (key.includes(searchText) || type.includes(searchText) || value.includes(searchText) || isActive.includes(searchText)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
+
+    function showingTostMsg(msg) {
+        $.toast({
+            heading: 'Error',
+            text: msg,
+            icon: 'error',
+            position: 'bottom-right',
+            bgColor: 'rgb(215 21 48)',
+            textColor: 'white',
+            hideAfter: 6000,
+            showHideTransition: 'plain'
+        });
+    }
+    
+    function checkTypeAndValueType() {
+        var type = document.getElementById("data_type").value;
+        var value = document.getElementById("value").value;
+        if (type === "JSON") {
+            try {
+                let replacedValue = value.replace(/'/g, '"');
+                let jsonData = JSON.parse(replacedValue);
+                return true
+            } catch (error) {
+                showingTostMsg("Please enter a value in JSON format, like {'key1':'value1',  'key2':'value2'}")
+                return false;
+            }
+        } else if (type === "BOOLEAN"){
+            try {
+                var lowerValue = value.toLowerCase();
+                if (lowerValue !== "true" && lowerValue !== "false") {
+                    showingTostMsg('Please enter a value of "True" or "False" for BOOLEAN type.')
+                    return false;
+                }
+            } catch (error) {
+                showingTostMsg('Please enter a value of "True" or "False" for BOOLEAN type.')
+                return false; 
+            }
+            
+        } else if (type === "INTEGER"){
+            try {
+                if (!Number.isInteger(Number(value))) {
+                    showingTostMsg('Please enter a valid integer value for INTEGER type.')
+                    return false;
+                }
+            } catch (error) {
+                showingTostMsg('Please enter a value in INTEGER format.')
+                return false; 
+            }
+            
+        } else if (type === "-----"){
+            showingTostMsg('Please select a type.')
+            return false; 
+
+        } else if (type === "LIST"){
+            try {
+                let jsonString = value.replace(/'/g, '"');
+                let myArray = JSON.parse(jsonString);
+                if (Array.isArray(myArray)) {
+                    return true
+                } else {
+                    showingTostMsg('Please enter a value in LIST format like "["1234567891",  "2345678901"]"')
+                    return false 
+                }
+
+            } catch (error) {
+                showingTostMsg('Please enter a value in LIST format like "["1234567891",  "2345678901"]"')
+                return false; 
+            }
+            
+        }
+    }
+    
+    
+    
+</script>
+
+
+{% endblock %}

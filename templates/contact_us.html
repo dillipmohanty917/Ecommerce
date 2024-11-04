@@ -1,0 +1,406 @@
+<html lang="en">
+
+{% load i18n %}
+{% load static %}
+{% load render_bundle from webpack_loader %}
+{% comment %} {% load i18n %} {% endcomment %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedleyMed Network</title>
+
+
+
+    <link rel="shortcut icon" href="{% static "assets/images/favicon.ico" %}">
+    {% comment %} <link rel="shortcut icon" href="{% static "home_v2/img/Favicon_MedleyMed.ico" %}"> {% endcomment %}
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-N3JJZ7H');</script>
+    <!-- End Google Tag Manager -->
+    <!-- Bootstrap CSS File -->
+    <link rel="stylesheet" href="{% static "home_v2/lib/bootstrap/css/bootstrap.min.css" %}" >
+    <!-- Libraries CSS Files -->
+    {# <link rel="stylesheet" type="text/css" href="{% static "home_v2/font-awesome/css/font-awesome.min.css" %}"> #}
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static "home_v2/lib/animate/animate.min.css" %}" >
+    <!-- Auto complete css File -->
+    <link rel="stylesheet" href="{% static "home_v2/lib/auto-complete/jquery-ui.css" %}">
+    <!-- Main Stylesheet File -->
+    <link rel="stylesheet" href="{% static "home_v2/css/style.css" %}">
+
+    <link href="{% static 'assets/css/app-creative.min.css' %}" rel="stylesheet" type="text/css" id="app-style" />
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+      integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+      integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+      crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="{% static 'assets/js/hyper-config.js' %}"></script>
+
+    <!-- App js -->
+    <script src="{% static 'assets/js/app.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <!--google fonts-->
+    {% comment %} <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet"> {% endcomment %}
+    <!-- Toaster -->
+    <link href="{% static 'assets/vendor/jquery-toast-plugin/jquery.toast.min.css' %}" rel="stylesheet" type="text/css" />
+  
+    <style>
+        @font-face {
+            font-family: headingFont;
+            src: url({% static "assets/fonts/CourierPrime-Bold.ttf" %});
+        }
+ 
+        @font-face {
+            font-family: bodyFont;
+            src: url({% static "assets/fonts/Numans-Regular.ttf" %});
+            font-weight: bold;
+        }
+        body{
+            font-family: bodyFont;
+        }
+        .primary-font {
+            font-family: headingFont;
+        }
+
+        .home-landing .hero {
+            position: relative;
+            /* background: url(https://images.unsplash.com/photo-1489844097929-c8d5b91c456e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1052&q=80);
+            background: url({% static "assets/images/new_images/bg.png" %}); */
+            /* min-height: 80vh; */
+            padding: 100px 0px 0px 0px;
+            background-color: #0a0a26;
+
+            /* background-size: cover;
+            background-position: center; */
+            border-radius: 0px 0px 0px 100px;
+        }
+
+        {% comment %} .primary-font {
+            font-family: courier-prime-bold;
+        } {% endcomment %}
+
+        .a {
+            text-decoration: none;
+        }
+
+        .home-landing .areyoubg {
+            position: relative;
+            /* background: url(https://images.unsplash.com/photo-1489844097929-c8d5b91c456e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1052&q=80); */
+            background: url({% static "assets/images/new_images/areyoubg.png" %});
+            /* min-height: 80vh; */
+            padding: 50px 0px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-heading {
+            font-size: 60px;
+        }
+
+        .home-landing .hero h1 {
+            font-size: 60px;
+            font-weight: 800;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+        }
+
+        .home-landing .hero h1 span {
+            color: #fff;
+        }
+
+        h1 {
+            color: black;
+            font-weight: 800;
+
+        }
+
+
+
+        .list-none {
+            list-style: none;
+        }
+
+        .text-gray {
+            color: #5e5e60;
+            font-size: 18px;
+        }
+
+        .bgrd-primary {
+            background-color: #0a0a26;
+        }
+
+        .p-color {
+            color: #0a0a26;
+        }
+
+        .rounded-full {
+            border-radius: 100px;
+        }
+        .rounded-3 {
+            border-radius: 20px !important;
+        }
+
+        /*contact*/
+        .bg-blue{
+            background-color: #e5eff8;
+        }
+        .bg-hero-contact{
+            background-image: url({% static "assets/images/new_images/bg-contact.png" %});
+            background-repeat: no-repeat;
+            background-position: top;
+            background-size: cover;
+        }
+
+        .a {
+            text-decoration: none;
+        }
+
+        a{
+            text-decoration:none;
+            color:white;
+        }
+        
+    </style>
+</head>
+
+<body class="home-landing" style="background-color: #f7f8fc;">
+    {% include 'header.html' %}
+    <!-- hero section -->
+    <section class="hero bg-hero-contact">
+        <div class="container">
+            <div class="py-5">
+                <h1 class="hero-heading text-white primary-font pb-5">
+                    <u style="text-decoration-color: #10c1cb;">Contact Us</u>
+                </h1>
+            </div>
+        </div>
+    </section>
+
+    <!--hello there and form-->
+    <section>
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-5 p-4">
+                    <h1 class="p-color primary-font">Hello There!!</h1>
+                    <div class="mt-4">
+                        <li class="list-none d-flex gap-4 align-items-center">
+                            <!-- <div
+                                style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                            </div> -->
+                            <div class="text-gray">
+                                You have come to right place. Got any questions? <br>
+                                Our team is here to help.
+                            </div>
+                        </li>
+                    </div>
+                    <div class="d-flex gap-2 mt-4">
+                         <a href="https://youtube.com/@medleymedicalsolutionspriv5417?feature=shared">
+                            <img style="width: 40px;" src={% static "assets/images/new_images/youtube-icon.png" %} alt="youtube-icon">
+                         </a>
+                         <a href="https://www.facebook.com/share/jG2ad4MPyVqACbLD/?mibextid=qi2Omg">
+                            <img style="width: 40px;" src={% static "assets/images/new_images/fb-icon.png" %} alt="fb-icon">
+                         </a>
+                         {% comment %} <a href="">
+                            <img style="width: 40px;" src={% static "assets/images/new_images/linked-icon.png" %} alt="linked-icon">
+                         </a> {% endcomment %}
+                         <a href="https://www.instagram.com/medleymednetwork?igsh=N3BvbWs2NjJ3Y3R2">
+                            <img style="width: 40px;" src={% static "assets/images/new_images/insta-icon.png" %} alt="insta-icon">
+                         </a>
+                         {% comment %} <a href="">
+                            <img style="width: 40px;" src={% static "assets/images/new_images/x.png" %} alt="x-icon">
+                         </a> {% endcomment %}
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <form method="POST" action="{% url 'contact_us_form' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-6 mt-3">
+                                <input type="text" id="name" name="name" class="p-2 bg-blue w-100 rounded border" placeholder="Name" required>
+                                <div id="name-error" style="color:red;"></div>
+                            </div>
+                            <div class="col-lg-6 mt-3">
+                                <input type="text" id="phone" name="phone" class="p-2 bg-blue w-100 rounded border" placeholder="Phone Number" required>
+                                <div id="phone-error" style="color:red;"></div>
+                            </div>
+                            {% comment %} <button type="submit" class="btn btn-primary mt-3" onclick="validateForm(event)">Submit</button> {% endcomment %}
+                        </div>
+                        <div class="mt-3">
+                            <textarea rows="6" name="message" id="message" class="p-2 bg-blue w-100 rounded border"
+                                placeholder="Message"></textarea>
+                        </div>
+                        <div class="mt-2 w-50">
+                            <button type="submit" class="p-3 gap-2 border-2 border text-lg rounded-full w-100 a my-3 text-white 
+                            d-flex align-items-center justify-content-center bgrd-primary" onclick="validateForm(event)">
+                                <div>
+                                    <h4>Send a Message</h4>
+                                </div>
+                                <div>
+                                    <img style="width:24px" src={% static "assets/images/new_images/arrow-icon-white.png" %} alt="">
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!--address and-->
+    <section>
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-5 p-4">
+                    <h1 class="p-color primary-font">Address</h1>
+                    <div class="mt-4">
+                        <li class="list-none d-flex gap-4 align-items-center">
+                            <!-- <div
+                                style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                            </div> -->
+                            <div class="text-gray">
+                                Gowra Palladium, 2nd Floor, Unit 203, Madhapur, Hitec City, Hyderabad, Telangana-500081
+                                <p class="mt-3"><b>Phone :</b> <span>(+91)</span> 950-295-2277</p>
+                                <p class=""><b>Email :</b> <span>support@medleymednetwork.com </span></p>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15226.329997336314!2d78.3818125!3d17.4318125!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb93de2e04dc6f%3A0xaccf94e31c73d500!2sGowra%20Palladium!5e0!3m2!1sen!2sin!4v1722350970391!5m2!1sen!2sin"
+                        class="w-100 rounded" style="height: 300px;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!--join medleymed network-->
+    <section>
+        <div class="container mb-5 bgrd-primary rounded-full" style="background-image: url({% static "assets/images/new_images/world.png" %}); background-position: center; background-repeat: no-repeat; background-size: cover;">
+            <div class="row p-4 text-center">
+                <div class="pt-5">
+                    <img style="width: 300px;" src={% static "assets/images/new_images/logo_white.png" %} alt="">
+                </div>
+
+                <h1 class="hero-heading text-white mt-5 primary-font">Join Medleymed Network</h1>
+                <div>
+                    <h4 class="text-white">and see your business grow <span><img style="width:20px" src={% static "assets/images/new_images/arrow2.png" %}
+                                alt="arrow"></span></h4>
+                </div>
+                <div class="d-flex align-items-center justify-content-center">
+                    <div
+                        class="p-5 py-3 mt-3 mb-5 gap-2 border-2 border text-lg rounded-full  a my-3 text-white d-flex align-items-center justify-content-center">
+                        <div>
+                            
+                                <h4 style="margin-bottom: 0rem;">Download</h4>
+                        </div>
+                        <div>
+                            <img style="width:24px" src={% static "assets/images/new_images/arrow-icon-white.png" %} alt="">
+                        </div>
+                        <div>
+                            <a href="https://play.google.com/store/apps/details?id=com.medleymed.b2bretailer.b2b_retailer&hl=en" target="_blank">
+                                <img style="width:24px" src={% static "assets/images/new_images/android.png" %} alt=""></a>
+                        </div>
+                        <div>
+                            <a href="https://apps.apple.com/us/app/medleymed-network/id6479243124" target="_blank">
+                             <img style="width:24px" src={% static "assets/images/new_images/apple.png" %} alt=""></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+ 
+    {% block footer%}
+      <div class="row p-0 text-left" id="footer">
+        <div class="col-lg-12 col-md-12" style="box-shadow: 16px 6px 15px 13px rgb(0 0 0 / 10%);">      
+             {% include 'footer.html' %}
+          </div>       
+        </div>
+      </div>
+      
+  
+    {% endblock footer %}
+    <!-- #footer -->
+</body>
+
+
+<!--toster-->
+{% block scripts %}
+    <script src="{% static 'assets/vendor/jquery-toast-plugin/jquery.toast.min.js' %}"></script>
+    <script>
+        document.getElementById('name').addEventListener('input', validateName);
+        document.getElementById('phone').addEventListener('input', validatePhone);
+    
+        function validateName() {
+            const name = document.getElementById('name').value;
+            const nameError = document.getElementById('name-error');
+            const nameRegex = /^[A-Za-z\s]+$/;
+    
+            if (!nameRegex.test(name)) {
+                nameError.textContent = 'Name must contain only letters and spaces.';
+                setTimeout(() => {
+                    nameError.textContent = '';
+                }, 2000);  // Clear the error message after 2 seconds
+            } else {
+                nameError.textContent = '';
+            }
+        }
+    
+        function validatePhone() {
+            const phone = document.getElementById('phone').value;
+            const phoneError = document.getElementById('phone-error');
+            const phoneRegex = /^[0-9]{10,12}$/;
+    
+            if (!phoneRegex.test(phone)) {
+                phoneError.textContent = 'Invalid Phone Number.';
+                setTimeout(() => {
+                    phoneError.textContent = '';
+                }, 2000);  // Clear the error message after 2 seconds
+            } else {
+                phoneError.textContent = '';
+            }
+        }
+    
+        function validateForm(event) {
+            validateName();
+            validatePhone();
+    
+            const nameError = document.getElementById('name-error').textContent;
+            const phoneError = document.getElementById('phone-error').textContent;
+    
+            if (nameError || phoneError) {
+                event.preventDefault();  // Prevent form submission if there are validation errors
+            }
+        }
+    
+    
+    </script>
+{% endblock %}
+
+{% include "toast_messages.html" %}
+
+
+
+
+
+</html>

@@ -1,0 +1,78 @@
+from django.urls import path
+from .views import *
+
+urlpatterns = [
+    path('', home, name='home'),
+    path('dashboard/', dashboard, name='dashboard'),
+    path('accounts/login/',register, name='register'),
+    path('login/',email_login,name='email-login'),
+    path('resendotp/', resendotp, name='resendotp'),
+    path('otp/',otp, name='otp'),
+    path('logout/', logout, name='account_logout'),
+    path('dashboard/add/partner-summary/',partner_summary, name='partner-summary'),
+    path('dashboard/customers/<str:serviceblepincodes>/',partner_summary, name='partner-summary'),
+    # path('dashboard/customers/',customer_list, name='customer_list'),
+    path('dashboard/partner/<str:serviceblepincodes>/',partner_summary, name='partner-summary'),
+    path('dashboard/new_customer_list/',new_customer_list, name='new_customer_list'),
+    path('dashboard/partner/action/<int:pk>/',action_partner, name='action_partner'),
+    path('reject_action_retailer/<int:pk>/',reject_action_retailer, name='reject_action_retailer'),
+    path('dashboard/retailers/edit/<int:pk>/',edit_retailer, name='edit_retailer'),
+    path('dashboard/partner/edit/<int:pk>/',edit_partner, name='edit_partner'),
+    path('dashboard/customer/details/<int:pk>/',customer_details,name='customer-details'),
+    path('dashboard/add/partner/',add_partner, name='add_partner'),
+    path('dashboard/distributor/serviceble-pincodes/list/<int:pk>/', dist_serviceble_picodes_list, name='dist-serviceble-picodes-list'),
+    path('dashboard/commissions/', commissions_list, name='commissions-list'),
+    path('dashboard/commissions/get-details', get_commission_details, name='get_commission_details'),
+    path('dashboard/add/new-partner/', add_new_partner, name='add-new-partner'),
+    path('dashboard/upload/mobile-app-banner/', upload_mobile_app_banner, name='upload-mobile-app-banner'),
+    path('dashboard/feedbacks/', feedback_list, name='feedbacks-list'),
+    path('dashboard/activity_log/',dashbord_activity_logs, name='dashbord-activity-logs'),
+    path('distributor/add_sales_executive',add_sales_executive,name='add-sales-executive'),
+    path('dashboard/master_orders/', master_order_list, name='master_order_list'),
+    path('dashboard/organisation/', organization, name='organization'),
+    path('web_version/',web_version, name='web_version'),
+    path('about_us/',about_us,name='about_us'),
+    path('termsandconditons/',terms_and_conditions_web,name='terms_and_conditions'),
+    path('privacyweb/',privacy_web,name='privacy_policy'),
+    path('contactus/',contact_us,name='contact_us'),
+    path('partycodes/',partycode_list,name='party-codes'),
+    path('partner/names',get_partner_names,name='partner-names'),
+    path('retailer/names',get_retailer_names,name='retailer-names'),
+    path('generate/presigned/url',generate_presigned_url,name='generate-presigned-url'),
+    path('new-otp-list/',new_otp_list,name='otp-list-page'),
+    path('open-issues/',open_issues,name='open-issues'),
+    path('onboard_retailers/', onboard_retailers, name='onboard-retailers'),
+    path('download/<param>', download_file, name='download_file'),
+    path('dashboard/users/',user_list,name='user-list'),
+    path('dashboard/sales_executive/',sfa_admin_dashboard,name='sales-executive'),
+    path('dashboard/retailer_assignment/<int:pk>/',retailer_assignment,name='retailer-assignment'),
+    path('user/<int:pk>/',user_list,name='user-list'),
+    path('user/edit/',edit_user,name='edit-user'),
+    path('dashboard/add/user/',create_and_update_user,name='add-user'),
+    path('distributor/assigned_retailer/<int:pk>/',assigned_retailer, name='assigned-retailer'),
+    path('download_onboard_retailers/', download_onboard_retailers, name='download-onboard-retailers'),
+    path('configurations/', setting_configuration, name='settings-configuration'),
+    path('retailer/enable-account/', retailer_enable, name='retailer-enable'),
+    path('dashboard/reset/password/',reset_password,name='reset-password'),
+    path('upload_sfa_file_by_admin/', upload_sfa_file_by_admin, name='sfa-file-upload-by-admin'),
+    path('upload_sfa_file/', upload_sfa_file, name='sfa-file-upload'),
+    path('dashboard/commission-report', commissions_report, name='commission-report-dashboard'),
+    path('dashboard/credit/line', credit_line, name='credit-line'),
+    path('dashboard/higher-base/discount', commission_discount, name='commission-discount'),
+    path('contact_us_form', contact_us_form, name='contact_us_form'),
+    
+    
+    path('dashboard/all_user_list/', delete_users, name='delete-user'),
+    path('chatbot_index', chatbot_index, name='chatbot_index'),
+
+
+
+    # distributor pannel urls
+    path('distributor/', distributor_home, name='distributor_home'),
+    path('distributor/retailers-list', distributor_retailers_list, name='distributor-retailers-list'),
+    
+    #marketing panel urls
+    path('marketing/', marketing_dashboard, name='marketing_dashboard'),
+    path('marketing/upload-banner/', marketing_upload_mobile_app_banner, name='marketing-upload-mobile-app-banner'),
+
+]

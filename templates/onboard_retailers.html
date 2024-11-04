@@ -1,0 +1,69 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+<title>{% block title %}Onboard Retailers{% endblock %}</title>
+{% block content %}
+<div class="content">
+    <div class="row p-2">
+       <div class="col-lg-6">
+        <div>
+            <!-- Content main header -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <h4 class="page-title">Upload Onboard Customers</h4>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Upload CSV Section -->
+            <div>
+                <form id="uploadForm" method="post" enctype="multipart/form-data" action="{% url 'onboard-retailers' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="csvFile" class="form-label">Upload CSV File:</label>
+                        <input type="file" id="csvFile" name="file" class="form-control" accept=".csv" required>
+                    </div>
+                    <button type="submit" class="btn btn-info">Upload</button>
+                </form>
+            </div>
+        </div>
+    
+        <div>
+            <!-- Content main header -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <h4 class="page-title">Download Onboard Customers</h4>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Download CSV Section -->
+            <div>
+                
+                <form id="downloadForm" method="get" action="{% url 'download-onboard-retailers' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <label for="singledaterange" class="visually-hidden">Select Date To Download CSV File:</label>
+                            <input type="text" class="form-control date" id="singledaterange" data-toggle="date-picker" data-cancel-class="btn-warning" name="daterange" required>
+                            <span class="input-group-text bg-primary border-primary text-white">
+                                <i class="mdi mdi-calendar-range font-13"></i>
+                            </span>
+                        </div>
+                    </div>
+                   
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-info">Download</button>
+                            <a href="{% url 'onboard-retailers' %}" class="btn btn-primary text-white">Reset</a>
+                        </div>
+                    </div>
+                </form>
+               
+            </div>
+        </div>  
+       </div>        
+    </div>
+</div>
+{% endblock %}

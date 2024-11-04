@@ -1,0 +1,59 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+    <title>{% block title %}Add A New Partner{% endblock %}</title>
+
+       {% block content %}
+            <div class="content">
+                <div class="container-fluid">
+                    <!--content main header-->
+                    <div class="row ">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title"> Product Name : {{deal.product.name}}</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                          <form method="post" action="">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                  <label class="form-label">Quantity:</label>
+                                  <input type="number" class="form-control" id="quantity" name="quantity" 
+                                      placeholder="Enter Quantity" value="{{deal.quantity}}" required>
+                                </div>
+
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">Discount Percentage</label>
+                                    <input type="text" class="form-control" id="discount_percentage" name="discount_percentage" 
+                                    maxlength="255" value="{{deal.discount_percentage}}"  required>                                
+                                  </div>
+
+
+                            </div>
+
+                            <div>
+                                <label class="form-label">Description:</label>
+                                <textarea class="w-10 form-control" id="description" name="description"  placeholder="Enter Your Text...">{{deal.description}}</textarea>
+                            </div>
+
+                            <button class="btn btn-primary card-body py-2 text-white w-100" type="submit">Add Partner</button>
+                            <a href="{% url 'deals-list' %}">
+                            <button class="btn btn-danger card-body py-2 text-white w-100" type="button">Cancel</button></a>
+                          </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       {% endblock %}
+            <!-- content -->
+
+{% block scripts %}
+    {{ block.super }}
+    <!-- plugin js -->
+    <script src="{% static 'assets/vendor/dropzone/min/dropzone.min.js' %}"></script>
+    <!-- init js -->
+    <script src="{% static 'assets/js/ui/component.fileupload.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,174 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+<title>{% block title %}New Customer{% endblock %}</title>
+
+
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+    {% block content %}
+                    <!--content main header-->
+                   <div class="content">
+                     <div class="container-fluid">
+                        <div class="row ">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <h4 class="page-title">New Customer</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row mb-2">
+                                    <div class="col-xl-12">
+                                        <form
+                                            class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
+                                            <div>
+                                                <form method="GET" action="{% url 'new_customer_list' %}">
+                                                    {% csrf_token %}
+                                                    <div class="row gy-2 gx-2 align-items-center justify-content-xl-start">
+                                                        
+                                                        <div class="col-sm-12 col-md-4 col-lg-3">
+                                                            <input type="text" class="form-control" id="mobile_number" name="mobile_number" placeholder="Search Mobile Number" value="{{ request.GET.mobile_number }}">
+                                                        </div>
+                                                        <div class="col-sm-12 col-md-4 col-lg-3">
+                                                            <input type="text" class="form-control" id="customer_name" name="customer_name" placeholder="Search Store Name" value="{{ request.GET.customer_name }}">
+                                                        </div>
+                                                        <div class="col-sm-12 col-md-4 col-lg-3">
+                                                                <input type="text" class="form-control" id="medley_id" name="medley_id" placeholder="Search Medley ID" value="{{ request.GET.medley_id }}">
+                                                        </div>
+                                                        <div class="col-sm-12 col-md-4 col-lg-3">
+                                                            <select class="form-select" id="status_id" name="status_id">
+                                                                
+                                                                <option value="" {% if request.GET.status_id == "" %}selected{% endif %}>Select Status</option>
+                                                                <option value="not started" {% if request.GET.status_id == "not started" %}selected{% endif %}>Not Started</option>
+                                                                <option value="pending" {% if request.GET.status_id == "pending" %}selected{% endif %}>Pending</option>
+                                                                <option value="completed" {% if request.GET.status_id == "completed" %}selected{% endif %}>Completed</option>
+                                                                <!-- Add more options as needed -->
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-12 col-md-6 col-lg-3">
+                                                            <div class="d-flex gap-2">
+                
+                                                                <button type="submit"
+                                                                    class="btn btn-light bg-success text-white">Apply</button>
+                                                                    <a href="{% url 'new_customer_list' %}" class="btn btn-primary text-white">Reset</a>
+                
+                                                            </div>
+                                                        </div>    
+                                                    </div>
+                                                    
+    
+                                                </form>
+                                            </div>
+                                    </div>
+    
+                                </div>
+                            </div>
+    
+                            <!--table-->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="table-responsive">
+                                            <table class="table table-centered table-nowrap mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>S.No</th>
+                                                        <th>Mobile Number</th>
+                                                        <th>Store Name</th>
+                                                        <th>Medleymed ID</th>
+                                                        <th>DL Validity</th>
+                                                        {% comment %} <th>Last Action</th> {% endcomment %}
+                                                        <th>KYC Status</th>
+                                                        {% comment %} <th>Geo Location</th> {% endcomment %}
+                                                        <th>Serviceable Area</th>
+                                                        <th>Edit</th>
+                                                        {% comment %} <th>Assigned to BOC</th> {% endcomment %}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% if retailer %}
+                                                      {% for customer in retailer %}
+                                                      <tr>
+                                                          <td>{{forloop.counter0|add:retailer.start_index }}</td>
+                                                          {% comment %} <td>{{ customer.store_name }}</td> {% endcomment %}
+                                                          <td>{{ customer.user.username}}</td>
+                                                          <td>{{ customer.store_name|truncatechars:25 }}</td>
+                                                          <td>
+                                                              {% if customer.medleyId %}
+                                                                {{ customer.medleyId }}
+                                                              {% else %}
+                                                                None
+                                                              {% endif %}
+                                                            </td>
+                                                         
+                                                          <td>{{ customer.user.kyc_details.valid_to|date}}</td>
+                                                          
+                                                          <td>{{ customer.kyc_status }}</td>
+                                                          {% comment %} <td>
+                                                            {% if customer.store_geo_location %}
+                                                              {{ customer.store_geo_location }}
+                                                            {% else %}
+                                                              No
+                                                            {% endif %}
+                                                          </td> {% endcomment %}
+                                                          <td>
+                                                            
+                                                            
+                                                            {% if customer.postal_code in serviceable_pincode %}
+                                                              Yes
+                                                            {% else %}
+                                                              No
+                                                                
+                                                            {% endif %}
+                                                            
+                                                          <td>
+                                                              <a class="action-icon" href="{% url 'edit_retailer' pk=customer.pk %}">
+                                                                    <i class="mdi mdi-square-edit-outline"></i>
+                                                              </a>
+                                                          </td>
+                                                          {% comment %} <td>
+                                                            <select class="form-select" id="status-select">
+                                                                <option selected>Assigned</option>
+                                                                <option value="1">Option</option>
+                                                                <option value="2">Option</option>
+                                                                <option value="2">Option</option>
+                                                                <option value="2">Option</option>
+                                                                <option value="2">Option</option>
+                                                            </select>
+                                                          </td> {% endcomment %}
+                                                      </tr>
+                                                      {% endfor %}
+                                                      {% endif%}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div> <!-- end card-->
+                                </div> <!-- end col -->
+                            </div>
+                            {% include 'pagination.html' with data=retailer %} 
+                        </div>
+                     </div>
+                   </div>
+            <!-- content -->
+
+            <!-- Footer Start -->
+            {% comment %} <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <script>document.write(new Date().getFullYear())</script> © Medleymed Network
+                        </div>
+                        {% comment %} <div class="col-md-6">
+                            <div class="text-md-end footer-links d-none d-md-block">
+                                <a href="javascript: void(0);">About</a>
+                                <a href="javascript: void(0);">Support</a>
+                                <a href="javascript: void(0);">Contact Us</a>
+                            </div>
+                        </div> {% endcomment %}
+                    {% comment %} </div>
+                </div>
+            </footer>  {% endcomment %}
+
+     {% endblock%}
+

@@ -1,0 +1,102 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+
+<title>{% block title %}Raised-Issue{% endblock %}</title>
+
+{% block content %}
+<div class="content">
+    <div class="container-fluid">
+        <!--content main header-->
+        <div class="row ">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Raised Issues</h4>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="row mb-2">
+                    <div class="col-xl-12">
+                        <form action="" method="get" class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
+                            <div class="col-sm-12 col-md-6 col-lg-3">
+                                <form method="GET" action="{% url 'open-issues' %}">
+                                    {% csrf_token %}
+                                    <div class="input-group gap-2">
+                                        <label for="searchInput" class="visually-hidden">Search</label>
+                                        {% comment %} <input type="search" class="form-control" id="searchInput" name="search_query" placeholder="Search..." value="{{ request.GET.search_query }}"> {% endcomment %}
+                                        <select class="form-select" name="issue_status">
+                                            <option value="">All</option>
+                                            <option value="Open" {% if request.GET.issue_status == 'Open' %}selected{% endif %}>Open</option>
+                                            <option value="Close" {% if request.GET.issue_status == 'Close' %}selected{% endif %}>Close</option>
+                                        </select>
+                                        <div class="col-sm-12 col-md-6 col-lg-4">
+                                            <div class="d-flex gap-2">
+                                                <button type="submit" class="btn bg-success text-white">Apply</button>
+                                                <a href="{% url 'open-issues' %}" class="btn btn-primary text-white">Reset</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            {% comment %} <div class="col-sm-12 col-md-6 col-lg-4">
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn bg-success text-white">Apply</button>
+                                    <a href="{% url 'open-issues' %}" class="btn btn-primary text-white">Reset</a>
+                                </div>
+                            </div> {% endcomment %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--table-->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Issue Type</th>
+                                        <th>Created</th>
+                                        <th>Raised By</th>
+                                        <th>Distributor ID</th>
+                                        <th>Distributor Name</td>
+                                        <th>Order ID</th>
+                                        <th>Status</th>
+                                        <th>Description</th>
+                                        {% comment %} <th>Action</th> {% endcomment %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if issues %}
+                                        {% for issue in issues %}
+                                            <tr>
+                                                <td scope="row">{{ forloop.counter0|add:issues.start_index }}</td>
+                                                <td>{{issue.issue_type|title}}</td>
+                                                <td>{{issue.updated_at}}</td>
+                                                <td>{{issue.user.get_retailer_name|title}}</td>
+                                                <td>#{{issue.distributor_id}}</td>
+                                                <td>{{issue.user.get_distributor_name}}</td>
+                                                <td>{{issue.id}}</td>
+                                                <td>{{issue.issue_status}}</td>
+                                                <td>{{issue.description|title}}</td>
+                                                {% comment %} <form method="POST" action="{% url 'open-issues' %}">
+                                                    {% csrf_token %}
+                                                    <td><button type="submit" name="issueId" value={{issue.id}} class="btn btn-primary btn-sm">Close</button></td>
+                                                </form> {% endcomment %}
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> 
+                </div> 
+            </div>
+            {% include 'pagination.html' with data=issues %}
+        </div>
+    </div>
+</div>
+{% endblock %}

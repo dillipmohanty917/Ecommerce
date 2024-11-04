@@ -1,0 +1,167 @@
+{% comment %} {% extends "base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+{% trans "Customers" context "Dashboard customers list" %} - {{ block.super }}
+{% endblock %}
+
+{% block body_class %}body-customers{% endblock %}
+
+{% block menu_customers_class %}active{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumbs">
+  <li class="visible-s">
+    {% trans "Distributors" context "Dashboard customers list" %}
+  </li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<style type="text/css">
+  .data-table th,td {
+    padding: 0px 10px !important;
+  }
+
+  .right-aligned {
+    
+    margin-left: 258px;
+
+  }
+  .customer-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px; /* Adjust the maximum width as needed */
+    margin: 0 auto; /* Center the form horizontally */
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    font-weight: bold;
+  }
+  
+  input {
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .submit-button {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .submit-button:hover {
+    background-color: #2980b9;
+  }
+  .customer-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .form-group {
+    flex: 0 0 48%; /* Adjust the width as needed */
+    margin-bottom: 10px;
+  }
+
+  .form-group-date {
+    flex: 0 0 23%; /* Adjust the width as needed */
+    margin-bottom: 10px;
+  }
+
+  /* For responsiveness, adjust styles for smaller screens */
+  @media (max-width: 768px) {
+    .form-group,
+    .form-group-date {
+      flex: 0 0 100%;
+    }
+  }
+</style>
+
+<div class="">
+  <div class="card-content text-center">  
+    <div class="data-table-header-action right-aligned">
+      <h2>{% trans "Distributor OnBoarding" %}</h2>
+      <form method="POST" enctype="multipart/form-data" action="{% url 'add_partner' %}" class="customer-form">
+        {% csrf_token %}
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between;margin-inline: -308px;">
+          <div class="form-group">
+            <label for="name">{% trans "Store Name" %}:</label>
+            <input type="text" id="name" name="name" placeholder="{% trans "Enter Name" %}" required>
+          </div>
+          <div class="form-group">
+            <label for="field2">{% trans "Phone" %}:</label>
+            <input type="text" id="field2" name="phone" placeholder="{% trans "Enter Phone" %}" required>
+          </div>
+          <div class="form-group">
+            <label for="field3">{% trans "Store Address" %}:</label>
+            <input type="text" id="field3" name="address" placeholder="{% trans "Enter Store Address" %}" required>
+          </div>
+          <div class="form-group">
+            <label for="field4">{% trans "State" %}:</label>
+            <input type="text" id="field4" name="state" placeholder="{% trans "Enter state " %}" required>
+          </div>
+          <div class="form-group">
+            <label for="field5">{% trans "Pin Code" %}:</label>
+            <input type="text" id="field5" name="pincode" placeholder="{% trans "Enter Pin Code" %}" required>
+          </div>
+          <div class="form-group">
+            <label for="field6">{% trans "Email" %}:</label>
+            <input type="email" id="field6" name="email" placeholder="{% trans "Enter Email" %}" required>
+          </div>
+          <div class="form-group">
+            <label for="field8">{% trans "Store licence" %}:</label>
+            <input type="text" id="field8" name="licence" placeholder="{% trans "Store licence" %}" required>
+          </div>
+          <div class="form-group">
+            <label for="field9">{% trans "GST Number" %}:</label>
+            <input type="text" id="field9" name="gstnumber" placeholder="{% trans "GST Number" %}" required>
+          </div>
+          <div class="form-group">
+            <label for="gstFile">{% trans "Upload GST Certificate" %}:</label>
+            <input type="file" id="gstFile" name="gstcertificate" accept=".pdf, .jpg, .jpeg, .png" required>
+          </div>
+          <div class="form-group">
+            <label for="licence">{% trans "Drug License Form20" %}:</label>
+            <input type="file" id="gstFile" name="doc_licence20" accept=".pdf, .jpg, .jpeg, .png" required>
+          </div>
+          <div class="form-group">
+            <label for="licence">{% trans "Drug License Form21" %}:</label>
+            <input type="file" id="gstFile" name="doc_licence21" accept=".pdf, .jpg, .jpeg, .png" required>
+          </div>
+          <div class="form-group-date">
+            <label for="uploaded_at">Valide from</label>
+            <input type="date" name="valide_from" required>
+          </div>
+          <div class="form-group-date" style="margin-right: 223px;">
+            <label for="uploaded_at">Valide To</label>
+            <input type="date" name="valide_to" required>
+          </div>
+        </div>
+        <button type="submit" class="submit-button">{% trans "Submit" %}</button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  // Set the minimum value for the date input to the current date
+  var now = new Date();
+  var year = now.getFullYear();
+  var month = (now.getMonth() + 1).toString().padStart(2, '0');
+  var day = now.getDate().toString().padStart(2, '0');
+  var currentDate = `${year}-${month}-${day}`;
+  
+  document.getElementById('uploaded_date').min = currentDate;
+</script>
+
+{% endblock %} {% endcomment %}

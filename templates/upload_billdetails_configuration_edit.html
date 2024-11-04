@@ -1,0 +1,171 @@
+{% extends template_to_extend %}
+{% load static %}
+    <title>{% block title %}Edit Configuration{% endblock %}</title>
+    {% block custom_css %}
+    {% endblock %}
+
+       {% block content %}
+       <style>
+        .form-label {
+            color: #333; /* Replace with your desired dark color code */
+        }
+        .form-control{
+            color: #3685cb;
+        }
+    </style>
+       <div class="content">
+        <div class="container-fluid">
+            <!--content main header-->
+            <div class="row ">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <h4 class="page-title">Upload Bill Details Configuration Field Names</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <form method="post" action="" id="updateForm">
+                        {% csrf_token %}
+                    <div class="row">
+
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">Product Name</label>
+                            <input type="text" name="product_name" id="product_name" value="{{bill_details.product_name}}" class="form-control" required>
+                        </div>
+                       
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">Product SKU</label>
+                            <input type="text" name="distributor_sku" id="distributor_sku" value="{{bill_details.distributor_sku}}" class="form-control" required>
+                        </div>
+
+
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">Billed Quantity</label>
+                            <input type="text" name="billed_quantity" id="billed_quantity" value="{{bill_details.billed_quantity}}" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">Billed Free</label>
+                            <input type="text" name="billed_free" id="billed_free" value="{{bill_details.billed_free}}" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">Billed Free Half (Optional)</label>
+                            <input type="text" name="billed_free_half" id="billed_free_half" value="" class="form-control">
+                        </div>
+
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">Unit Price</label>
+                            <input type="text" name="price_to_retail" id="price_to_retail" value="{{bill_details.price_to_retail}}" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">Max Retail Price</label>
+                            <input type="text" name="max_retail_price" id="max_retail_price" value="{{bill_details.max_retail_price}}" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">Discount</label>
+                            <input type="text" name="discount" id="discount" value="{{bill_details.discount}}" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">Expiry</label>
+                            <input type="text" name="expiry" id="expiry" value="{{bill_details.expiry}}" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">Batch</label>
+                            <input type="text" name="batch" id="batch" value="{{bill_details.batch}}" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">BarCode</label>
+                            <input type="text" name="barcode" id="barcode" value="{{bill_details.barcode}}" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">HSN Code</label>
+                            <input type="text" name="hsn_code" id="hsn_code" value="{{bill_details.hsn_code}}" class="form-control" required>
+                        </div>
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">PartyCode</label>
+                            <input type="text" name="partycode" id="partycode" value="{{bill_details.partycode}}" class="form-control" required>
+                        </div>
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">Invoice Number</label>
+                            <input type="text" name="invoice_no" id="invoice_no" value="{{bill_details.invoice_no}}" class="form-control" required>
+                        </div>
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">CGST Amount</label>
+                            <input type="text" name="cgst_amount" id="cgst_amount" value="{{bill_details.cgst_amount}}" class="form-control" required>
+                        </div>
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">Gross Amount</label>
+                            <input type="text" name="gross_amount" id="gross_amount" value="{{bill_details.gross_amount}}" class="form-control" required>
+                        </div>
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">Invoice Amount</label>
+                            <input type="text" name="invoice_amount" id="invoice_amount" value="{{bill_details.invoice_amount}}" class="form-control" required>
+                        </div>
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">PTS</label>
+                            <input type="text" name="pts" id="pts" value="{{bill_details.pts}}" class="form-control" required>
+                        </div>
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">SGST% (Optional)</label>
+                            <input type="text" name="sgst" id="sgst" value="{{bill_details.sgst}}" class="form-control">
+                        </div>
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">CGST% (Optional)</label>
+                            <input type="text" name="cgst" id="cgst" value="{{bill_details.cgst}}" class="form-control">
+                        </div>
+
+                        <div class="mb-3 col-md-2 col-lg-3 col-sm-12">
+                            <label class="form-label">IGST% (Optional)</label>
+                            <input type="text" name="igst" id="igst" value="{{bill_details.igst}}" class="form-control">
+                        </div>
+
+                    </div>
+
+                    <input type="hidden" name="upload_flag" id="upload_flag" value="">
+
+                    <div class="row d-flex align-items-center justify-content-end">
+                        <div class="col-md-4">
+                            <button class="btn btn-info card-body py-2 text-white  w-100" type="button" id="uploadNew">Upload New</button>
+                            </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-primary card-body py-2 text-white  w-100" type="submit">Update</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+
+
+            </div>
+
+
+
+
+        </div>
+
+
+
+    </div>
+        {% endblock %}
+
+        {% block javascript %}
+        <script>
+            $(document).ready(function() {
+                $('#uploadNew').on('click', function() {
+                    $('#upload_flag').val('new');
+                    $('#updateForm').submit();
+                });
+            });
+        </script>
+        {% endblock %}
+
+
+       

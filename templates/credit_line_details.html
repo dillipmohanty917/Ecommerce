@@ -1,0 +1,622 @@
+{% extends template_to_extend %}
+{% load static %}
+{% load humanize %}
+
+<title>{% block title %}Credit Line{% endblock %}</title>
+    {% block custom_css %}
+    <link href="{% static 'assets/css/custom.css' %}" rel="stylesheet" type="text/css" />
+    {% endblock %}
+
+{% block content %}
+<style>
+    #loader {
+        display: none;
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #3498db;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 2s linear infinite;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+<div class="content">
+    <div class="container-fluid">
+        <!--content main header-->
+        <div class="row ">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Credit Line</h4>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+          {% if request.user.is_superuser or request.user.is_admin %}
+
+                <div class="card-header">
+                    <div class="row mb-2">
+                        <div class="col-xl-12">
+                            <form action="" method="get" class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
+                                
+                                    <div class="col-sm-12 col-md-4 col-lg-3">
+                                        <div class="relative w-100">
+                                            <input type="hidden" id="selectedRetailerId" value="{{ request.GET.selectedRetailerId }}" name="selectedRetailerId">
+                                            <input  class="form-control" id="retailer_search" name="retailer_name" type="search" value="{{ request.GET.retailer_name }}" placeholder="Enter Customer Name" autocomplete="off">
+                                            <div class="list-group display_list" id="show-list-retailer">
+                                            
+                                            </div>
+                                        </div>                                
+                                        </div>
+                                    <div class="col-sm-12 col-md-4 col-lg-3">
+                                        <div class="relative w-100">
+                                            <input type="hidden" id="selectedPartnerId" value="{{ request.GET.selectedPartnerId }}" name="selectedPartnerId">
+                                            <input  class="form-control" id="partner_search" name="partner_name" type="search" value="{{ request.GET.partner_name }}" placeholder="Search Partners" autocomplete="off">
+                                            <div class="list-group" id="show-list">
+                                            
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" class="btn bg-success text-white">Apply</button>
+                                        <a href="{% url 'credit-line' %}" class="btn btn-primary text-white">Reset</a>    
+                                        <button type="button" class="btn btn-warning text-black align-items-center" data-bs-toggle="modal" data-bs-target="#upload_stock"><i class="mdi mdi-medical-bag"></i> Upload</button>
+                                        <a href="{% url 'download_file' 'credit line' %}" class="btn btn-secondary text-white" name="download_partner_pincodes">Download Format</a>
+
+                                    </div>
+                                </div>   
+                                
+                            </form>  
+                        </div>
+                    </div>
+                </div>
+
+                <!--table-->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="table-responsive">
+                                <table class="table table-centered table-nowrap mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Phone Number</th>
+                                            <th>Partner Name</th>
+                                            <th>Partner ID</th>
+                                            <th>Customer Name</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Customer ID</th>
+                                            <th>Date</th>  
+                                            <th>Is Expired</th>  
+                                            <th>Credit Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if credit_line_details %}
+                                            {% for obj in credit_line_details %}
+                                                <tr>
+                                                    <td scope="row">{{forloop.counter0|add:credit_line_details.start_index }}</td>
+                                                    <td>{{obj.retailer.user.phone_number}}</td>
+                                                    <td>{{obj.distributor.name|title}}</td>
+                                                    <td>{{obj.distributor.id}}</td>
+                                                    <td>{{obj.retailer.store_name|title}}</td>
+                                                    {% if obj.start_date%}
+                                                        <td>{{ obj.start_date }}</td>
+                                                    {% else %}
+                                                        <td>NA</td>
+                                                    {% endif %}
+                                                    {% if obj.end_date%}
+                                                        <td>{{ obj.end_date }}</td>
+                                                    {% else %}
+                                                        <td>NA</td>
+                                                    {% endif %}
+                                                    <td>{{obj.retailer.id}}</td>
+                                                    <td>{{obj.created_at}}</td> 
+                                                    <td>{{obj.is_expired}}</td>
+                                                    <td>{{obj.credit_amount|floatformat:2|intcomma}}</td>
+                                                    
+                                                </tr>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div> 
+                    </div> 
+                </div>
+          {% else %}
+                <div class="card-header">
+                    <div class="row mb-2">
+                        <div class="col-xl-12">
+                            <form action="" method="get" class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
+                                
+                                    <div class="col-sm-12 col-md-4 col-lg-3">
+                                        <div class="relative w-100">
+                                            <input type="hidden" id="selectedRetailerId" value="{{ request.GET.selectedRetailerId }}" name="selectedRetailerId">
+                                            <input  class="form-control" id="retailer_search" name="retailer_name" type="search" value="{{ request.GET.retailer_name }}" placeholder="Enter Customer Name" autocomplete="off">
+                                            <div class="list-group display_list" id="show-list-retailer">
+                                            
+                                            </div>
+                                        </div>                                
+                                    </div>
+                                <div class="col-sm-12 col-md-6 col-lg-8">
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" class="btn bg-success text-white">Apply</button>
+                                        <a href="{% url 'credit-line' %}" class="btn btn-primary text-white">Reset</a>    
+                                        {% comment %} <button type="button" class="btn btn-warning text-black align-items-center" data-bs-toggle="modal" data-bs-target="#upload_stock"><i class="mdi mdi-medical-bag"></i> Upload</button>
+                                        <a href="{% url 'download_file' 'credit line' %}" class="btn btn-secondary text-white" name="download_partner_pincodes">Download Format</a> {% endcomment %}
+                                        {% comment %} <button data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal1" type="button" name="bulk_delete" class="btn btn-danger text-white">Delete Selected</button> {% endcomment %}
+                                    </div>
+                                </div>   
+                                
+                            </form>  
+                        </div>
+                    </div>
+                </div>
+
+                <!--table-->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="table-responsive">
+                                <table class="table table-centered table-nowrap mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            {% comment %} <th class="d-flex align-items-center gap-2"><input type="checkbox" onclick="selectAll(this)"> Select All</th> {% endcomment %}
+                                            <th>S.No</th>
+                                            <th>Phone Number</th>
+                                            <th>Customer Name</th>
+                                            <th>Customer ID</th>
+                                            <th>Date</th> 
+                                            <th>Start Date</th>
+                                            <th>End Date</th> 
+                                            <th>Is Expired</th>  
+                                            <th>Credit Amount</th>
+                                            {% comment %} <th>Action</th> {% endcomment %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if credit_line_details %}
+                                            {% for obj in credit_line_details %}
+                                                <tr>
+                                                    {% comment %} <td>
+                                                        <input type="checkbox" name="selected_products[]" value="{{ obj.retailer.id }}">
+                                                    </td> {% endcomment %}
+                                                    <td scope="row">{{forloop.counter0|add:credit_line_details.start_index }}</td>
+                                                    <td>{{obj.retailer.user.phone_number}}</td>
+                                                    <td>{{obj.retailer.store_name|title}}</td>
+                                                    <td>{{obj.retailer.id}}</td>
+                                                    <td>{{obj.created_at}}</td> 
+                                                    {% if obj.start_date%}
+                                                        <td>{{ obj.start_date }}</td>
+                                                    {% else %}
+                                                        <td>NA</td>
+                                                    {% endif %}
+                                                    {% if obj.end_date%}
+                                                        <td>{{ obj.end_date }}</td>
+                                                    {% else %}
+                                                        <td>NA</td>
+                                                    {% endif %}
+                                                    <td>{{obj.is_expired}}</td>
+                                                    <td>{{obj.credit_amount|floatformat:2|intcomma}}</td>
+                                                    {% comment %} <td>
+                                                        <form method="POST" class="delete-form">
+                                                            {% csrf_token %}
+                                                            <a href="javascript:void(0);" class="action-icon text-danger delete-user-btn" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal{{ obj.retailer.id }}"> <i class="mdi mdi-delete"></i></a>
+                                                            <!-- Modal -->
+                                                            <div class="modal fade" id="deleteConfirmationModal{{ obj.retailer.id }}" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel{{ product.id }}" aria-hidden="true">
+                                                                <div class="modal-dialog" style="margin-top: 217px;">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="deleteConfirmationModalLabel{{ obj.retailer.id }}">Confirm Deletion</h5>
+                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            Are you sure you want to delete this Customer form Credit Line?
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                            <button type="submit" name="delete_ratailer_credit" value="{{ obj.retailer.id }}" class="btn btn-danger">Delete</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>  
+                                                    </td> {% endcomment %}
+                                                    
+                                                </tr>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> 
+                    </div> 
+                </div>
+           {% endif %}
+            {% include 'pagination.html' with data=credit_line_details %}
+        </div>
+    </div>
+</div>
+{% comment %} <div class="modal fade" id="deleteConfirmationModal1" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel1" aria-hidden="true">
+    <div class="modal-dialog" style="margin-top: 217px;">
+        <div class="modal-content">
+            <form id="deleteForm" method="POST" action="{% url 'credit-line' %}">
+                {% csrf_token %}
+                <input type="hidden" name="bulk_delete" value="1">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmationModalLabel1">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this selected Customer form Credit Line?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> {% endcomment %}
+
+<div id="loader"></div>
+
+<div class="modal fade" id="upload_stock" tabindex="-1" aria-labelledby="upload_stockLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header p-2 bg-info">
+            <h5 class="modal-title text-white" id="upload_stockLabel">Bulk Upload</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-1">
+                <label for="id_file" class="form-label">Upload Your File</label>
+                <input type="file" class="form-control" id="fileInput" name="_file" accept=".csv, .xlsx, .xls" required>
+                <p id="errorMessage" class="error-message"></p>
+            </div>
+            {% if request.user.is_superuser or request.user.is_admin %}
+            <div class="relative w-100">
+                <input type="hidden" id="selectedPartnerId_credit" name="selectedPartnerId_credit">
+                <input class="form-control" id="partner_id" name="partner_name" type="text"  placeholder="Search Partners" autocomplete="off">
+                <div class="list-group display_list" id="show-list-credit">
+                    <!-- Dynamic search results here -->
+                </div>
+            </div>
+
+            <div class="mb-2" id="dateRangeFields">
+                <label for="startDate">Start Date:</label>
+                <input type="date" class="form-control" id="startDate" name="start_date" readonly>
+                <label for="endDate" class="mt-2">End Date:</label>
+                <input type="date" class="form-control" id="endDate" name="end_date">
+            </div>
+
+            {% endif %}
+                  <div id="alertContainer" class="text-danger"></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info" onclick="validateAndUpload()">Submit</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+  
+{% endblock %}
+
+{% block scripts %}
+{{block.super}}
+<script src="{% static 'assets/js/partner_search.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% comment %} <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.10.1/jquery-ui.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> {% endcomment %}
+{% endblock %}
+
+{% block javascript %}
+{% comment %} <script>
+    document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+        // Get the form
+        var form = document.getElementById('deleteForm');
+        var checkedBoxes = document.querySelectorAll('input[name="selected_products[]"]:checked');
+        checkedBoxes.forEach(function(checkbox) {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'selected_products[]';
+            input.value = checkbox.value;
+            form.appendChild(input);
+        });
+        form.submit();
+    });
+</script>
+<script>
+    function selectAll(source) {
+        checkboxes = document.getElementsByName('selected_products[]');
+        for(var i=0, n=checkboxes.length;i<n;i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+</script> {% endcomment %}
+<script>
+    $(document).ready(function(){
+        var debounceTimer;
+        /*
+        $('#retailer_search').on('input', function(){
+            var searchText = $(this).val();
+            clearTimeout(debounceTimer);
+            // Clear dropdown content immediately when input is empty
+            if (!searchText.trim()) {
+              $('#show-list-retailer').empty();
+              $('#selectedRetailerId').val("");
+              return;
+          }
+            debounceTimer = setTimeout(function() {
+                if(searchText){
+                    $.ajax({
+                        url: '/retailer/names',
+                        type: 'GET',
+                        data: { filter: searchText },
+                        success: function(data) {
+                            $('#show-list-retailer').empty();
+                            console.log(data,"dta")
+                            data.forEach(function(partner) {
+                                const item_name = partner.name;
+                                const substring = new RegExp(searchText, "gi");
+                                const original = item_name;
+                                let x = original.replace(substring, `<strong>${searchText}</strong>`);
+                                $('#show-list-retailer').append(`
+                                <div class='dropdown_data_pos_list' id='dropdown_data_credit_retailer' data-retailer-id=${partner.id} data-retailer-name="${partner.name}" data-retailer-city=${partner.city}>
+                                    <div class='dropdown_item_name col'>${x}</div>
+                                    <div class='mar-l-r-0 d-flex'>
+                                            <div class='dropdown_item_details col-7'>
+                                                <span>Phone: <strong>${partner.user}</strong></span>
+                                            </div>                                                 
+                                            
+                                    </div>
+                                </div>
+                                `);
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error fetching data:', error);
+                        }
+                    });
+                }
+            }, 200);
+        });
+    
+    
+        $(document).on('click', '#dropdown_data_credit_retailer' ,function(){
+            var retailer_name = $(this).data('retailer-name');
+            var retailer_id = $(this).data('retailer-id');
+            $('#selectedRetailerId').val(retailer_id);
+            $('#retailer_search').val(retailer_name);
+            $('#show-list-retailer').empty();
+            $('#retailer_search').focus();
+    
+          });
+
+          */
+
+        $('#partner_id').on('input', function(){
+            var searchText = $(this).val();
+            clearTimeout(debounceTimer);
+            // Clear dropdown content immediately when input is empty
+            if (!searchText.trim()) {
+              $('#show-list-credit').empty();
+              $('#selectedPartnerId_credit').val("");
+              return;
+          }
+            debounceTimer = setTimeout(function() {
+                if(searchText){
+                    $.ajax({
+                        url: '/partner/names',
+                        type: 'GET',
+                        data: { filter: searchText },
+                        success: function(data) {
+                            $('#show-list-credit').empty();
+                            data.forEach(function(partner) {
+                                const item_name = partner.name;
+                                const substring = new RegExp(searchText, "gi");
+                                const original = item_name;
+                                let x = original.replace(substring, `<strong>${searchText}</strong>`);
+                                $('#show-list-credit').append(`
+                                    <div class='dropdown_data_pos_list' id='dropdown_data_pos_credit' data-partner-id=${partner.id} data-partner-name="${partner.name}">
+                                        <div class='dropdown_item_name col'>${x}</div>
+                                        <div class='mar-l-r-0 d-flex'>
+                                            <div class='dropdown_item_details col-7'>
+                                                <span>City: <strong>${partner.city}</strong></span>
+                                            </div>                                                 
+                                            <div class='dropdown_item_details col-5'>
+                                                <span>ID: <strong>${partner.id}</strong></span>
+                                            </div> 
+                                        </div>
+                                    </div>
+                                `);
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error fetching data:', error);
+                        }
+                    });
+                }
+            }, 200);
+        });
+    
+    
+        $(document).on('click', '#dropdown_data_pos_credit' ,function(){
+            console.log('event')
+            var partner_id = $(this).data('partner-id');
+            var partner_name = $(this).data('partner-name');
+            $('#partner_id').val(partner_name);
+            $('#selectedPartnerId_credit').val(partner_id);
+            $('#show-list-credit').empty();
+            $('#partner_id').focus();
+    
+          });
+    });
+        function getCSRFToken() {
+            const csrfCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('csrftoken='));
+            if (csrfCookie) {
+                return csrfCookie.split('=')[1];
+            }
+            return null;
+        }
+
+    //-------------UPLOAD FILE PROCESS START----------------------
+
+    function showAlert(message, i_status, title_status) {
+        Swal.fire({
+            icon: i_status,
+            title: title_status,
+            text: message,
+            showConfirmButton: true,
+            timer: 10000,
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
+                location.reload();
+            }
+        });
+    }
+  
+    function getCSRFToken() {
+        const csrfCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('csrftoken='));
+        if (csrfCookie) {
+            return csrfCookie.split('=')[1];
+        }
+        return null;
+    }
+    
+    function uploadFile(file,partner_id, endDate){        
+        const uploadURL = "{% url 'credit-line' %}"; 
+        const formData = new FormData();
+        formData.append('file', file);   
+        formData.append('partner_id',partner_id)
+        formData.append('end_date',endDate)
+
+        showLoader();
+        fetch(uploadURL, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCSRFToken('csrftoken')
+            }
+        })
+        .then(response => {
+            hideLoader();
+            if (response.ok) {
+                const contentType = response.headers.get('Content-Type');
+                if (contentType && contentType.includes('text/csv')) {
+                    return response.blob();
+                } else {
+                    showAlert("The file has been Uploaded successfully.", "success", "Success!");
+                }
+            } else {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error);
+                });
+            }
+        })
+        .then(blobData => {
+            if (blobData) {
+                const url = window.URL.createObjectURL(blobData);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'wrong_creditline_data.csv';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                showAlert("The file has been Uploaded successfully.", "success", "Success!");
+            }
+        })
+        .catch(error => {
+            showAlert(error.message, "error", "Error!");
+        });
+    }
+
+    function showLoader() {
+        const loader = document.getElementById('loader');
+        loader.style.display = 'block';
+    }
+
+    function hideLoader() {
+        const loader = document.getElementById('loader');
+        loader.style.display = 'none';
+    }
+
+    let isSubmitting = false;  // Track the submission status
+
+    function validateAndUpload() {
+        if (isSubmitting) return; // Prevent further submissions if already submitting
+        
+        const fileInput = document.getElementById('fileInput');
+        const partner_element = document.getElementById('selectedPartnerId_credit');
+        const errorMessage = document.getElementById('errorMessage');
+        const endDateInput = document.getElementById('endDate').value;
+
+        let partner_id = "";
+        if (partner_element) {
+            partner_id = partner_element.value;
+        }
+
+        if (fileInput.files.length === 0) {
+            errorMessage.textContent = "Please choose a file before uploading.";
+            errorMessage.style.color = "red";
+            return;
+        }
+
+        const allowedExtensions = ["xlsx", "xls", "csv"];
+        const selectedFile = fileInput.files[0];
+        const fileName = selectedFile.name;
+        const fileExtension = fileName.split('.').pop().toLowerCase();
+
+        if (allowedExtensions.includes(fileExtension)) {
+            errorMessage.textContent = ""; 
+            isSubmitting = true;
+            const submitButton = document.querySelector('.btn-info');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+            uploadFile(selectedFile, partner_id, endDateInput)
+        } else {
+            errorMessage.textContent = "Please select an Excel (XLSX/XLS) or CSV file.";
+            errorMessage.style.color = "red";
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        
+        // Set the default value of the start date to tomorrow’s date
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const startDate = tomorrow.toISOString().split('T')[0];
+        startDateInput.value = startDate;
+        
+        // Set the default value of the end date to the day after tomorrow
+        const dayAfterTomorrow = new Date();
+        dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+        const endDate = dayAfterTomorrow.toISOString().split('T')[0];
+        
+        // Set the minimum value for the end date to the day after tomorrow
+        endDateInput.min = endDate;
+    });
+
+     
+</script>
+
+{% endblock %}

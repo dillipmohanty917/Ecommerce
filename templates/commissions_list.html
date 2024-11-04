@@ -1,0 +1,294 @@
+
+{% extends 'dashboard.html' %}
+{% load static %}
+    <title>{% block title %}Partner Commissions Details{% endblock %}</title>
+       {% block content %}
+            <div class="content">
+                <div class="container-fluid">
+                    <!--content main header-->
+                    <div class="row ">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title">Partner Commissions</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row mb-2">
+                                <div class="col-xl-12">
+                                    <form
+                                        class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
+                                        <div class="col-sm-12 col-md-6 col-lg-2">
+                                            <label for="inputPassword2" class="visually-hidden">Search</label>
+                                            <input type="search" class="form-control" id="searchInput" name="search_query" placeholder="Search..." value="{{ request.GET.search_query }}">
+
+                                        </div>
+                                        <div class="col-sm-12 col-md-6 col-lg-8">
+                                            <div class="d-flex  gap-2">
+                                                <button type="submit" class="btn bg-success text-white">Apply</button>
+                                                <a href="{% url 'commissions-list' %}" class="btn btn-primary text-white">Reset</a>
+                                                <button type="button" class="btn btn-warning text-black align-items-center" data-bs-toggle="modal" data-bs-target="#upload_commission"><i
+                                                        class="mdi mdi-cloud-upload"></i> Upload Commissions</button>
+                                                        <a href="{% url 'download_file' 'download_commission_upload_format' %}" class="btn btn-secondary text-white" name="download_partner_pincodes">Download Format</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-6 col-lg-1">
+                                            
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% if commissions %}
+                        <!--table-->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="table-responsive">
+                                        <table class="table table-centered table-nowrap mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th>Partner Name</th>
+                                                    <th>Partner ID</th>
+                                                    <th>Created at</th>
+                                                    {% comment %} <th>Commission Rate</th> {% endcomment %}
+                                                    <th>Base Disc.</th>
+                                                    {% comment %} <th>Base Disc. Check</th> {% endcomment %}
+                                                    <th>Base Disc. LT</th>
+                                                    <th>Base Disc. GT</th>
+                                                    <th>MMC Cash</th>
+                                                    <th>MMC Credit</th>
+                                                    <th>DBC Commission</th>
+                                                    <th>Deals Commission</th>
+                                                    <th>Edit</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for commission in commissions %}
+                                                        <tr>
+                                                            <td>{{forloop.counter}}</td>
+                                                            <td>{{commission.distributor.name|title}}</td>
+                                                            <td>{{commission.distributor.id}}</td>
+                                                            <td>{{commission.created_at}}</td>
+                                                            {% comment %} <td>{{commission.commission_rate}}</td> {% endcomment %}
+                                                            <td>{{commission.base_discount}}</td>
+                                                            {% comment %} <td>{{commission.base_discount_check}}</td> {% endcomment %}
+                                                            <td>{{commission.base_discount_lt}}</td>
+                                                            <td>{{commission.base_discount_gt}}</td>
+                                                            <td>{{commission.mmc_cash}}</td>
+                                                            <td>{{commission.mmc_credit}}</td>
+                                                            <td>{{commission.dbc_commn}}</td>
+                                                            <td>{{commission.deals_commn}}</td>
+                                                            <td><i class="mdi mdi-square-edit-outline edit_user" data-user-id="{{commission.id}}" style="cursor: pointer;" onclick="get_details(event)"></i></td>
+                                                        </tr>
+                                                {% endfor %}
+                                              </tbody>
+                                        </table>
+                                    </div>
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
+                        </div>
+                        {% include 'pagination.html' with data=commissions %}
+                            {% else %}
+                                    <h3>No Data Found</h3>
+                            {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="modal fade" id="upload_commission" tabindex="-1" aria-labelledby="upload_commission" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <form method="post" enctype="multipart/form-data" >
+                    <div class="modal-content">
+                        <div class="modal-header bg-info p-2">
+                            <h5 class="modal-title text-white" id="upload_commission">Bulk Upload Partner Commission</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label class="form-label">Upload Your File</label>
+                                    <input type="file" id="commission_file"  name="file" class="form-control" accept=".csv, .xlsx, .xls" required>
+                                </div>
+                                <div id="alertContainer"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-info">Submit</button>
+                        </div>
+                </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="modal fade" id="commissionModal" tabindex="-1" aria-labelledby="commissionModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="commissionModalLabel">Commission Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="commissionForm" method="POST" action="{% url 'commissions-list' %}">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="hidden" id="commissionId" name="commissionId">
+                                        <div class="mb-3">
+                                            <label for="partner_name_modal" class="form-label">Partner Name:</label>
+                                            <input type="text" class="form-control" id="partner_name_modal" name="partner_name_modal">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="base_discount_modal" class="form-label">Base Discount:</label>
+                                            <input type="text" class="form-control" id="base_discount_modal" name="base_discount_modal">
+                                            <span id="base_discount_error" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="base_discount_lt_modal" class="form-label">Base Discount LT:</label>
+                                            <input type="text" class="form-control" id="base_discount_lt_modal" name="base_discount_lt_modal">
+                                            <span id="base_discount_lt_error" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="base_discount_gt_modal" class="form-label">Base Discount GT:</label>
+                                            <input type="text" class="form-control" id="base_discount_gt_modal" name="base_discount_gt_modal">
+                                            <span id="base_discount_gt_error" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="mmc_cash_modal" class="form-label">MMC Cash:</label>
+                                            <input type="text" class="form-control" id="mmc_cash_modal" name="mmc_cash_modal">
+                                            <span id="mmc_cash_error" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="mmc_credit_modal" class="form-label">MMC Credit:</label>
+                                            <input type="text" class="form-control" id="mmc_credit_modal" name="mmc_credit_modal">
+                                            <span id="mmc_credit_error" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="dbc_commn_modal" class="form-label">DBC Commission:</label>
+                                            <input type="text" class="form-control" id="dbc_commn_modal" name="dbc_commn_modal">
+                                            <span id="dbc_commn_error" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="deals_commn_modal" class="form-label">Deals Commission:</label>
+                                            <input type="text" class="form-control" id="deals_commn_modal" name="deals_commn_modal">
+                                            <span id="deals_commn_error" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" name="singleUpdate" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+                                                            
+            {% endblock %}
+            <!-- content -->
+             {% block javascript %}
+             <script>
+                $(document).ready(function(){
+                    $fileInput = $('#commission_file');
+                    var alertHTML = '<span class="alert alert-danger">' +
+                        'Invalid file format. Only CSV, XLSX, and XLS formats are allowed.' +
+                    '</span>';
+                    $fileInput.on('change', function(event) {
+                        var validFileTypes = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel", "text/csv", ".csv"];
+                        var isValidFileType = Array.from($fileInput[0].files).every(file => validFileTypes.includes(file.type) || validFileTypes.includes(file.name.split('.').pop().toLowerCase()));
+                        if (!isValidFileType) {
+                            // Prevent form submission
+                            event.preventDefault();
+                            $fileInput.val('');
+                            $("#alertContainer").show();
+                            $("#alertContainer").html(alertHTML);
+                        }else{
+                            $("#alertContainer").hide();
+                        }
+                    });
+                });
+
+                function getCSRFToken() {
+                    const csrfCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('csrftoken='));
+                    if (csrfCookie) {
+                        return csrfCookie.split('=')[1];
+                    }
+                    return null;
+                }
+
+                function get_details(event) {
+                    var commission_id = event.target.getAttribute('data-user-id'); 
+                    console.log('Editing user with ID:', commission_id);
+                    
+                    $.ajax({
+                        url: "{% url 'get_commission_details' %}", // Assuming this is the correct endpoint
+                        type: 'POST',
+                        data: {
+                            pk: commission_id // Pass the userId as pk
+                        },
+                        headers: {
+                            'X-CSRFToken': getCSRFToken('csrftoken')
+                        },
+                
+                        success: function(response) {
+                            console.log(response);
+                            $('#commissionModal').modal('show');
+                            $('#commissionId').val(response.commission_id);
+                            $('#partner_name_modal').val(response.partner_name);
+                            $('#base_discount_modal').val(response.base_discount);
+                            $('#base_discount_lt_modal').val(response.base_discount_lt);
+                            $('#base_discount_gt_modal').val(response.base_discount_gt);
+                            $('#mmc_cash_modal').val(response.mmc_cash);
+                            $('#mmc_credit_modal').val(response.mmc_credit);
+                            $('#dbc_commn_modal').val(response.dbc_commn);
+                            $('#deals_commn_modal').val(response.deals_commn);
+                        },
+                        error: function(xhr, status, error) {
+                            // Handle errors here
+                            console.error(xhr.responseText);
+                        }
+                    });
+                }
+
+                document.getElementById('commissionForm').addEventListener('submit', function(event) {
+                    var baseDiscount = document.getElementById('base_discount_modal').value;
+                    var baseDiscountLt = document.getElementById('base_discount_lt_modal').value;
+                    var baseDiscountGt = document.getElementById('base_discount_gt_modal').value;
+                    var mmcCash = document.getElementById('mmc_cash_modal').value;
+                    var mmcCredit = document.getElementById('mmc_credit_modal').value;
+                    var dbcCommn = document.getElementById('dbc_commn_modal').value;
+                    var dealsCommn = document.getElementById('deals_commn_modal').value;
+            
+                    var isValid = true;
+            
+                    isValid = isValid && isValidDecimal(baseDiscount, 'base_discount_error');
+                    isValid = isValid && isValidDecimal(baseDiscountLt, 'base_discount_lt_error');
+                    isValid = isValid && isValidDecimal(baseDiscountGt, 'base_discount_gt_error');
+                    isValid = isValid && isValidDecimal(mmcCash, 'mmc_cash_error');
+                    isValid = isValid && isValidDecimal(mmcCredit, 'mmc_credit_error');
+                    isValid = isValid && isValidDecimal(dbcCommn, 'dbc_commn_error');
+                    isValid = isValid && isValidDecimal(dealsCommn, 'deals_commn_error');
+            
+                    if (!isValid) {
+                        event.preventDefault(); // Prevent form submission
+                    }
+                });
+            
+                function isValidDecimal(value, errorId) {
+                    var errorSpan = document.getElementById(errorId);
+                    if (!value || isNaN(value) || value < 0) {
+                        errorSpan.textContent = 'Please enter a valid non-negative decimal number.';
+                        return false;
+                    } else {
+                        errorSpan.textContent = '';
+                        return true;
+                    }
+                }             
+             </script>
+             {% endblock %}

@@ -1,0 +1,539 @@
+{% extends "dashboard.html" %}
+{% load i18n %}
+
+
+{% block title %}
+{% trans "Partner" context "Dashboard Partner list" %} - {{ block.super }}
+{% endblock %}
+
+{% block body_class %}body-Partner{% endblock %}
+
+{% block menu_customers_class %}active{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumbs">
+  <li class="visible-s">
+    {% trans "Retailers" context "Dashboard Retailers list" %}
+  </li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<style>
+    .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+    }
+
+    .popup-content {
+        max-width: 80%;
+        max-height: 80%;
+    }
+
+    .popup a {
+        color: white;
+        text-decoration: none;
+        background: #333;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .error-message {
+        color: red;
+    }
+    #errorMessage {
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #d9534f;
+        border-radius: 4px;
+        color: #d9534f;
+        background-color: #f2dede;
+    }
+    
+    #errorMessage.close {
+        display: none;
+    }
+    .form-label {
+        color: #333; /* Replace with your desired dark color code */
+    }
+    .form-control{
+        color: #3685cb;
+    }
+</style>
+
+  
+
+            <div class="content">
+                <div class="container-fluid">
+                    <!--content main header-->
+                    <div class="row ">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title">View / Modify Partner KYC</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                          {% if error_message %}
+                            <div id="errorMessage" class="error-message">{{ error_message }}</div>
+                          {% endif %}
+                          <form method="POST" enctype="multipart/form-data" action="{% url 'edit_partner' instance.id %}"   class="customer-form needs-validation" novalidate>
+                            {% csrf_token %}
+                            <div class="row">
+
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">Partner Name *</label>
+                                    <input id="storeNameInput" class="form-control" type="text" name="name" value="{{ instance.name }}" placeholder="Store Name" required>
+                                    <small id="storeNameError" class="text-danger" style="display: none;">Please enter only characters and spaces.</small>
+                                </div>
+
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">Partner Mobile Number *</label>
+                                    <input type="text" class="form-control" data-provide="typeahead" id="phoneNumberInput" name="phone_number" value="{{ instance.user.phone_number }}" placeholder="Enter Number" required>
+                                    <small id="phoneNumberError" class="text-danger" style="display: none;">Please enter only numbers.</small>
+                                </div>
+
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">Pincode *</label>
+                                    <input type="text" class="form-control" data-provide="typeahead" id="pincodeInput" name="postal_code" value="{{ instance.postal_code }}" placeholder="Pincode" required>
+                                    <small id="pincodeError" class="text-danger" style="display: none;">Please enter a valid 6-digit Pincode.</small>
+                                </div>
+
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                  <label class="form-label">Email</label>
+                                  <input type="email" class="form-control"  name="email" value="{{instance.user.email}}" placeholder="Enter Email">
+                                </div>
+                                
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">City *</label>
+                                    <input type="text" class="form-control"  name="city" value="{{instance.city}}" placeholder="Enter City" required>
+                                </div>
+
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">State *</label>
+                                    <input type="text" class="form-control"  name="state" value="{{instance.state}}" placeholder="Enter State" required>
+                                  </div>
+                               
+
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">GST Number *</label>
+                                    <input type="text" class="form-control" data-provide="typeahead"
+                                           id="gstNumberInput"  name="gstnumber" value="{{kyc_data.gst_number}}" placeholder="GST Number" required>
+                                    <small id="gstNumberError" style="color: red; display: none;">Only 15 alphanumeric characters allowed</small>
+                                </div>
+
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">Drug License Number *</label>
+                                    <input id="drugLicenseInput" class="form-control" type="text"
+                                    name="licence" value="{{kyc_data.drug_license_number}}"  placeholder="DL Number" required>
+                                    <small id="drugLicenseError" style="color: red; display: none;">Only 30 alphanumeric characters allowed</small>
+                                </div>
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                  <label class="form-label">Valid from: *</label>
+                                  <input type="date" class="form-control" name="valide_from" value="{{ kyc_data.valid_from|date:'Y-m-d' }}" >
+                                </div>
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                  <label class="form-label">Valid to: *</label>
+                                  <input type="date" class="form-control" name="valide_to" value="{{ kyc_data.valid_to|date:'Y-m-d' }}" >
+                                </div>
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">Cart Value</label>
+                                    <input type="text" name="hreshold_value" class="form-control" data-provide="typeahead"
+                                        id="thresholdValueInput" value="{{instance.cart_value}}" placeholder="Enter Threshold Value ">
+                                        <small id="thresholdValueError" style="color: red; display: none;">Invalid Input</small>
+                                </div>
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">Pan Number *</label>
+                                    <input type="text" name="pan_number" class="form-control" data-provide="typeahead"
+                                        id="panNumberInput" value="{{kyc_data.pan_number}}" placeholder="Enter Pan Number ">
+                                        <small id="panNumberError" style="color: red; display: none;">Invalid Input</small>
+                                </div>
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">Aadhaar Number *</label>
+                                    <input type="text" name="aadhaar" class="form-control" data-provide="typeahead"
+                                        id="aadharInput" value="{{kyc_data.aadhaar_number}}" placeholder="Enter Aadhaar ">
+                                        <small id="aadharError" style="color: red; display: none;">Invalid Input</small>
+                                </div>
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">Payment Term</label>
+                                    <input type="text" class="form-control" name="payment_term"
+                                    value="{{instance.Payment_term}}" placeholder="Enter Payment Term">
+                                </div>
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">Discount</label>
+                                    <input type="text" class="form-control" name="discount" id="discountInput" 
+                                           value="{{ instance.discount }}" placeholder="Enter Discount">
+                                    <small id="discountError" class="text-danger"></small>
+                                </div>
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">Speciality </label>
+                                    <input type="text" class="form-control" name="speciality" 
+                                    value="{{instance.speciality}}" placeholder="Enter Speciality">
+                                </div>
+                                <div class="mb-3 col-lg-12">
+                                    <label class="form-label">Address *</label>
+                                    <input type="text" class="form-control"  name="address" value="{{instance.address}}" placeholder="Enter Address" required>
+                                </div>
+
+                            </div>
+                           
+
+
+                            <div class="row mt-3">
+                                
+                                
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">DL Form 20</label>
+                                    {% if partner_user.documents.drug_license_form20 %}
+                                        <button  type="button" class="btn text-primary" data-bs-toggle="modal" data-bs-target="#scrollable-modal-DL20">View</button>
+                                        <div>
+                                            <div class="modal fade" id="scrollable-modal-DL20" tabindex="-1" role="dialog" aria-labelledby="scrollableModalTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body">
+                                                            {% if partner_user.documents.drug_license_form20.name|lower|slice:'-3:' == 'pdf' %}
+                                                                <iframe src="{{document_urls.drug_license_form20 }}" width="100%" height="400" style="border:none;"></iframe>
+                                                            {% else %}
+                                                                <img src="{{document_urls.drug_license_form20 }}" alt="drug_license_form20" style="max-width: 100%; height: auto;">
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div><!-- /.modal-content -->
+                                                </div><!-- /.modal-dialog -->
+                                            </div><!-- /.modal -->  
+                                        </div>
+                                    {% endif %}
+                                    <input type="file" id="id_doc_licence20" name="doc_licence20" accept=".pdf, .jpg, .jpeg, .png" class="form-control" onchange="previewFile('doc_licence20', 'docLicence20Preview')">
+                                    <div id="docLicence20Preview" style="max-width: 50%; max-height: 100px; display: none;"></div>
+                                </div>
+                                
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">DL Form 21</label>
+                                    {% if partner_user.documents.drug_license_form21 %}
+                                        <button  type="button" class="btn text-primary" data-bs-toggle="modal" data-bs-target="#scrollable-modal-DL21">View</button>
+                                        <div>
+                                            <div class="modal fade" id="scrollable-modal-DL21" tabindex="-1" role="dialog" aria-labelledby="scrollableModalTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body">
+                                                            {% if partner_user.documents.drug_license_form21.name|lower|slice:'-3:' == 'pdf' %}
+                                                                <iframe src="{{document_urls.drug_license_form21 }}" width="100%" height="400" style="border:none;"></iframe>
+                                                            {% else %}
+                                                                <img src="{{document_urls.drug_license_form21 }}" alt="Drug License Form 21" style="max-width: 100%; height: auto;">
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div><!-- /.modal-content -->
+                                                </div><!-- /.modal-dialog -->
+                                            </div><!-- /.modal -->  
+                                        </div>
+                                    {% endif %}
+                                    <input type="file" id="id_doc_licence21" name="doc_licence21" accept=".pdf, .jpg, .jpeg, .png" class="form-control" onchange="previewFile('doc_licence21', 'docLicence21Preview')">
+                                    <div id="docLicence21Preview" style="max-width: 50%; max-height: 100px; display: none;"></div>
+                                </div>
+                                
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">Upload GST Certificate</label>
+                                    {% if partner_user.documents.gst_image %}
+                                        <button  type="button" class="btn text-primary" data-bs-toggle="modal" data-bs-target="#scrollable-modal-gst">View</button>
+                                        <div>
+                                            <div class="modal fade" id="scrollable-modal-gst" tabindex="-1" role="dialog" aria-labelledby="scrollableModalTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body">
+                                                            {% if partner_user.documents.gst_image.name|lower|slice:'-3:' == 'pdf' %}
+                                                                <iframe src="{{document_urls.gst_image }}" width="100%" height="400" style="border:none;"></iframe>
+                                                            {% else %}
+                                                                <img src="{{document_urls.gst_image }}" alt="gst_image" style="max-width: 100%; height: auto;">
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div><!-- /.modal-content -->
+                                                </div><!-- /.modal-dialog -->
+                                            </div><!-- /.modal -->  
+                                        </div>
+                                    {% endif %}
+                                    <input type="file" id="id_gstcertificate" name="gstcertificate" accept=".pdf, .jpg, .jpeg, .png" class="form-control" onchange="previewFile('gstFile', 'gstFilePreview')">
+                                    <div id="gstFilePreview" style="max-width: 50%; max-height: 100px; display: none;"></div>
+                                </div>
+                                <div class="mb-3 col-md-2 col-lg-4 col-sm-12">
+                                    <label class="form-label">Update Logo</label>
+                                    {% if instance.logo %}
+                                        <button  type="button" class="btn text-primary" data-bs-toggle="modal" data-bs-target="#scrollable-modal-logo">View</button>
+                                        <div>
+                                            <div class="modal fade" id="scrollable-modal-logo" tabindex="-1" role="dialog" aria-labelledby="scrollableModalTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body">
+                                                            {% comment %} <iframe src="{{local_s3}}{{instance.logo}}" width="800" height="500" style="border:none;">
+                                                            </iframe> {% endcomment %}
+                                                            {% if instance.logo|lower|slice:'-3:' == 'pdf' %}
+                                                                <iframe src="{{document_urls.logo }}" width="100%" height="400" style="border:none;"></iframe>
+                                                            {% else %}
+                                                                <img src="{{document_urls.logo}}" alt="Drug License Form 20" style="max-width: 100%; height: auto;">
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div><!-- /.modal-content -->
+                                                </div><!-- /.modal-dialog -->
+                                            </div><!-- /.modal -->  
+                                        </div>
+                                    {% endif %}
+                                    <input type="file" id="id_logo" name="logo" accept=".pdf, .jpg, .jpeg, .png" class="form-control" onchange="previewFile('gstFile', 'gstFilePreview')">
+                                    <div id="logo" style="max-width: 50%; max-height: 100px; display: none;"></div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <a href="{% url 'partner-summary' %}">
+                                            <button class="btn btn-light card-body py-2 text-black w-100" type="button">Cancel</button></a>
+                                    </div>
+                                    <div class="col-md-4">
+                                      <button class="btn btn-secondary card-body py-2 text-white  w-100" id="2" type="submit"
+                                      onclick="validateAndUpdate()" id="updateButton">Update</button>
+                                    </div>
+                            </div>
+                          </form> 
+                         
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- content -->
+
+        <!-- Footer Start -->
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <script>document.write(new Date().getFullYear())</script> © Medleymed Network
+                    </div>
+                    {% comment %} <div class="col-md-6">
+                        <div class="text-md-end footer-links d-none d-md-block">
+                            <a href="javascript: void(0);">About</a>
+                            <a href="javascript: void(0);">Support</a>
+                            <a href="javascript: void(0);">Contact Us</a>
+                        </div>
+                    </div> {% endcomment %}
+                </div>
+            </div>
+        </footer>
+        <!-- end Footer -->
+        <script>
+            // Function to validate the discount input field
+            function validateDiscountInput() {
+                var discountInput = document.getElementById("discountInput");
+                var discountError = document.getElementById("discountError");
+                var discountValue = discountInput.value.trim(); // Trim whitespace from input
+        
+                // Check if the value is not empty
+                if (discountValue === "") {
+                    discountError.textContent = "Discount value cannot be empty.";
+                    return false;
+                }
+        
+                // Check if the value is a positive integer
+                if (!/^\d+$/.test(discountValue)) {
+                    discountError.textContent = "Please enter a positive integer for the discount.";
+                    discountInput.value = ""; // Clear input field
+                    return false;
+                }
+        
+                // Check if the value is not negative
+                if (parseInt(discountValue) < 1) {
+                    discountError.textContent = "Discount value cannot be negative.";
+                    discountInput.value = ""; // Clear input field
+                    return false;
+                }
+        
+                discountError.textContent = ""; // Clear error message if validation passes
+                return true; // Input is valid
+            }
+        
+            // Add event listener for input validation
+            document.getElementById("discountInput").addEventListener("input", function() {
+                validateDiscountInput();
+            });
+        </script>
+        
+        
+        
+        <script>
+
+            function setupInputValidation(inputId, errorId, regex, lengthLimit, errorMessageDelay, allowDecimal) {
+                var input = document.getElementById(inputId);
+                var error = document.getElementById(errorId);
+                var timeoutId;
+
+                input.addEventListener('input', function () {
+                    clearTimeout(timeoutId);
+            
+                    var value = input.value;
+                    // Allow alphanumeric characters and special characters
+                    var sanitizedValue = value.slice(0, lengthLimit);
+                    input.value = sanitizedValue;
+            
+                    if (sanitizedValue !== value) {
+                        error.style.display = 'block';
+                    } else {
+                        error.style.display = 'none';
+                    }
+            
+                    // Hide the error message after a delay
+                    timeoutId = setTimeout(function () {
+                        error.style.display = 'none';
+                    }, errorMessageDelay);
+                });
+            }
+
+            // Usage for GST Number with a 2-second delay
+            setupInputValidation('gstNumberInput', 'gstNumberError', /[^a-zA-Z0-9\s]/g, 15, 3000);
+
+
+            // Usage for Drug License with a 2-second delay
+            setupInputValidation('drugLicenseInput', 'drugLicenseError', /[^a-zA-Z0-9\s]/g, 30, 3000);
+
+            // Additional input validations
+            setupInputValidation('storeNameInput', 'storeNameError', /[^a-zA-Z\s]/g, Infinity, 2000);
+            setupInputValidation('phoneNumberInput', 'phoneNumberError', /\D/g, 12, 2000);
+            setupInputValidation('pincodeInput', 'pincodeError', /\D/g, 6, 2000);
+
+            // Usage for Threshold Value with a 2-second delay, disallowing decimal values
+            setupInputValidation('aadharInput', 'aadharError', /\D/g, 12, 2000);
+            setupInputValidation('panNumberInput', 'panNumberError', /[^a-zA-Z0-9]/g, 10, 2000);
+
+
+            var fileInputGST = document.getElementById("id_gstcertificate");
+            var fileInputLicence20 = document.getElementById("id_doc_licence20");
+            var fileInputLicence21 = document.getElementById("id_doc_licence21");
+            var fileInputLogo = document.getElementById("id_logo");
+
+            var errorMessageGST;
+            var errorMessageLicence20;
+            var errorMessageLicence21;
+            var errorMessageLogo;
+
+            fileInputGST.addEventListener("change", function() {
+                handleFileInputChange(fileInputGST, errorMessageGST);
+            });
+
+
+            fileInputLicence20.addEventListener("change", function() {
+                handleFileInputChange(fileInputLicence20, errorMessageLicence20);
+            });
+
+            fileInputLicence21.addEventListener("change", function() {
+                handleFileInputChange(fileInputLicence21, errorMessageLicence21);
+            });
+
+            fileInputLogo.addEventListener("change", function() {
+                handleFileInputlogo(fileInputLogo, errorMessageLogo);
+            });
+
+            function handleFileInputChange(fileInput, errorMessage) {
+                // Remove any existing error message
+                if (errorMessage && errorMessage.parentNode) {
+                    errorMessage.parentNode.removeChild(errorMessage);
+                }
+
+                var file = fileInput.files[0];
+                var allowedExtensions = ['jpg','pdf','jpeg', 'png'];
+                var fileExtension = file ? file.name.split(".").pop().toLowerCase() : "";
+
+                if (file && !allowedExtensions.includes(fileExtension)) {
+                    // Invalid file type, display the error message
+                    fileInput.value = ""; // Clear the selected file
+                    errorMessage = document.createElement("span");
+                    errorMessage.className = "error-message";
+                    errorMessage.style.fontSize = '12px';
+                    errorMessage.textContent = "Only JPG, JPEG, and PNG files are allowed.";
+                    fileInput.parentNode.appendChild(errorMessage);
+
+                    // Set a timeout to hide the error message after 2 seconds
+                    setTimeout(function() {
+                        if (errorMessage && errorMessage.parentNode) {
+                            errorMessage.parentNode.removeChild(errorMessage);
+                        }
+                    }, 2000); // 2000 milliseconds = 2 seconds
+                }
+            }
+            function handleFileInputlogo(fileInput, errorMessage) {
+                // Remove any existing error message
+                if (errorMessage && errorMessage.parentNode) {
+                    errorMessage.parentNode.removeChild(errorMessage);
+                }
+
+                var file = fileInput.files[0];
+                var allowedExtensions = ['jpg','jpeg', 'png'];
+                var fileExtension = file ? file.name.split(".").pop().toLowerCase() : "";
+
+                if (file && !allowedExtensions.includes(fileExtension)) {
+                    // Invalid file type, display the error message
+                    fileInput.value = ""; // Clear the selected file
+                    errorMessage = document.createElement("span");
+                    errorMessage.className = "error-message";
+                    errorMessage.style.fontSize = '12px';
+                    errorMessage.textContent = "Only JPG, JPEG, and PNG files are allowed.";
+                    fileInput.parentNode.appendChild(errorMessage);
+
+                    // Set a timeout to hide the error message after 2 seconds
+                    setTimeout(function() {
+                        if (errorMessage && errorMessage.parentNode) {
+                            errorMessage.parentNode.removeChild(errorMessage);
+                        }
+                    }, 2000); // 2000 milliseconds = 2 seconds
+                }
+            }
+        
+        </script> 
+        <script>
+            function setupThresholdValueValidation() {
+                var input = document.getElementById('thresholdValueInput');
+                var error = document.getElementById('thresholdValueError');
+                var defaultValue = 0;
+        
+                // Set default value
+                input.addEventListener('input', function () {
+                    var value = input.value;
+        
+                    // Replace invalid input with 0
+                    var sanitizedValue = value.replace(/\D/g, '');
+                    input.value = sanitizedValue;
+        
+                    // Check if the input is a valid integer
+                    if (/^\d*$/.test(sanitizedValue)) {
+                        error.style.display = 'none';
+                    } else {
+                        error.style.display = 'block';
+                    }
+                });
+            }
+        
+            // Call the setup function on document ready
+            document.addEventListener('DOMContentLoaded', function () {
+                setupThresholdValueValidation();
+            });
+        </script>
+
+
+    {% endblock %}
+
+   

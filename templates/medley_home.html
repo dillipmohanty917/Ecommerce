@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+      {% load i18n %}
+      {% load static %}
+      {% load render_bundle from webpack_loader %}
+      {% comment %} {% load gross from prices_i18n %} {% endcomment %}
+   <head>
+      <meta charset="utf-8">
+      <title>MedleyMed Network</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no,  minimal-ui" />
+      <meta content="" name="keywords">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta content="" name="description">
+      <!-- Favicons -->
+
+      <link rel="shortcut icon" href="{% static "assets/images/favicon.ico" %}">
+      {% comment %} <link rel="shortcut icon" href="{% static "home_v2/img/Favicon_MedleyMed.ico" %}"> {% endcomment %}
+      <!-- Google Tag Manager -->
+      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-N3JJZ7H');</script>
+      <!-- End Google Tag Manager -->
+      <!-- Bootstrap CSS File -->
+      <link rel="stylesheet" href="{% static "home_v2/lib/bootstrap/css/bootstrap.min.css" %}" >
+      <!-- Libraries CSS Files -->
+      {# <link rel="stylesheet" type="text/css" href="{% static "home_v2/font-awesome/css/font-awesome.min.css" %}"> #}
+      <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="{% static "home_v2/lib/animate/animate.min.css" %}" >
+      <!-- Auto complete css File -->
+      <link rel="stylesheet" href="{% static "home_v2/lib/auto-complete/jquery-ui.css" %}">
+      <!-- Main Stylesheet File -->
+      <link rel="stylesheet" href="{% static "home_v2/css/style.css" %}">
+
+      <link href="{% static 'assets/css/app-creative.min.css' %}" rel="stylesheet" type="text/css" id="app-style" />
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!--google fonts-->
+    {% comment %} <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet"> {% endcomment %}
+      <!-- <script src="{% static 'assets/js/app.min.js' %}"></script>
+    <script src="{% static 'assets/js/hyper-config.js' %}"></script>
+    <script src="{% static 'assets/js/vendor.min.js' %}"></script> -->
+
+
+
+  
+    <!-- Dashboard App js -->
+    <!-- <script src="{% static 'assets/js/pages/demo.dashboard.js' %}"></script> -->
+    <script src="{% static 'assets/js/hyper-config.js' %}"></script>
+
+    <!-- App js -->
+    <script src="{% static 'assets/js/app.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+      
+    <style>
+        {% comment %} .courier-prime-bold {
+            font-family: "Courier Prime", monospace;
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        .courier-prime-bold-italic {
+            font-family: "Courier Prime", monospace;
+            font-weight: 700;
+            font-style: italic;
+        } {% endcomment %}
+        @font-face {
+            font-family: headingFont;
+            src: url({% static "assets/fonts/CourierPrime-Bold.ttf" %});
+        }
+ 
+        @font-face {
+            font-family: bodyFont;
+            src: url({% static "assets/fonts/Numans-Regular.ttf" %});
+            font-weight: bold;
+        }
+        body{
+            font-family: bodyFont;
+        }
+        .primary-font {
+            font-family: headingFont;
+        }
+        .home-landing .hero {
+            position: relative;
+            /* background: url(https://images.unsplash.com/photo-1489844097929-c8d5b91c456e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1052&q=80);
+            background: url({% static "assets/images/new_images/bg.png" %}); */
+            /* min-height: 80vh; */
+            padding: 100px 0px 0px 0px;
+            background-color: #0a0a26;
+
+            /* background-size: cover;
+            background-position: center; */
+            border-radius: 0px 0px 0px 100px;
+        }
+
+        {% comment %} .primary-font {
+            font-family: courier-prime-bold;
+        } {% endcomment %}
+
+        .a {
+            text-decoration: none;
+        }
+
+        .home-landing .areyoubg {
+            position: relative;
+            /* background: url(https://images.unsplash.com/photo-1489844097929-c8d5b91c456e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1052&q=80); */
+            background: url({% static "assets/images/new_images/areyoubg.png" %});
+            /* min-height: 80vh; */
+            padding: 50px 0px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-heading {
+            font-size: 60px;
+        }
+
+        .home-landing .hero h1 {
+            font-size: 60px;
+            font-weight: 800;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+        }
+
+        .home-landing .hero h1 span {
+            color: #fff;
+        }
+
+        h1 {
+            color: black;
+            font-weight: 800;
+
+        }
+
+        .home-landing .hero p {
+            padding: 0;
+            margin: 1em 0 0 0;
+            font-size: 20px;
+            font-weight: 500;
+
+        }
+
+        .list-none {
+            list-style: none;
+        }
+
+        .text-gray {
+            color: #5e5e60;
+            font-size: 18px;
+        }
+
+        .bgrd-primary {
+            background-color: #0a0a26;
+        }
+
+        .p-color {
+            color: #0a0a26;
+        }
+
+        .rounded-full {
+            border-radius: 100px;
+        }
+
+        .nav-tabs .nav-link {
+            margin-bottom: -1px;
+            color: #0a0a26;
+            background: 0 0;
+            border: 1px solid #0a0a26;
+            border-top-left-radius: .25rem;
+            border-top-right-radius: .25rem;
+            position: relative;
+        }
+
+        .nav-tabs .nav-item.show .nav-link,
+        .nav-tabs .nav-link.active::after {
+            content: "";
+            color: red;
+            font-weight: bold;
+            position: absolute;
+            width: 30%;
+            height: 40px;
+            right: 35%;
+            background-image: url({% static "assets/images/new_images/active-img.png" %});
+            background-position: bottom;
+            background-repeat: no-repeat;
+            background-size: cover;
+
+        }
+
+        @media screen and (max-width: 1200px) {
+
+            .nav-tabs .nav-item.show .nav-link,
+            .nav-tabs .nav-link.active::after {
+                
+
+            }
+        }
+
+        .nav-tabs .nav-item.show .nav-link,
+        .nav-tabs .nav-link.active {
+            color: #0a0a26;
+            background-color: #0ec8d5;
+            border: #0a0a26 solid 4px;
+            padding: 20px;
+            border-radius: 20px;
+
+        }
+
+        .nav-tabs .nav-link {
+            font-size: 18px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .nav-tabs {
+            border-bottom: 1px solid #f7f8fc;
+        }
+
+        .testimonial-card {
+            min-width: 48%;
+        }
+
+        .rounded-3 {
+            border-radius: 20px !important;
+        }
+        a{
+            text-decoration:none;
+            color:white;
+        }
+
+        /*testimonials*/
+    </style>
+   </head>
+   <body class="home-landing" style="background-color: #f7f8fc;">
+      
+      <!--==========================
+         Header
+         ============================-->
+      <header id="header" class="fixed-top">
+         <div class="container" style="display: flex;  align-items: center;  justify-content: space-between;">
+            <div class="logo float-left">
+               <!-- Uncomment below if you prefer to use an image logo -->
+               
+
+               <a href="{% url "home" %}"
+               class="scrollto">
+               <img style="padding:10px"  src="{% static "assets/images/Medleymed_Network.png" %}" alt="" class="img-fluid"></a>
+            </div>
+            <nav class="main-nav float-right d-none d-lg-block">
+               {% comment %} <div class="hlp_right">
+                  <a class="nav_top">Need Help? Questions?<span>(+91) 950-295-2277</span></a>
+               </div>  {% endcomment %}
+               <ul class="second_menu">
+               <li class="active"><a href="#">Home</a></li>
+               <li class=""><a href="#about">About Us</a></li>
+               <li class=""><a href="#medley_network">Medleymed Network</a></li>
+               <li ><a href={%url "contact_us"%} class="text-white">Contact Us</a></p>
+               {% comment %} <li><a href="#our_services">Our Services</a></li> {% endcomment %}
+               <li>
+                  {% comment %} <a class="login_top"><button class="log_btn1" type="button">Admin Login</button></a>  {% endcomment %}
+                  <a class="login_top" href="{% url "register" %}"><button class="log_btn" type="button">Login</button></a>
+               </li>
+            </nav>
+            <!-- .main-nav -->
+         </div>
+      </header>
+      <!-- #header -->
+      <!--==========================
+         Intro Section
+         ============================-->
+        <section class="hero bgrd-primary d-flex flex-column justify-content-center">
+            <div class="container pt-5" >
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-9">
+                        <h1 class="hero-heading text-white primary-font">India's <u
+                                style="text-decoration-color: #10c1cb;">Fastest
+                                growing</u> <span><img style="width:32px" src={% static "assets/images/new_images/arrow.png" %} alt="arrow"></span></h1>
+                        <h1 class="hero-heading text-white primary-font">B2B Pharmacy Network</h1>
+                        {% comment %} <p class="text-white">We provide room feature that make it easier for users to interact on
+                            specific and focused topics and discussion, just in one click</p> {% endcomment %}
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-lg-4">
+                        <img class="w-100 py-4 pr-5" src={% static "assets/images/new_images/moreBenifits.png" %} alt="">
+                        <div
+                            class="p-3 gap-2 border-2 border text-lg rounded-full w-100 a my-3 text-white d-flex align-items-center justify-content-center">
+                            <div>
+                                <h4 style="margin-bottom: 0rem;">Download</h4>
+                            </div>
+                            <div>
+                                <img style="width:24px" src={% static "assets/images/new_images/arrow-icon-white.png" %} alt="">
+                            </div>
+                            <div>
+                                <a href="https://play.google.com/store/apps/details?id=com.medleymed.b2bretailer.b2b_retailer&hl=en" target="_blank">
+                                    <img style="width:24px" src={% static "assets/images/new_images/android.png" %} alt=""></a>
+                            </div>
+                            <div>
+                                <a href="https://apps.apple.com/us/app/medleymed-network/id6479243124" target="_blank">
+                                 <img style="width:24px" src={% static "assets/images/new_images/apple.png" %} alt=""></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img class="w-100" src={% static "assets/images/new_images/hero1.png" %} alt="">
+    
+                                </div>
+                                <div class="carousel-item">
+                                    <img class="w-100" src={% static "assets/images/new_images/hero2.png" %} alt="">
+    
+                                </div>
+                                <div class="carousel-item" style="position: relative;">
+                                    <div style="position: absolute; width: 45%; bottom: 0; left: 15%;">
+                                        <img class="w-100" src="{% static "assets/images/new_images/medley.gif" %}" alt="">
+                                    </div>
+                                    <img class="w-100" src={% static "assets/images/new_images/hero3.png" %} alt="">
+    
+                                </div>
+                            </div>
+                            <!-- <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Next</span>
+                            </button> -->
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--About-->
+        <section id="about" class="pt-5">
+            <div class="container py-5">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <img class="w-100" src={% static "assets/images/new_images/about.png" %} alt="">
+                    </div>
+                    <div class="col-lg-8 p-4">
+                        <h1 class="p-color primary-font"><u style="text-decoration-color: #10c1cb;">About Us</u></h1>
+                        <div class="mt-4">
+                            <li class="list-none d-flex gap-4 align-items-center">
+                                <div
+                                    style="width: 15px; height: 15px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                </div>
+                                <div class="text-gray">
+                                    Medleymed Network has been promoted by Medleymed Network Solutions Pvt Ltd, a 100%
+                                    subsidiary of Athena Global Technologies Limited, a leading Hyderabad based Technology
+                                    Services Company.
+                                </div>
+                            </li>
+                            <li class="list-none d-flex gap-4 align-items-center mt-3">
+                                <div
+                                    style="width: 15px; height: 15px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                </div>
+                                <div class="text-gray">
+                                    Medleymed harnesses the power of technology to orchestrate and simplify the complex
+                                    Pharmacy value chain. We are improving accessibility, reliability and affordability
+                                    through efficient demand aggregation, supply chain reengineering and useful analytics.
+                                </div>
+                            </li>
+                            <li class="list-none d-flex gap-4 align-items-center mt-3">
+                                <div
+                                    style="width: 15px; height: 15px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                </div>
+                                <div class="text-gray">
+                                    As an innovative start-up led by the young thinkers and doers from top institutes like
+                                    IIMs and IITs, we operate at the cutting edge of technology and innovation. We have a
+                                    powerful competitive advantage because of our business model, platform quality and
+                                    strong implementation team. </div>
+                            </li>
+                            <li class="list-none d-flex gap-4 align-items-center mt-3">
+                                <div
+                                    style="width: 15px; height: 15px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                </div>
+                                <div class="text-gray">
+                                    Our vision is to become the largest B2B technology platform in the Healthcare space in
+                                    the country seamlessly facilitating the business interactions between Manufacturers,
+                                    Distributors and Pharmacies through easy Order placements and attractive Deals. </div>
+                            </li>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--medleymed network-->
+        <section id='medley_network' class="pt-5">
+            <div class="container py-5">
+                <div class="row">
+                    <div class="col-lg-8 p-4">
+                        <h1 class="p-color primary-font"><u style="text-decoration-color: #10c1cb;">Medleymed Network</u>
+                        </h1>
+                        <div class="mt-4">
+                            <li class="list-none d-flex gap-4 align-items-center">
+                                <div
+                                    style="width: 15px; height: 15px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                </div>
+                                <div class="text-gray">
+                                    Medleymed Network is enabling thousands of Pharmacies and hundreds of Distributors
+                                    across India to grow their business, using technology and knowledge.
+                                </div>
+                            </li>
+                            <li class="list-none d-flex gap-4 align-items-center mt-3">
+                                <div
+                                    style="width: 15px; height: 15px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                </div>
+                                <div class="text-gray">
+                                    As your dedicated B2B marketplace, we help you minimize costs and maximize profits. Our
+                                    platform is open 24/7, allowing you to conduct transactions anytime, anywhere, ensuring
+                                    continuous business operations.
+                                </div>
+                            </li>
+                            <li class="list-none d-flex gap-4 align-items-center mt-3">
+                                <div
+                                    style="width: 15px; height: 15px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                </div>
+                                <div class="text-gray">
+                                    Medleymed Network enables Pharmacies the ease of buying all their pharmacy and general
+                                    items. In short, it is a one stop solution for the retailers to place orders to multiple
+                                    distributors for their pharmacy needs.
+                                </div>
+                            </li>
+                            <li class="list-none d-flex gap-4 align-items-center mt-3">
+                                <div
+                                    style="width: 15px; height: 15px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                </div>
+                                <div class="text-gray">
+                                    Medleymed Network provides real time details on products, offers, schemes, pricing and
+                                    availability of medicines.Come, be part of a groundbreaking transformation that unites
+                                    the entire industry on one seamless platform that helps you to minimize your costs and
+                                    maximize your profits.
+                                </div>
+                            </li>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <video src={% static "assets/images/new_images/video2.mp4" %} class="w-100" style="border-radius: 50px;" loop muted autoplay></video>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--to know more-->
+        <section>
+            <div class="container py-1 px-5 bgrd-primary rounded-full">
+                <div class="row px-2 align-items-center">
+                    <div class="cols-sm-12 col-md-12 col-lg-4 p-4 text-center">
+                        <h3 class="text-white primary-font" style="margin-bottom: 0rem; font-size: 20px;">To know more...</h3>
+                    </div>
+                    <div class="cols-sm-12 col-md-12 col-lg-4 text-center">
+                        <a href={%url "contact_us"%} class="text-white">
+                            <div class="d-flex align-items-center gap-2">
+                                <div 
+                                    class="p-3 gap-3 border rounded-full w-100 a text-white d-flex align-items-center justify-content-center">
+                                    <div >
+                                        <h3 style="margin-bottom: 0rem; font-size: 24px;">Request a call</h3>
+                                        {% comment %} <h3>Request a call</h3> {% endcomment %}
+                                    </div>
+                                    <div>
+                                        <img style="width:30px" src={% static "assets/images/new_images/firstrequestrecords-first-request.gif" %} alt="phone">
+                                    </div>
+                                </div>
+                                <div>
+                                    <img style="width:75px" src={% static "assets/images/new_images/giphy.gif" %} alt="pointer">
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="cols-sm-12 col-md-12 col-lg-4 p-4 text-center">
+                        <h4 style="color: #888795; font-size: 18px; margin-bottom: 0rem;">Speak to our specialists today</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--tabs-->
+        <section class="mt-5">
+            <div class="container">
+                <div class="">
+                    <nav>
+                        <div class="nav nav-tabs mb-3 gap-5" id="nav-tab" role="tablist">
+                            <button style="position: relative;" class="nav-link active col" id="nav-home-tab"
+                                data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab"
+                                aria-controls="nav-home" aria-selected="true">
+                                {% comment %} <div style="width:30%; height: 20px; position: absolute; left:35%; bottom:-10%;">
+                                    <img class="w-100" src={% static "assets/images/new_images/active-img.png" %} alt="">
+                                </div> {% endcomment %}
+                                <div style="font-size: 24px;">Retailer</div>
+                            </button>
+                            <button class="nav-link col" id="nav-profile-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
+                                aria-selected="false">
+                                <div style="font-size: 24px;">Distributors</div>
+                            </button>
+                            <button class="nav-link col" id="nav-contact-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact"
+                                aria-selected="false">
+                                <div style="font-size: 24px;">Manufacturer</div>
+                            </button>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade active show" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+    
+                            <div class="row mt-5">
+                                <div class="col-lg-8 p-5 bg-white" style="border-radius: 40px;">
+                                    <div class="mt-4">
+                                        <li class="list-none">
+                                            <div class="text-gray">
+                                                Access a diverse range of products and services through Medleymed Network.
+                                                Our B2B platform enables you to source high-quality and diverse products
+                                                from reliable suppliers thereby enhancing your offerings and meeting
+                                                customer demands effectively.
+                                            </div>
+                                        </li>
+                                    </div>
+                                    <div class="mt-4">
+                                        <li class="list-none">
+                                            <div class="text-gray">
+                                                Connect with a vast network of Trade Partners and enhance your ability to
+                                                reach new markets and customers. Simplify your ordering process with our App
+                                                and increase your visibility in the Pharma industry, ensuring sustained
+                                                growth and success </div>
+                                        </li>
+                                    </div>
+                                    <div class="mt-4">
+                                        <li class="list-none">
+                                            <div class="text-gray">
+                                                You can stay competitive by leveraging our extensive network and industry
+                                                insights.
+                                        </li>
+                                    </div>
+                                    <h1 class="p-color mt-4 primary-font"><u
+                                            style="text-decoration-color: #10c1cb;">Benefits of
+                                            partnering with us</u>
+                                    </h1>
+                                    <div class="mt-4">
+                                        <div class="row">
+                                            <li
+                                                class="col-md-6 col-lg-4 col-sm-6 list-none d-flex gap-4 align-items-center">
+                                                <div>
+                                                    <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                        style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                                </div>
+                                                <div class="text-gray">
+                                                    Curated Selection
+                                                </div>
+                                            </li>
+                                            <li
+                                                class="col-md-6 col-lg-4 col-sm-6 list-none d-flex gap-4 align-items-center mt-3">
+                                                <div>
+                                                    <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                        style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                                </div>
+                                                <div class="text-gray">
+                                                    Transparent pricing
+                                                </div>
+                                            </li>
+                                            <li
+                                                class="col-md-6 col-lg-4 col-sm-6 list-none d-flex gap-4 align-items-center mt-3">
+                                                <div>
+                                                    <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                        style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                                </div>
+                                                <div class="text-gray">
+                                                    Ease of Ordering
+                                                </div>
+                                            </li>
+                                            <li
+                                                class="col-md-6 col-lg-4 col-sm-6 list-none d-flex gap-4 align-items-center mt-3">
+                                                <div>
+                                                    <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                        style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                                </div>
+                                                <div class="text-gray">
+                                                    Credit facilities
+                                                </div>
+                                            </li>
+                                            <li
+                                                class="col-md-6 col-lg-4 col-sm-6 list-none d-flex gap-4 align-items-center mt-3">
+                                                <div>
+                                                    <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                        style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                                </div>
+                                                <div class="text-gray">
+                                                    Delivery tie-ups
+                                                </div>
+                                            </li>
+                                            <li
+                                                class="col-md-6 col-lg-4 col-sm-6 list-none d-flex gap-4 align-items-center mt-3">
+                                                <div>
+                                                    <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                        style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                                </div>
+                                                <div class="text-gray">
+                                                    Special Deals
+                                                </div>
+                                            </li>
+                                            <li
+                                                class="col-md-6 col-lg-4 col-sm-6 list-none d-flex gap-4 align-items-center mt-3">
+                                                <div>
+                                                    <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                        style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                                </div>
+                                                <div class="text-gray">
+                                                    Intercity Deals
+                                                </div>
+                                            </li>
+                                        </div>
+                                        <div style="max-width: 368px;"
+                                            class="p-3 bgrd-primary gap-2 border-2 border text-lg rounded-full a my-3 text-white d-flex align-items-center justify-content-center">
+                                            <h4 style="margin-bottom: 0rem;">Download Now</h4>
+                                            <div>
+                                                <img style="width:24px" src={% static "assets/images/new_images/arrow-icon-white.png" %} alt="">
+                                            </div>
+                                            <div>
+                                                <a href="https://play.google.com/store/apps/details?id=com.medleymed.b2bretailer.b2b_retailer&hl=en" target="_blank">
+                                                    <img style="width:24px" src={% static "assets/images/new_images/android.png" %} alt=""></a>
+                                            </div>
+                                            <div>
+                                                <a href="https://apps.apple.com/us/app/medleymed-network/id6479243124" target="_blank">
+                                                 <img style="width:24px" src={% static "assets/images/new_images/apple.png" %} alt=""></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 ">
+                                    <img class="w-100" src={% static "assets/images/new_images/medleynetwork.png" %} alt="medleynetwork">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                            <div class="row mt-5">
+                                <div class="col-lg-8 p-5 bg-white" style="border-radius: 40px;">
+                                    <div class="mt-4">
+                                        <li class="list-none">
+    
+                                            <div class="text-gray">
+                                                Optimize your distribution operations with Medleymed Network. You can gain
+                                                access to our ever-expanding Pharmacy Network that helps you manage your
+                                                supply chain efficiently, reducing costs and improving delivery times.
+                                                Enhance your distribution capabilities and achieve operational excellence
+                                                with our support.
+                                            </div>
+                                        </li>
+    
+                                    </div>
+                                    <h1 class="p-color mt-4 primary-font"><u
+                                            style="text-decoration-color: #10c1cb;">Benefits of
+                                            partnering with us</u>
+                                    </h1>
+                                    <div class="mt-4">
+                                        <li class="list-none d-flex gap-4 align-items-center">
+                                            <div>
+                                                <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                    style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                            </div>
+                                            <div class="text-gray">
+                                                Increasing your Distribution Reach and adding New Customers
+                                            </div>
+                                        </li>
+                                        <li class="list-none d-flex gap-4 align-items-center mt-3">
+                                            <div>
+                                                <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                    style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                            </div>
+                                            <div class="text-gray">
+                                                Augmenting Demand Generation through Offers and Schemes
+                                            </div>
+                                        </li>
+                                        <li class="list-none d-flex gap-4 align-items-center mt-3">
+                                            <div>
+                                                <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                    style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                            </div>
+                                            <div class="text-gray">
+                                                Efficient and effective inventory management to increase Business
+                                            </div>
+                                        </li>
+                                        <li class="list-none d-flex gap-4 align-items-center mt-3">
+                                            <div>
+                                                <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                    style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                            </div>
+                                            <div class="text-gray">
+                                                Continuously grow your Business thus optimising your infrastructure and
+                                                Manpower
+                                            </div>
+                                        </li>
+                                        <li class="list-none d-flex gap-4 align-items-center mt-3">
+                                            <div>
+                                                <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                    style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                            </div>
+                                            <div class="text-gray">
+                                                Connecting directly with Manufacturers for Best deals and new exciting
+                                                products
+                                            </div>
+                                        </li>
+                                        <div style="max-width: 368px;"
+                                            class="p-3 bgrd-primary gap-2 border-2 border text-lg rounded-full a my-3 text-white d-flex align-items-center justify-content-center">
+                                            <h4 style="margin-bottom: 0rem;">Download Now</h4>
+                                            <div>
+                                                <img style="width:24px" src={% static "assets/images/new_images/arrow-icon-white.png" %} alt="">
+                                            </div>
+                                            <div>
+                                                <a href="https://play.google.com/store/apps/details?id=com.medleymed.b2bretailer.b2b_retailer&hl=en" target="_blank">
+                                                    <img style="width:24px" src={% static "assets/images/new_images/android.png" %} alt=""></a>
+                                            </div>
+                                            <div>
+                                                <a href="https://apps.apple.com/us/app/medleymed-network/id6479243124" target="_blank">
+                                                 <img style="width:24px" src={% static "assets/images/new_images/apple.png" %} alt=""></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 ">
+                                    <img class="w-100" src={% static "assets/images/new_images/distributor.png" %} alt="distributor">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                            <div class="row mt-5">
+                                <div class="col-lg-8 p-5 bg-white" style="border-radius: 40px;">
+                                    <div class="mt-4">
+                                        <li class="list-none">
+    
+                                            <div class="text-gray">
+                                                You can leverage Medleymed Network to streamline your supply chain and
+                                                business processes. Our platform offers end-to-end solutions, from
+                                                procurement to distribution, enabling you to make informed decisions that
+                                                drive efficiency and profitability. Strengthen your corporate strategy by
+                                                tapping into our comprehensive network of industry partners.
+                                            </div>
+                                        </li>
+    
+                                    </div>
+                                    <h1 class="p-color mt-4 primary-font"><u
+                                            style="text-decoration-color: #10c1cb;">Benefits of
+                                            partnering with us</u>
+                                    </h1>
+                                    <div class="mt-4">
+                                        <li class="list-none d-flex gap-4 align-items-center">
+                                            <div>
+                                                <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                    style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                            </div>
+                                            <div class="text-gray">
+                                                Quicker Go-To-Market with our growing Distribution Network
+                                            </div>
+                                        </li>
+                                        <li class="list-none d-flex gap-4 align-items-center mt-3">
+                                            <div>
+                                                <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                    style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                            </div>
+                                            <div class="text-gray">
+                                                Launch products in multiple markets without a sales team – We will take care
+                                                of it
+                                            </div>
+                                        </li>
+                                        <li class="list-none d-flex gap-4 align-items-center mt-3">
+                                            <div>
+                                                <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                    style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                            </div>
+                                            <div class="text-gray">
+                                                Smart and Relevant Analytics that help you optimise your manufacturing plans
+                                            </div>
+                                        </li>
+                                        <li class="list-none d-flex gap-4 align-items-center mt-3">
+                                            <div>
+                                                <img src={% static "assets/images/new_images/plus.png" %} alt="plus"
+                                                    style="width: 30px; height: 30px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                            </div>
+                                            <div class="text-gray">
+                                                Ability to run Secondary Schemes
+                                            </div>
+                                        </li>
+    
+                                        <div style="max-width: 368px;"
+                                            class="p-3 bgrd-primary gap-2 border-2 border text-lg rounded-full a my-3 text-white d-flex align-items-center justify-content-center">
+                                            <h4 style="margin-bottom: 0rem;">Download Now</h4>
+                                            <div>
+                                                <img style="width:24px" src={% static "assets/images/new_images/arrow-icon-white.png" %} alt="">
+                                            </div>
+                                            <div>
+                                                <a href="https://play.google.com/store/apps/details?id=com.medleymed.b2bretailer.b2b_retailer&hl=en" target="_blank">
+                                                    <img style="width:24px" src={% static "assets/images/new_images/android.png" %} alt=""></a>
+                                            </div>
+                                            <div>
+                                                <a href="https://apps.apple.com/us/app/medleymed-network/id6479243124" target="_blank">
+                                                 <img style="width:24px" src={% static "assets/images/new_images/apple.png" %} alt=""></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 ">
+                                    <img class="w-100" src={% static "assets/images/new_images/manufacture.png" %} alt="manufacture">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+        </section>
+        <!--testmonials-->
+        <section class="py-5">
+            <div class="container">
+                <div class="text-center pb-5">
+                    <h1 class="p-color primary-font"><u style="text-decoration-color: #10c1cb;">What Our Clients</u>
+                        Say</h1>
+                </div>
+                <div id="testimonialCarousel" class="carousel slide relative" data-bs-ride="carousel">
+                    {% comment %} <div style="width: 50px; height: 50px; position: absolute; z-index: 2; top:-30px">
+                        <img class="w-100" src={% static "assets/images/new_images/qtop.webp" %} alt="">
+                    </div>
+                    <div style="width: 50px; height: 50px; position: absolute; z-index: 2; right:0px; bottom:30px">
+                        <img class="w-100" src={% static "assets/images/new_images/qbottom.png" %} alt="">
+                    </div> {% endcomment %}
+                    <div class="carousel-inner ">
+    
+                        <div class="carousel-item active">
+                            <div class="d-lg-flex gap-5">
+                                <div class="testimonial-card bd-highlight p-4 bg-white rounded-3">
+                                    <p class="mb-4">
+                                        Using the Medleymed Network app, I was able to move more of my existing inventory.
+                                        They connect me with retailers who need exactly what I have in stock.
+                                        It’s like finding new business without any extra effort.
+                                    </p>
+                                    <div class="row gx-2">
+                                        <div class="col-sm-12 col-md-12 col-lg-10">
+                                            <div class="d-flex gap-2">
+                                                <div>
+                                                    <img src={% static "assets/images/new_images/testimonials-sanjay.jpg" %}
+                                                        class="testimonial-img rounded-circle mb-3" alt="sanjay"
+                                                        style="width: 50px;">
+                                                </div>
+                                                <div class="">
+                                                    <h5 class="card-title">Sanjay Ji</h5>
+                                                    <p class="card-subtitle text-muted">Gourav Medical Agencies</p>
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        {% comment %} <div class="col-sm-12 col-md-12 col-lg-2">
+                                            <div class="d-flex gap-1">
+                                                <img style="width: 20px; height: 20px;" src={% static "assets/images/new_images/rating.png" %} alt="">
+                                                <h5 class="card-title">5.0</h5>
+                                            </div>
+                                            <p class="card-subtitle text-muted">Rating</p>
+                                        </div> {% endcomment %}
+                                    </div>
+                                </div>
+                                <div class="testimonial-card bd-highlight p-4 bg-white rounded-3">
+                                    <p class="mb-4">
+                                        One thing I love about Medleymed Network is that they constantly keep adding new
+                                        Retailers.
+                                        I am now supplying to Retailers who are reaching out to me through the Medleymed
+                                        Network App.
+                                        My Sales have gone up considerably as I expanded my reach through this wonderful
+                                        app.
+                                    </p>
+                                    <div class="row gx-2">
+                                        <div class="col-sm-12 col-md-12 col-lg-10">
+                                            <div class="d-flex gap-2">
+                                                <div>
+                                                    <img src={% static "assets/images/new_images/testimonial-govind.jpg" %}
+                                                        class="testimonial-img rounded-circle mb-3" alt="govind"
+                                                        style="width: 50px;">
+                                                </div>
+                                                <div class="">
+                                                    <h5 class="card-title">Govind Ji</h5>
+                                                    <p class="card-subtitle text-muted">D K Pharma</p>
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        {% comment %} <div class="col-sm-12 col-md-12 col-lg-2">
+                                            <div class="d-flex gap-1">
+                                                <img style="width: 20px; height: 20px;" src={% static "assets/images/new_images/rating.png" %} alt="">
+                                                <h5 class="card-title">5.0</h5>
+                                            </div>
+                                            <p class="card-subtitle text-muted">Rating</p>
+                                        </div> {% endcomment %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="d-lg-flex gap-5">
+                                <div class="testimonial-card bd-highlight p-4 bg-white rounded-3">
+                                    <p class="mb-4">
+                                        I found more distributors, more products and more deals
+                                        on Medleymed Network than ever before.
+                                    </p>
+                                    <div class="row gx-2">
+                                        <div class="col-sm-12 col-md-12 col-lg-10">
+                                            <div class="d-flex gap-2">
+                                                <div>
+                                                    <img src={% static "assets/images/new_images/user-icon.png" %} class="testimonial-img rounded-circle mb-3"
+                                                        alt="Client" style="width: 50px;">
+                                                </div>
+                                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                                    <h5 class="card-title">S.Ramesh</h5>
+                                                    <p class="card-subtitle text-muted">India Pharmacies, Hyderabad</p>
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        {% comment %} <div class="col-sm-12 col-md-12 col-lg-2">
+                                            <div class="d-flex gap-1">
+                                                <img style="width: 20px; height: 20px;" src={% static "assets/images/new_images/rating.png" %} alt="">
+                                                <h5 class="card-title">5.0</h5>
+                                            </div>
+                                            <p class="card-subtitle text-muted">Rating</p>
+                                        </div> {% endcomment %}
+                                    </div>
+    
+                                </div>
+                                <div class="testimonial-card bd-highlight p-4 bg-white rounded-3">
+                                    <p class="mb-4">
+                                        Managing finances was always a big headache with multiple credit terms and delayed
+                                        payments
+                                        from Retailers. Using the Medleymed Network App has enabled me to
+                                        complete the transactions quickly and mostly through cash.
+                                        It's straightforward and helps me keep my cash flows healthy. Always.
+                                    </p>
+                                    <div class="row gx-2">
+                                        <div class="col-sm-12 col-md-12 col-lg-10">
+                                            <div class="d-flex gap-2">
+                                                <div>
+                                                    <img src={% static "assets/images/new_images/user-icon.png" %} class="testimonial-img rounded-circle mb-3"
+                                                        alt="Client" style="width: 50px;">
+                                                </div>
+                                                <!-- <div class="col-sm-12 col-md-12 col-lg-6">
+                                                <h5 class="card-title">S.Ramesh</h5>
+                                                <p class="card-subtitle text-muted">India Pharmacies, Hyderabad</p>
+                                            </div> -->
+                                            </div>
+                                        </div>
+    
+                                        {% comment %} <div class="col-sm-12 col-md-12 col-lg-2">
+                                            <div class="d-flex gap-1">
+                                                <img style="width: 20px; height: 20px;" src={% static "assets/images/new_images/rating.png" %} alt="">
+                                                <h5 class="card-title">5.0</h5>
+                                            </div>
+                                            <p class="card-subtitle text-muted">Rating</p>
+                                        </div> {% endcomment %}
+                                    </div>
+                                </div>
+    
+                            </div>
+                        </div>
+                    </div>
+                    <button class="mt-2 p-1 rounded bg-white" type="button" data-bs-target="#testimonialCarousel"
+                        data-bs-slide="prev">
+                        <!-- <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span> -->
+                        <img style="width: 15px;" src={% static "assets/images/new_images/left-arrow.png" %} alt="">
+                    </button>
+                    <button class="mt-2 p-1 rounded bg-white" type="button" data-bs-target="#testimonialCarousel"
+                        data-bs-slide="next">
+                        <!-- <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span> -->
+                        <img style="width: 15px;" src={% static "assets/images/new_images/right-arrow.png" %} alt="">
+                    </button>
+                </div>
+            </div>
+        </section>
+    
+        <!--chatbot-->
+        <section>
+            <div class="container py-5">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <img class="w-100" src={% static "assets/images/new_images/medley.gif" %} alt="chatbot">
+                    </div>
+                    <div class="col-lg-6 p-4">
+                        <h1 class="p-color primary-font" style="font-size:60px;">Coming Soon...</h1>
+                        <div class="mt-4">
+                            <li class="list-none d-flex gap-4 align-items-center">
+                                <!-- <div
+                                    style="width: 15px; height: 15px; flex: none;  border-radius: 100%; background-color: #0a0a26;">
+                                </div> -->
+                                <div class="text-gray">
+                                    Our upcoming chatbot, featuring a cutting-edge medicine substitute function, will
+                                    revolutionize the way you manage and recommend pharmaceutical products.
+                                </div>
+                            </li>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--medleymed network image-->
+        <section>
+            <div class="container py-5">
+                <div class="row align-items-center text-center">
+                    <h1 class="p-color primary-font"><u style="text-decoration-color: #10c1cb;">Medleymed Network</u>
+                        App</h1>
+                    <div class="text-gray">
+                        App can help your business in multiple ways
+                    </div>
+                    <div class="col-lg-12">
+                        <img class="w-100 p-5" src={% static "assets/images/new_images/medleynetworkbanner.png" %} alt="chatbot">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--join medleymed network-->
+        <section>
+            <div class="container mb-5 bgrd-primary rounded-full" style="background-image: url({% static "assets/images/new_images/world.png" %}); background-position: center; background-repeat: no-repeat; background-size: cover;">
+                <div class="row p-4 text-center">
+                    <div class="pt-5">
+                        <img style="width: 300px;" src={% static "assets/images/new_images/logo_white.png" %} alt="">
+                    </div>
+    
+                    <h1 class="hero-heading text-white mt-5 primary-font">Join Medleymed Network</h1>
+                    <div>
+                        <h4 class="text-white">and see your business grow <span><img style="width:20px" src={% static "assets/images/new_images/arrow2.png" %}
+                                    alt="arrow"></span></h4>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div
+                            class="p-5 py-3 mt-3 mb-5 gap-2 border-2 border text-lg rounded-full  a my-3 text-white d-flex align-items-center justify-content-center">
+                            <div>
+                                
+                                    <h4 style="margin-bottom: 0rem;">Download</h4>
+                            </div>
+                            <div>
+                                <img style="width:24px" src={% static "assets/images/new_images/arrow-icon-white.png" %} alt="">
+                            </div>
+                            <div>
+                                <a href="https://play.google.com/store/apps/details?id=com.medleymed.b2bretailer.b2b_retailer&hl=en" target="_blank">
+                                    <img style="width:24px" src={% static "assets/images/new_images/android.png" %} alt=""></a>
+                            </div>
+                            <div>
+                                <a href="https://apps.apple.com/us/app/medleymed-network/id6479243124" target="_blank">
+                                 <img style="width:24px" src={% static "assets/images/new_images/apple.png" %} alt=""></a>
+                            </div>
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+        </section>
+
+      <!-- #intro -->
+      <main id="main">
+      {% block footer%}
+        <div class="row p-0" id="footer">
+          <div class="col-lg-12 col-md-12" style="box-shadow: 16px 6px 15px 13px rgb(0 0 0 / 10%);">      
+               {% include 'footer.html' %}
+            </div>       
+          </div>
+        </div>
+        
+    
+      {% endblock footer %}
+      <!-- #footer -->
+      {% comment %} <a class="query_popup" title="Any Queries?"><img src="{% static "home_v2/img/chat_icon.svg" %}"></a> {% endcomment %}
+      <a class="close_popup"><img src="{% static "home_v2/img/close_icn.svg" %}"></a>
+      <a href="#" class="back-to-top" title="Scroll to top"><i class="fa fa-chevron-up"></i></a>
+      <!--==========================
+         Search
+         ============================-->
+      
+
+
+
+    
+      
+       <script src="{% static "home_v2/lib/mobile-nav/mobile-nav.js" %}"></script>
+     
+   </body>
+</html>
